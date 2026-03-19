@@ -1,0 +1,12 @@
+node_modules
+dist/
+.agent/
+.sandbox/*-proxy.js
+webpack-sandbox-plugin/src/*.js
+webpack-sandbox-plugin/src/*/*.js
+test-harness/*/
+docs/context/*.md
+docs/analysis/*.md
+conductor/
+claude.md
+gemini.md
