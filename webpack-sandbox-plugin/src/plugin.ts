@@ -185,6 +185,16 @@ export class WebpackSandboxPlugin {
     }
 
     if (dtsFiles.length === 0) {
+      const atTypesPath = path.resolve(context, "node_modules", "@types", libraryName);
+      if (fs.existsSync(atTypesPath)) {
+        console.log(
+          `[SandboxPlugin] No .d.ts files found in ${libraryName} folder. Falling back to @types/${libraryName}.`,
+        );
+        dtsFiles = findAllDtsFiles(atTypesPath);
+      }
+    }
+
+    if (dtsFiles.length === 0) {
       console.warn(
         `[SandboxPlugin] No .d.ts files found for ${libraryName}. Generating default minimal proxy.`,
       );
