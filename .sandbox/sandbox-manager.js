@@ -92,6 +92,232 @@ export function bindWebApi(apiObject) {
   return boundObject;
 }
 
+/**
+ * Reverse membrane for QJS→host exports.
+ * Uses a Proxy with a lazy `get` trap to create QJS-side bound closures
+ * via arena.evalCode(), so method calls preserve the original QJS `this`
+ * — bypassing Arena's ue() re-marshalling which creates new QJS objects
+ * that lack private fields / internal slots.
+ */
+/**
+ * Wraps a return value from a bound method call — if it's a non-primitive,
+ * non-TypedArray object, applies wrapReturned to preserve QJS `this` identity.
+ */
+function maybeWrapResult(arena, result) {
+  if (
+    result !== null &&
+    typeof result === "object" &&
+    !isTypedArrayView(result)
+  ) {
+    return wrapReturned(arena, result);
+  }
+  return result;
+}
+
+/**
+ * Creates a bound Proxy for a function (class or standalone) from the sandbox.
+ * Intercepts both direct calls AND property access (for static methods).
+ */
+function bindSandboxFunction(arena, fn, fnAccessPath, depth) {
+  const childFnCache = new Map();
+  const callFn = arena.evalCode(`(...args) => ${fnAccessPath}(...args)`);
+
+  return new Proxy(fn, {
+    apply(_target, _thisArg, args) {
+      return maybeWrapResult(arena, callFn(...args));
+    },
+    construct(target, args) {
+      // Delegate to the original — the proxy-generator's construct trap
+      // or Arena's own construct handling will take care of `new`.
+      return Reflect.construct(target, args);
+    },
+    get(target, key, receiver) {
+      if (typeof key === "symbol") return Reflect.get(target, key, receiver);
+      const value = target[key];
+      if (typeof value === "function") {
+        if (!childFnCache.has(key)) {
+          const childPath = `${fnAccessPath}["${key}"]`;
+          childFnCache.set(
+            key,
+            bindSandboxFunction(arena, value, childPath, depth + 1),
+          );
+        }
+        return childFnCache.get(key);
+      }
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !isTypedArrayView(value)
+      ) {
+        return bindSandboxExport(
+          arena,
+          value,
+          `${fnAccessPath}["${key}"]`,
+          depth + 1,
+        );
+      }
+      return value;
+    },
+  });
+}
+
+function bindSandboxExport(arena, obj, accessPath, depth = 0) {
+  if (obj === null || obj === undefined) return obj;
+  if (typeof obj !== "object" && typeof obj !== "function") return obj;
+  if (depth > 3) return obj;
+  if (exportBindCache.has(obj)) return exportBindCache.get(obj);
+
+  const fnCache = new Map();
+
+  const bound = new Proxy(obj, {
+    get(target, key, receiver) {
+      if (typeof key === "symbol") return Reflect.get(target, key, receiver);
+
+      const value = target[key];
+      if (typeof value === "function") {
+        if (!fnCache.has(key)) {
+          const fnPath = `${accessPath}["${key}"]`;
+          fnCache.set(
+            key,
+            bindSandboxFunction(arena, value, fnPath, depth + 1),
+          );
+        }
+        return fnCache.get(key);
+      }
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !isTypedArrayView(value)
+      ) {
+        return bindSandboxExport(
+          arena,
+          value,
+          `${accessPath}["${key}"]`,
+          depth + 1,
+        );
+      }
+      return value;
+    },
+    set(target, key, value) {
+      target[key] = value;
+      return true;
+    },
+  });
+
+  exportBindCache.set(obj, bound);
+  return bound;
+}
+
+/**
+ * Wraps objects returned from bound sandbox methods.
+ * Stores the QJS-side result in a temporary Map entry and binds methods
+ * from that reference, preserving object identity for private fields.
+ *
+ * @param preStoredId - If provided, the object was already stored in
+ *   __SANDBOX_TEMP__ by a QJS-side constructor (via createInstance).
+ *   Skips the setter round-trip, which would otherwise create a new
+ *   QJS object and break WeakMap-based private field emulation.
+ */
+function wrapReturned(arena, obj, preStoredId) {
+  if (obj === null || typeof obj !== "object") return obj;
+  if (isTypedArrayView(obj)) return obj;
+  if (returnedObjCache.has(obj)) return returnedObjCache.get(obj);
+
+  arena.evalCode(
+    `if (!globalThis.__SANDBOX_TEMP__) globalThis.__SANDBOX_TEMP__ = new Map();`,
+  );
+
+  let id;
+  if (preStoredId !== undefined) {
+    // Object was already stored in __SANDBOX_TEMP__ inside QJS by the
+    // constructor closure (createInstance).  No round-trip needed.
+    id = preStoredId;
+  } else {
+    id = tempIdCounter++;
+    const setter = arena.evalCode(
+      `(v) => globalThis.__SANDBOX_TEMP__.set(${id}, v)`,
+    );
+    setter(obj);
+  }
+
+  const fnCache = new Map();
+  // Stores host-side property overrides (e.g. from mock.method / direct assignment).
+  // These take priority over fnCache so that mocked methods are visible both on the
+  // host side (mock.calls) and when the object is marshalled back into QJS.
+  const hostOverrides = new Map();
+
+  // Cache for QJS-side property getters (for primitive-typed properties such
+  // as Luxon DateTime.year / .month / .day that are defined as class getters).
+  // Arena's sync-proxy materialises the object via ctx.dump() — a JSON dump
+  // that never calls QJS prototype getters — so target[key] returns NaN/undefined
+  // for those properties.  We read them directly from the live QJS object instead.
+  const propGetterCache = new Map();
+
+  const bound = new Proxy(obj, {
+    get(target, key, receiver) {
+      if (typeof key === "symbol") return Reflect.get(target, key, receiver);
+
+      // Return any host-side override set via the set trap (e.g. mock.method).
+      if (hostOverrides.has(key)) {
+        return hostOverrides.get(key);
+      }
+
+      const value = target[key];
+      if (typeof value === "function") {
+        if (!fnCache.has(key)) {
+          const boundFn = arena.evalCode(
+            `(...args) => globalThis.__SANDBOX_TEMP__.get(${id})["${key}"](...args)`,
+          );
+          fnCache.set(key, (...args) => {
+            const result = boundFn(...args);
+            if (
+              result !== null &&
+              typeof result === "object" &&
+              !isTypedArrayView(result)
+            ) {
+              return wrapReturned(arena, result);
+            }
+            return result;
+          });
+        }
+        return fnCache.get(key);
+      }
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !isTypedArrayView(value)
+      ) {
+        return wrapReturned(arena, value);
+      }
+      // For primitive-typed properties (numbers, strings, booleans, null,
+      // undefined) read the value directly from the live QJS object so that
+      // class getter properties defined on the prototype (e.g. DateTime.year,
+      // DateTime.month) are actually invoked inside the VM rather than read
+      // from Arena's ctx.dump() snapshot which omits prototype getters.
+      if (!propGetterCache.has(key)) {
+        propGetterCache.set(
+          key,
+          arena.evalCode(
+            `() => globalThis.__SANDBOX_TEMP__.get(${id})["${key}"]`,
+          ),
+        );
+      }
+      return propGetterCache.get(key)();
+    },
+    set(target, key, value) {
+      // Persist the host value so get() returns it directly (bypassing fnCache),
+      // and invalidate any stale fnCache entry for the same key.
+      hostOverrides.set(key, value);
+      fnCache.delete(key);
+      target[key] = value;
+      return true;
+    },
+  });
+
+  returnedObjCache.set(obj, bound);
+  return bound;
+}
+
 export class SandboxManager {
   quickJS = null;
 
@@ -243,7 +469,7 @@ export class SandboxManager {
       if (typeof globalThis[apiName] !== "undefined") {
         let rootAPI = globalThis[apiName];
         if (typeof rootAPI === "function") {
-          rootAPI = rootAPI.bind(globalThis);
+          rootAPI = makeCallable(rootAPI, globalThis);
         } else {
           rootAPI = bindWebApi(rootAPI);
         }
@@ -259,6 +485,17 @@ export class SandboxManager {
 
     const libExports = arena.evalCode(code);
 
+    // Bind exports so method calls preserve the original QJS `this`,
+    // fixing private fields (mime) and object identity (luxon) issues.
+    const boundExports = bindSandboxExport(
+      arena,
+      libExports,
+      "__SANDBOXED_LIB__",
+    );
+
+    // Drive the QuickJS async job queue so Promises resolve inside the VM.
+    // Do NOT .unref() here — the pump must keep Node alive during top-level
+    // await initialization. The proxy calls unrefPump() after init completes.
     const pumpInterval = setInterval(() => {
       try {
         if (vm.runtime.hasPendingJob()) {
@@ -272,9 +509,41 @@ export class SandboxManager {
     return {
       vm,
       arena,
-      exports: libExports,
+      exports: boundExports,
+      // Wrap a raw Arena sync-proxy returned by a construct-trap call through
+      // wrapReturned so that method calls on the constructed instance preserve
+      // QJS `this` (required for private class fields).
+      wrapResult: (value) => maybeWrapResult(arena, value),
+      /**
+       * Construct a new instance of `ctorKey` inside QJS and wrap it so that
+       * all method calls keep the original QJS `this`.
+       *
+       * Unlike `wrapResult(ctor(...args))`, this never marshals the instance
+       * through the host boundary before storing it in __SANDBOX_TEMP__.
+       * That round-trip loses object identity and breaks WeakMap-based private
+       * field emulation (the TypeScript `__classPrivateFieldGet` pattern).
+       */
+      createInstance: (ctorKey, constructorArgs) => {
+        const id = tempIdCounter++;
+        arena.evalCode(
+          `if (!globalThis.__SANDBOX_TEMP__) globalThis.__SANDBOX_TEMP__ = new Map();`,
+        );
+        const ctor = arena.evalCode(
+          `(...args) => { const _i = new __SANDBOXED_LIB__["${ctorKey}"](...args); globalThis.__SANDBOX_TEMP__.set(${id}, _i); return _i; }`,
+        );
+        const result = ctor(...constructorArgs);
+        return wrapReturned(arena, result, id);
+      },
+      unrefPump: () => pumpInterval.unref(),
       dispose: () => {
         clearInterval(pumpInterval);
+        if (isTypedArrayInVM.alive) isTypedArrayInVM.dispose();
+        for (const fn of typedArrayCreators.values()) {
+          if (fn.alive) fn.dispose();
+        }
+        for (const fn of Object.values(unmarshalHelpers)) {
+          if (fn.alive) fn.dispose();
+        }
         arena.dispose();
         vm.dispose();
       },
