@@ -10,8 +10,10 @@ export class ProxyGenerator {
     content += `let libraryCode;\n`;
     content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;
     content += `  const { readFileSync } = await import('fs');\n`;
-    content += `  const { resolve } = await import('path');\n`;
-    content += `  libraryCode = readFileSync(resolve('dist', '${libraryName}.bundle.js'), 'utf-8');\n`;
+    content += `  const { resolve, dirname } = await import('path');\n`;
+    content += `  const { fileURLToPath } = await import('url');\n`;
+    content += `  const __proxyDir = dirname(fileURLToPath(import.meta.url));\n`;
+    content += `  libraryCode = readFileSync(resolve(__proxyDir, '..', 'dist', '${libraryName}.bundle.js'), 'utf-8');\n`;
     content += `} else {\n`;
     content += `  libraryCode = await fetch('/dist/${libraryName}.bundle.js').then(r => r.text());\n`;
     content += `}\n`;
@@ -21,6 +23,10 @@ export class ProxyGenerator {
     content += `  "${libraryName}",\n`;
     content += `  libraryCode\n`;
     content += `);\n\n`;
+    content += `// Allow Node.js to exit after initialization (pump was kept ref'd during await)\n`;
+    content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;
+    content += `  librarySandbox.unrefPump();\n`;
+    content += `}\n\n`;
     content += `const proxyExports = librarySandbox.exports;\n\n`;
 
     // Keep track of exported names to handle TS overloads or multiple files
