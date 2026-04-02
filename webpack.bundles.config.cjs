@@ -22,6 +22,21 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
   },
   mode: "development",
+  resolve: {
+    alias: {
+      "bresenham-zingl": path.resolve(__dirname, "node_modules/bresenham-zingl/dist/index.mjs"),
+    },
+  },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+    ],
+  },
   plugins: [
     new WebpackSandboxPlugin({
       configPath: "./.sandbox/sandbox.config.js",
