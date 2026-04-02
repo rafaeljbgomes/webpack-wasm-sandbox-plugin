@@ -40,28 +40,52 @@ export class ProxyGenerator {
       exportedNames.add(name);
 
       if (name === "default") {
+        // Find the first named (non-default) export to use as a fallback constructor
+        // when proxyExports.default is a singleton object rather than a class.
+        const fallbackName = libraryData.exportedNames.find((n) => n !== "default") ?? null;
+        const fallbackExpr = fallbackName
+          ? `(typeof proxyExports.${fallbackName} === "function" ? proxyExports.${fallbackName} : null)`
+          : `null`;
+        const fallbackCtorKey = fallbackName ?? "default";
+
         content += `// Default Export\n`;
-        content += `let defaultConstructor;\n`;
-        content += `export default typeof proxyExports.default === "function"\n`;
-        content += `  ? new Proxy(proxyExports.default, {\n`;
-        content += `      construct(target, args) {\n`;
-        content += `        if (!defaultConstructor) {\n`;
-        content += `          defaultConstructor = librarySandbox.arena.evalCode(\`(...args) => new __SANDBOXED_LIB__["default"](...args)\`);\n`;
-        content += `        }\n`;
-        content += `        return defaultConstructor(...args);\n`;
+        content += `// If proxyExports.default is a singleton (not a constructor), fall back to the\n`;
+        content += `// first named class export so that both \`new Default()\` and singleton method\n`;
+        content += `// access (\`default.someMethod()\`) work via the get-trap fallthrough.\n`;
+        content += `const _defaultProxyTarget = typeof proxyExports.default === "function"\n`;
+        content += `  ? proxyExports.default\n`;
+        content += `  : ${fallbackExpr};\n`;
+        content += `const _defaultSingleton = typeof proxyExports.default !== "function" ? proxyExports.default : null;\n`;
+        content += `// Plain constructable function as Proxy target: Arena-wrapped QJS functions are\n`;
+        content += `// arrow functions (no [[Construct]]), so using them directly as Proxy target\n`;
+        content += `// makes the Proxy non-constructable even when a construct trap is present.\n`;
+        content += `function _default_target() {}\n`;
+        content += `export default _defaultProxyTarget\n`;
+        content += `  ? new Proxy(_default_target, {\n`;
+        content += `      construct(_target, args) {\n`;
+        content += `        const ctorKey = typeof proxyExports.default === "function" ? "default" : "${fallbackCtorKey}";\n`;
+        content += `        return librarySandbox.createInstance(ctorKey, args);\n`;
+        content += `      },\n`;
+        content += `      get(_target, key, receiver) {\n`;
+        content += `        if (typeof key === "symbol") return Reflect.get(_target, key, receiver);\n`;
+        content += `        const val = _defaultProxyTarget?.[key];\n`;
+        content += `        if (val !== undefined) return val;\n`;
+        content += `        return _defaultSingleton?.[key];\n`;
         content += `      }\n`;
         content += `    })\n`;
         content += `  : proxyExports.default;\n\n`;
       } else {
         content += `// Export: ${name}\n`;
-        content += `let ${name}_Constructor;\n`;
+        content += `// Plain constructable function as Proxy target — see default export comment.\n`;
+        content += `function _${name}_target() {}\n`;
         content += `export const ${name} = typeof proxyExports.${name} === "function"\n`;
-        content += `  ? new Proxy(proxyExports.${name}, {\n`;
-        content += `      construct(target, args) {\n`;
-        content += `        if (!${name}_Constructor) {\n`;
-        content += `          ${name}_Constructor = librarySandbox.arena.evalCode(\`(...args) => new __SANDBOXED_LIB__["${name}"](...args)\`);\n`;
-        content += `        }\n`;
-        content += `        return ${name}_Constructor(...args);\n`;
+        content += `  ? new Proxy(_${name}_target, {\n`;
+        content += `      construct(_target, args) {\n`;
+        content += `        return librarySandbox.createInstance("${name}", args);\n`;
+        content += `      },\n`;
+        content += `      get(_target, key, receiver) {\n`;
+        content += `        if (typeof key === "symbol") return Reflect.get(proxyExports.${name}, key, receiver);\n`;
+        content += `        return proxyExports.${name}[key];\n`;
         content += `      }\n`;
         content += `    })\n`;
         content += `  : proxyExports.${name};\n\n`;
