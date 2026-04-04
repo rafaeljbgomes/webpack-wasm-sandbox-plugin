@@ -274,3 +274,72 @@ This ensures that QJS prototype getters are always invoked inside the VM with th
 **Impact:** After the fix, `dst.test.js` (the primary affected file) went from 0/28 to 28/28 passing tests. Overall Luxon compatibility improved from 211 to 327 passing tests (out of 367 total). The remaining 40 failures are pre-existing issues unrelated to this fix: locale-dependent `Intl` output differences between the host node process and the QuickJS VM (whose ICU data may use different default locale), object reference identity assertions across the membrane, and an unrelated circular-JSON serialisation error in Jest's worker IPC when test modules expose raw QuickJS context objects.
 
 **Trade-off:** Every new primitive property key incurs one `evalCode` call the first time it is accessed, after which the result is served from `propGetterCache`. This is consistent with the cost already paid for method bindings and is negligible compared to the WASM call overhead.
+
+---
+
+## 03/04/2026 - 15. State Sync vs. RPC Membrane (`quickjs-emscripten-sync` evaluation)
+
+**Decision:** Adopted `quickjs-emscripten-sync` (the Arena) as the core boundary synchronization layer, despite its friction with object identity preservation on VM-to-Host exports.
+
+**Rationale:** Building a robust membrane for projecting complex host graphs (like the DOM or `localStorage`) into WebAssembly is extremely complex. `quickjs-emscripten-sync` handles the **Host → VM** projection exceptionally well, creating synchronized proxies and marshaling operations automatically. This fulfills the core thesis objective of granular, policy-driven WebAPI exposure with minimal custom infrastructure.
+
+**Trade-off:** The library's state-synchronization model is lossy when moving complex object graphs from the **VM → Host** (stripping prototypes, class getters, and breaking object identity/private fields). 
+
+**Implementation Note:** To achieve transparent API compatibility for the host application (allowing it to consume sandboxed OOP libraries seamlessly), the system implements a custom "Reverse RPC Membrane" (`bindSandboxExport`, `wrapReturned`, `createInstance`). This bypasses the Arena's default `ctx.dump()` mechanism, forcing methods to execute in-place within QJS, thus preserving encapsulation and prototype behaviors.
+
+**Future Work (Productionization):** The current reverse-membrane pins QJS object identities in a global `__SANDBOX_TEMP__` Map to prevent identity loss. In a production environment, this introduces a memory leak. A host-side `FinalizationRegistry` attached to the host Proxies should be implemented to evaluate `globalThis.__SANDBOX_TEMP__.delete(id)` when the host proxy is garbage collected.
+
+---
+
+## 03/04/2026 - 16. Patching `ue()` in `quickjs-emscripten-sync` — `new.target` identity loss
+
+**Problem:** `quickjs-emscripten-sync`'s Arena wraps QJS functions as host callables via an internal function `ue()`. When such a callable is invoked with `new` (the `new.target` branch), the original code was:
+
+```js
+if (new.target) {
+  const [h] = r(y(n, "(Cls, ...args) => new Cls(...args)", p, e, ...l));
+  return Object.defineProperties(this, Object.getOwnPropertyDescriptors(h)), this;
+}
+```
+
+`h` is the Arena sync proxy registered in the Arena's bidirectional identity map (`_map`). However, the function returns `this` — a fresh object created by the JavaScript engine as the implicit receiver of the `new` call. `this` is **not** registered in the Arena's map.
+
+The consequence: every subsequent method call on the constructed instance (e.g. `largeStack.set(key, value)`) fails to find the instance in the Arena's map via `_marshalFind`. The Arena then re-marshals the host object by copying its enumerable properties into a **new, temporary QJS object** for each call. This temporary object is a structurally equivalent copy but a distinct object — it is not the original QJS instance.
+
+This breaks any operation that requires **state persistence across calls**. The most concrete manifestation was lodash's `Stack.set()`: over 199 calls, the QJS ListCache accumulates 199 key–value pairs via in-place mutation. On the 200th call, lodash's internal `stackSet` upgrades the backing store by reassigning `this.__data__ = new MapCache(pairs)`. With the unregistered `this` producing a fresh temporary QJS object on each call, this assignment is discarded; the next call still sees the old ListCache with 199 entries, perpetually re-attempting the failed upgrade.
+
+Eventually the QJS Stack and its ListCache — held only transitively by `h`, which was discarded as a local variable after `ue()` returned `this` — are garbage-collected by the QJS runtime. Arena's map retains the now-freed handle. Any call that dereferences it inside QJS evaluates to `undefined`, producing the terminal error:
+
+```
+QuickJSUnwrapError [TypeError]: cannot read property 'set' of undefined at stackSet (<input>:2409:11)
+```
+
+**Solution:** Return `h` directly instead of `this`. In JavaScript, when a constructor explicitly returns an object, `new` evaluates to that returned object and discards the implicit `this`. Since `h` is the properly registered Arena sync proxy, all subsequent `_marshalFind` lookups succeed and the actual QJS instance is used consistently across calls.
+
+```js
+// Before (original library code):
+return Object.defineProperties(this, Object.getOwnPropertyDescriptors(h)), this;
+
+// After (patched):
+return h;
+```
+
+**Maintenance:** The library is patched via `patch-package`. The patch file is committed at `patches/quickjs-emscripten-sync+1.8.1.patch` and is re-applied automatically via the `postinstall` script (`"postinstall": "patch-package"` in `package.json`). The diff is a single-line change to `node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js`.
+
+**Scope:** The patch affects all `new arenaProxy(args)` call sites — i.e. any host code that obtains an Arena sync proxy of a QJS constructor and invokes it with `new`. The existing `createInstance` helper (AD#13) was already immune to this bug because it constructs and stores the instance entirely inside QJS without crossing the `new.target` branch. The patch makes raw Arena proxies used as constructors consistent with `createInstance`'s behaviour.
+
+---
+
+## 04/04/2026 - 17. Proxying Exported Functions: The `apply` Trap
+
+**Problem:** When testing libraries that heavily rely on exported functions that return chainable objects (e.g., `zod` with `z.string().min(3)`), the generated sandbox proxies were returning `undefined` for the initial function call. This caused a `TypeError: Cannot read properties of undefined` on the subsequent chained method. The proxy generator was creating a `new Proxy` over a dummy target function (`function _target() {}`) to satisfy the JavaScript requirement that a proxy target must be callable to be invoked as a function. However, it only implemented the `construct` and `get` traps, omitting the `apply` trap. As a result, direct function calls on the proxy fell through to the empty dummy target, which returned `undefined`.
+
+**Solution:** The proxy generator was updated to include an `apply` trap for both default and named exports. 
+
+```javascript
+apply(_target, _thisArg, args) {
+  return proxyExports["${name}"](...args);
+}
+```
+
+This ensures that when an exported function is invoked (e.g., `z.string()`), the call is correctly intercepted and forwarded to the Arena-wrapped `proxyExports` (which internally delegates to `arena.evalCode`), preserving the execution context and returning the actual result from within the QuickJS VM.

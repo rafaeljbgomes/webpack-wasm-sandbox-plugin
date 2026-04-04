@@ -62,7 +62,7 @@ For each sandboxed library, the plugin generates a "Proxy Module" facade. The ge
 - Imports the `SandboxManager`.
 - Lazily fetches the isolated library bundle and creates the sandbox environment (`SandboxManager.createSandbox(libraryCode)`).
 - Re-exports the library's API functions.
-- **Transparent Marshalling:** Because `{ isMarshalable: true }` is enabled in the runtime `Arena`, the generated code does **not** need to manually marshal or format parameters (like `JSON.stringify`). The proxy simply calls the sandboxed function (`sandbox.exports.functionName(...args)`), and the Arena automatically synchronizes primitives and creates proxies for complex objects seamlessly across the host boundaries.
+- **Semi-Transparent Marshalling & Reverse Membrane:** While `{ isMarshalable: true }` allows primitives and simple objects to cross seamlessly, the proxy generator wraps exports in a **Reverse Membrane** to preserve object identity and prototype chains. The proxy intercepts function calls (`apply` trap), constructor calls (`construct` trap, routed through a dedicated `createInstance` helper), and property accesses (`get` trap) to ensure all operations are seamlessly forwarded to the QuickJS VM. Returned objects are wrapped so they execute their methods in-place within the QuickJS VM.
 
 ---
 
@@ -132,11 +132,72 @@ libraryArena.expose({ localStorage: syncedStorage });
 
 _Note: While the Membrane handles property access and standard invocations cleanly, callbacks (e.g., `element.addEventListener('click', myCallback)`) require special handling. The Membrane must detect functions crossing the boundary from QuickJS into the V8 host and wrap them in a reverse-proxy to ensure the host can call back into the correct Arena. This bridging protocol for events and promises is deferred for future optimization._
 
+### 5.5 VM-to-Host Exports: The Reverse Membrane
+
+While `quickjs-emscripten-sync` excels at projecting Host APIs into the VM, its default state-synchronization model is lossy when exporting complex Object-Oriented libraries (e.g., Luxon, Mime) from the **VM to the Host**. It strips prototype getters and breaks object identity, which destroys ES2022 private fields (`#field`).
+
+To achieve transparent API compatibility, the sandbox implements a **Reverse RPC Membrane** (`bindSandboxExport` / `wrapReturned`):
+1.  **Identity Preservation:** Objects exported from the VM are temporarily pinned in a VM-global Map (`__SANDBOX_TEMP__`).
+2.  **In-Place Execution:** Instead of marshaling the state to the host, the Membrane generates host-side Proxies that route all method calls and property accesses back into the VM via `arena.evalCode(...)`, ensuring they execute with their original `this` context.
+3.  **TypedArrays:** A custom marshaller gracefully handles raw byte transfers (e.g., `Uint8Array`) across the boundary without proxying.
+
 ---
 
-## 6. Memory and Lifecycle Management
+## 6. Proxy Membrane Compatibility Limitations
 
-### 6.1 Disposal Pattern
+The sandbox exposes sandboxed library functions and objects to the host through a layered proxy membrane (Arena sync proxies + `bindSandboxExport` / `wrapReturned`). While this makes the vast majority of library APIs transparently usable, there is a category of observable behaviour that **cannot be preserved** across the VM–host boundary. These are not bugs in the implementation; they are fundamental constraints of any cross-VM proxy membrane.
+
+### 6.1 Object Reference Identity
+
+The membrane never returns the same JavaScript object twice for the same QJS value. Each crossing of the boundary may produce a new proxy wrapper. As a result:
+
+- **`===` identity comparisons** between values obtained in separate calls always fail, even when they logically refer to the same underlying QJS object.
+- **`assert.strictEqual(cache.get(key), key)`** fails when `key` is an object — the value stored in the sandbox and retrieved back is a new proxy, not the same host reference.
+- This affects any test or application code that uses referential equality to track object identity across calls.
+
+### 6.2 `instanceof` Checks on Proxied Objects
+
+An Arena sync proxy (created by `ae()`) has a plain `{}` or `[]` as its host shell. Its prototype chain is set to a sync proxy of the QJS prototype, but not to the real host constructor's prototype. Therefore:
+
+- `proxiedDate instanceof Date` → `false` (the proxy is not a real `Date`)
+- `proxiedArray instanceof Array` → depends on depth; `Array.isArray(proxy)` works for one level of Proxy, but `instanceof` does not
+- Test assertions that gate on `instanceof` (e.g. `assert.ok(result instanceof Date)`) will fail even when the underlying QJS value is the correct type
+
+### 6.3 Symbol Identity
+
+JavaScript `Symbol` values have unique identity by design. Symbols do not survive the QJS↔host round-trip with their identity intact: a Symbol created or stored inside QJS is marshalled out as a new host Symbol each time. Consequently:
+
+- A Symbol used as a Map key inside the sandbox cannot be used as the same key on the host side
+- `cache.has(sym)` where `sym` was passed in from the host may return `false` if the QJS side stored a marshalled copy under a different identity
+- `assert.strictEqual(returned_symbol, original_symbol)` always fails
+
+### 6.4 `null` vs. `undefined` Marshalling
+
+In some cases the Arena marshals QJS `null` as host `undefined`. Assertions of the form `assert.strictEqual(cache.get(absent_key), null)` may receive `undefined` instead, causing failures even when the semantic intent (absence of a value) is correct.
+
+### 6.5 `arguments` Objects
+
+Host `arguments` objects passed into the sandbox are marshalled as plain QJS objects. They lose their special `arguments` identity (`Array.isArray` remains false, but lodash's `isArguments` check — which inspects `Object.prototype.toString` or the `callee` property — fails on the proxy representation). Library functions that branch on `isArguments` to decide whether to flatten or iterate may treat these values as opaque objects rather than array-like collections.
+
+### 6.6 Host Built-ins with Internal Slots (e.g. `Date`)
+
+Native host constructors like `Date`, `Map`, `Set`, and `RegExp` carry internal slots that are inaccessible through a Proxy. When a host `Date` constructor is passed into the sandbox (e.g. via `_.bind(Date, null)`) and the resulting bound function is invoked with `new`, the constructed object crosses back to the host as an Arena sync proxy. Native methods such as `Date.prototype.toString` and `Date.prototype.valueOf` perform an internal slot check (`[[DateValue]]`) on their receiver and throw `TypeError: Method Date.prototype.toString called on incompatible receiver` when invoked on the proxy.
+
+This limitation applies to any built-in that validates its receiver via internal slots rather than prototype chain inspection.
+
+### 6.7 Function Source Text
+
+Arena-wrapped functions have a `toString()` that reflects the wrapper machinery, not the original function body. Test assertions that compare `fn.toString()` (a common pattern in lodash's own test suite to verify aliasing) will always fail for sandboxed functions.
+
+### 6.8 Practical Impact
+
+These limitations affect the **library's own test suite** when that suite is run through the sandbox via the ESM loader interception strategy. They do not affect the library's **runtime behaviour** for normal usage patterns — calling functions, transforming data, and consuming return values — which is the primary use case the sandbox is designed for. Applications that do not assert on object identity, symbol equality, or native built-in slot access will be unaffected.
+
+---
+
+## 7. Memory and Lifecycle Management
+
+### 7.1 Disposal Pattern
 
 QuickJS objects in the Wasm heap are not automatically garbage-collected by the browser's V8 engine. The system implements a strict disposal pattern per library:
 
@@ -144,16 +205,19 @@ QuickJS objects in the Wasm heap are not automatically garbage-collected by the 
 - The library's `QuickJSContext` (VM) is disposed to free its dedicated Wasm memory.
 - This is wrapped in `try...finally` blocks to prevent memory leaks in the browser.
 
-### 6.2 Double Security Boundary
+**Note on Reverse Membrane GC:** Because the Reverse Membrane pins VM objects in `__SANDBOX_TEMP__` to preserve identity, those objects persist as long as the VM lives. In a long-lived production scenario, a `FinalizationRegistry` on the host side should be utilized to detect when the host Proxy is garbage collected, subsequently triggering a cleanup of the pinned object inside the VM.
 
-Security is enforced on two levels:
+### 7.2 Double Security Boundary
+
+Security is enforced on three levels:
 
 1.  **Memory Isolation:** Each library lives in its own QuickJS module and heap. A malicious library cannot "reach out" to the V8 host heap or to another library's Wasm heap.
 2.  **Granular WebAPI Access:** The `Arena` only exposes host objects that have been explicitly passed through the Membrane according to the configuration.
+3.  **Prototype Pollution Prevention:** The host environment is structurally immune to prototype pollution attacks originating from the sandboxed library. Global prototype mutations (e.g., `Object.prototype.polluted = true`) only affect the isolated Wasm heap. Furthermore, the Forward Membrane (`bindWebApi`) intentionally halts prototype chain traversal before reaching `Object.prototype`, acting as a structural firewall that prevents the VM from mutating shared host prototypes even on explicitly exposed APIs.
 
 ---
 
-## 7. Configuration (`sandbox.config.js`)
+## 8. Configuration (`sandbox.config.js`)
 
 Developers define the permissions per library in a central configuration file. This file is dynamically imported by the `SandboxManager` at runtime so the exact same Manager code can handle multiple different libraries.
 
