@@ -29,10 +29,44 @@ export class ProxyGenerator {
     content += `}\n\n`;
     content += `const proxyExports = librarySandbox.exports;\n\n`;
 
+    // 2a. Callable singleton export — `export = identifier` pattern (e.g. lodash `_`).
+    // proxyExports IS the exported value (e.g. the _ function).  Emit a single default
+    // export with apply + get + construct traps so both _(value) and _.map() work.
+    if (libraryData.callableSingletonExport) {
+      content += `// Callable singleton — library uses \`export = ${libraryData.callableSingletonExport}\`.\n`;
+      content += `// proxyExports is the exported value itself; expose it as the default export\n`;
+      content += `// with an apply trap so \`_(value)\` works for chaining, and a get trap for\n`;
+      content += `// \`_.map\`, \`_.filter\`, etc. (delegated to bindSandboxExport's get trap).\n`;
+      content += `let _callFn;\n`;
+      content += `function _callable_target() {}\n`;
+      content += `export default new Proxy(_callable_target, {\n`;
+      content += `  apply(_t, _thisArg, args) {\n`;
+      content += `    _callFn ??= librarySandbox.arena.evalCode(\`(...args) => __SANDBOXED_LIB__(...args)\`);\n`;
+      content += `    return librarySandbox.wrapResult(_callFn(...args));\n`;
+      content += `  },\n`;
+      content += `  get(_t, key, receiver) {\n`;
+      content += `    if (typeof key === "symbol") return Reflect.get(proxyExports, key, receiver);\n`;
+      content += `    return proxyExports[key];\n`;
+      content += `  },\n`;
+      content += `  construct(_t, args) {\n`;
+      content += `    _callFn ??= librarySandbox.arena.evalCode(\`(...args) => __SANDBOXED_LIB__(...args)\`);\n`;
+      content += `    return librarySandbox.wrapResult(_callFn(...args));\n`;
+      content += `  },\n`;
+      content += `});\n\n`;
+
+      content += `// Sandbox Lifecycle Management\n`;
+      content += `export function disposeLibrary() {\n`;
+      content += `  if (librarySandbox) {\n`;
+      content += `    librarySandbox.dispose();\n`;
+      content += `  }\n`;
+      content += `}\n`;
+      return content;
+    }
+
     // Keep track of exported names to handle TS overloads or multiple files
     const exportedNames = new Set<string>();
 
-    // 2. Export Everything (Functions, Classes, Namespaces, Variables)
+    // 2b. Export Everything (Functions, Classes, Namespaces, Variables)
     libraryData.exportedNames.forEach((name) => {
       if (exportedNames.has(name)) {
         return; // Skip duplicates
@@ -62,6 +96,9 @@ export class ProxyGenerator {
         content += `function _default_target() {}\n`;
         content += `export default _defaultProxyTarget\n`;
         content += `  ? new Proxy(_default_target, {\n`;
+        content += `      apply(_target, _thisArg, args) {\n`;
+        content += `        return _defaultProxyTarget(...args);\n`;
+        content += `      },\n`;
         content += `      construct(_target, args) {\n`;
         content += `        const ctorKey = typeof proxyExports.default === "function" ? "default" : "${fallbackCtorKey}";\n`;
         content += `        return librarySandbox.createInstance(ctorKey, args);\n`;
@@ -75,20 +112,28 @@ export class ProxyGenerator {
         content += `    })\n`;
         content += `  : proxyExports.default;\n\n`;
       } else {
+        const safeName = name.replace(/[^a-zA-Z0-9_$]/g, '_');
+        const safeIdentifier = `_export_${safeName}`;
         content += `// Export: ${name}\n`;
         content += `// Plain constructable function as Proxy target — see default export comment.\n`;
-        content += `function _${name}_target() {}\n`;
-        content += `export const ${name} = typeof proxyExports.${name} === "function"\n`;
-        content += `  ? new Proxy(_${name}_target, {\n`;
+        content += `function _${safeName}_target() {}\n`;
+        content += `const ${safeIdentifier} = typeof proxyExports["${name}"] === "function"\n`;
+        content += `  ? new Proxy(_${safeName}_target, {\n`;
+        content += `      apply(_target, _thisArg, args) {\n`;
+        content += `        return proxyExports["${name}"](...args);\n`;
+        content += `      },\n`;
         content += `      construct(_target, args) {\n`;
         content += `        return librarySandbox.createInstance("${name}", args);\n`;
         content += `      },\n`;
         content += `      get(_target, key, receiver) {\n`;
-        content += `        if (typeof key === "symbol") return Reflect.get(proxyExports.${name}, key, receiver);\n`;
-        content += `        return proxyExports.${name}[key];\n`;
+        content += `        if (typeof key === "symbol") return Reflect.get(proxyExports["${name}"], key, receiver);\n`;
+        content += `        return proxyExports["${name}"][key];\n`;
         content += `      }\n`;
         content += `    })\n`;
-        content += `  : proxyExports.${name};\n\n`;
+        content += `  : proxyExports["${name}"];\n`;
+        // Using quotes in export { _val as "name" } is only supported in very modern ES, but
+        // exporting reserved words like export { _val as null } is supported.
+        content += `export { ${safeIdentifier} as ${name} };\n\n`;
       }
     });
 
