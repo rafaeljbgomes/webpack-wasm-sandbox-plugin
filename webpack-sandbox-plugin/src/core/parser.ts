@@ -67,6 +67,14 @@ export class Parser {
       libraryData.variants.push(...this.mapper.generatedVariants);
     }
 
+    // For `export = identifier` libraries (e.g. lodash), checker.getExportsOfModule()
+    // returns TypeScript type-level names from the namespace declaration — not runtime
+    // values. Clear them so the proxy generator doesn't emit stubs for names that
+    // don't exist at runtime.
+    if (libraryData.callableSingletonExport) {
+      libraryData.exportedNames = [];
+    }
+
     // Resolve Inheritance (Flattening)
     this.resolveHeritage(libraryData);
 
@@ -163,8 +171,13 @@ export class Parser {
       } else {
         data.typeAliases.push(this.extractTypeAlias(node));
       }
-    } else if (ts.isExportAssignment(node)) {
-      // Limitation: We only try to handle identifiers or generic default export logic
+    } else if (ts.isExportAssignment(node) && node.isExportEquals && ts.isIdentifier(node.expression)) {
+      // `export = identifier` — CJS-style re-export (e.g. `export = _` in lodash).
+      // Use first-wins: index.d.ts is visited before per-function files (e.g. zipWith.d.ts),
+      // so the first assignment captures the library's main export identifier.
+      if (!data.callableSingletonExport) {
+        data.callableSingletonExport = node.expression.text;
+      }
     }
 
     ts.forEachChild(node, (child) => this.visit(child, data));
