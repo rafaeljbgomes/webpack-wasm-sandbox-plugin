@@ -15,7 +15,7 @@ export class WebpackSandboxPlugin {
 
   constructor(options: SandboxPluginOptions) {
     this.options = options;
-    this.sandboxCacheDir = path.resolve(process.cwd(), ".sandbox");
+    this.sandboxCacheDir = path.resolve(process.cwd(), ".sandbox/proxys");
   }
 
   apply(compiler: Compiler) {

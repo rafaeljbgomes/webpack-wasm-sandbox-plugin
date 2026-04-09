@@ -3,7 +3,7 @@ import { LibraryData } from "./domain/types.js";
 export class ProxyGenerator {
   public generate(libraryData: LibraryData, libraryName: string): string {
     let content = `// Auto-generated Sandbox Proxy for ${libraryName}\n`;
-    content += `import { SandboxManager } from "./sandbox-manager.js";\n\n`;
+    content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
 
     // 1. Core Sandbox Initialization using Top-Level Await
     content += `// 1. Load library bundle (Node.js or browser)\n`;

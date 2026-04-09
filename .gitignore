@@ -1,7 +1,7 @@
 node_modules
 dist/
 .agent/
-.sandbox/*-proxy.js
+.sandbox/proxys/*-proxy.js
 .sandbox/sandbox.config.*
 webpack-sandbox-plugin/src/*.js
 webpack-sandbox-plugin/src/*/*.js
