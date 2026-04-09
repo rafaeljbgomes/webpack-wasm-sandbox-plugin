@@ -107,7 +107,8 @@ function maybeWrapResult(arena, result, sbHelpers) {
   if (
     result !== null &&
     typeof result === "object" &&
-    !isTypedArrayView(result)
+    !isTypedArrayView(result) &&
+    !(result instanceof Date)
   ) {
     return wrapReturned(arena, result, undefined, sbHelpers);
   }
@@ -279,7 +280,8 @@ function wrapReturned(arena, obj, preStoredId, sbHelpers) {
             if (
               result !== null &&
               typeof result === "object" &&
-              !isTypedArrayView(result)
+              !isTypedArrayView(result) &&
+              !(result instanceof Date)
             ) {
               return wrapReturned(arena, result, undefined, sbHelpers);
             }
@@ -291,7 +293,8 @@ function wrapReturned(arena, obj, preStoredId, sbHelpers) {
       if (
         typeof value === "object" &&
         value !== null &&
-        !isTypedArrayView(value)
+        !isTypedArrayView(value) &&
+        !(value instanceof Date)
       ) {
         return wrapReturned(arena, value, undefined, sbHelpers);
       }
