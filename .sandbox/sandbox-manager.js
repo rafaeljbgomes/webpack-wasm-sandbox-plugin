@@ -332,41 +332,52 @@ export class SandboxManager {
 
     // Per-sandbox cache for marshal: one QJS constructor fn per TypedArray type
     const typedArrayCreators = new Map();
+    // Lazily-created QJS RegExp constructor helper (marshal path)
+    let regExpCreator = null;
     // Per-sandbox cache for unmarshal: QJS helper functions
     const unmarshalHelpers = {};
 
-    // Pre-create TypedArray detector used by isHandleWrappable.
+    // Pre-create TypedArray and RegExp detectors used by isHandleWrappable.
     // Must exist before Arena is constructed since Arena captures the callback at init.
     const isTypedArrayInVM = vm.unwrapResult(
       vm.evalCode("(h) => ArrayBuffer.isView(h) && !(h instanceof DataView)"),
+    );
+    const isRegExpInVM = vm.unwrapResult(
+      vm.evalCode("(h) => h instanceof RegExp"),
     );
 
     const arena = new Arena(vm, {
       isMarshalable: true,
 
-      // Prevent sync-proxy creation for TypedArrays: they cross the boundary as
-      // value copies, not as live-synced references.  Without this, `de()` wraps
-      // the host TypedArray in a Proxy and `ArrayBuffer.isView(proxy)` → false,
-      // which would bypass the customMarshaller on re-entry.
-      isWrappable: (value) => !isTypedArrayView(value),
+      // Prevent sync-proxy creation for TypedArrays and RegExps: they cross the
+      // boundary as value copies via custom marshallers.  Without this guard,
+      // Arena's de() wraps them in a Proxy that defeats internal-slot checks
+      // (ArrayBuffer.isView(proxy) → false; RegExp.prototype.exec rejects proxy).
+      isWrappable: (value) => !isTypedArrayView(value) && !(value instanceof RegExp),
 
       // Mirror of isWrappable for the QJS→host direction.
       // _wrapHandle() converts QJS object handles into QJS proxy-functions before
-      // passing them to customUnmarshaller. For TypedArrays that bypasses the
-      // unmarshaller entirely (ctx.typeof(proxyFn) === "function", not "object").
+      // passing them to customUnmarshaller.  For TypedArrays and RegExps that
+      // bypasses the unmarshaller entirely (ctx.typeof(proxyFn) === "function").
       // Returning false here tells _wrapHandle to skip wrapping, so the original
       // QJS handle reaches customUnmarshaller unchanged.
       isHandleWrappable: (handle, ctx) => {
         if (ctx.typeof(handle) !== "object") return true;
-        const result = ctx.unwrapResult(
+        const taResult = ctx.unwrapResult(
           ctx.callFunction(isTypedArrayInVM, ctx.undefined, handle),
         );
-        const isTA = ctx.dump(result);
-        result.dispose();
-        return !isTA;
+        const isTA = ctx.dump(taResult);
+        taResult.dispose();
+        if (isTA) return false;
+        const reResult = ctx.unwrapResult(
+          ctx.callFunction(isRegExpInVM, ctx.undefined, handle),
+        );
+        const isRE = ctx.dump(reResult);
+        reResult.dispose();
+        return !isRE;
       },
 
-      // host TypedArray  →  proper QJS TypedArray
+      // host TypedArray / RegExp  →  proper QJS counterpart
       customMarshaller: [
         (value, ctx) => {
           if (!isTypedArrayView(value)) return undefined;
@@ -393,9 +404,28 @@ export class SandboxManager {
           bufHandle.dispose();
           return result;
         },
+        // host RegExp  →  real QJS RegExp (preserves source + flags)
+        // Without this, Arena wraps a host RegExp in a sync-Proxy and methods
+        // like RegExp.prototype.exec throw "incompatible receiver" inside QJS.
+        (value, ctx) => {
+          if (!(value instanceof RegExp)) return undefined;
+          const sourceHandle = ctx.newString(value.source);
+          const flagsHandle = ctx.newString(value.flags);
+          if (!regExpCreator) {
+            regExpCreator = ctx.unwrapResult(
+              ctx.evalCode("(src, flags) => new RegExp(src, flags)"),
+            );
+          }
+          const result = ctx.unwrapResult(
+            ctx.callFunction(regExpCreator, ctx.undefined, sourceHandle, flagsHandle),
+          );
+          sourceHandle.dispose();
+          flagsHandle.dispose();
+          return result;
+        },
       ],
 
-      // QJS TypedArray  →  real host TypedArray
+      // QJS TypedArray / RegExp  →  real host counterpart
       customUnmarshaller: [
         (handle, ctx) => {
           // Skip non-objects early to avoid expensive QJS calls
@@ -461,6 +491,41 @@ export class SandboxManager {
           const TypedArrayCtor = globalThis[typeName];
           if (!TypedArrayCtor) return undefined;
           return new TypedArrayCtor(rawBytes.buffer);
+        },
+        // QJS RegExp  →  host RegExp (copy source + flags out of QJS)
+        (handle, ctx) => {
+          if (ctx.typeof(handle) !== "object") return undefined;
+          if (!unmarshalHelpers.isRegExp) {
+            unmarshalHelpers.isRegExp = ctx.unwrapResult(
+              ctx.evalCode("(h) => h instanceof RegExp"),
+            );
+          }
+          const checkResult = ctx.unwrapResult(
+            ctx.callFunction(unmarshalHelpers.isRegExp, ctx.undefined, handle),
+          );
+          const isRE = ctx.dump(checkResult);
+          checkResult.dispose();
+          if (!isRE) return undefined;
+
+          if (!unmarshalHelpers.getRegExpSource) {
+            unmarshalHelpers.getRegExpSource = ctx.unwrapResult(
+              ctx.evalCode("(h) => h.source"),
+            );
+            unmarshalHelpers.getRegExpFlags = ctx.unwrapResult(
+              ctx.evalCode("(h) => h.flags"),
+            );
+          }
+          const srcHandle = ctx.unwrapResult(
+            ctx.callFunction(unmarshalHelpers.getRegExpSource, ctx.undefined, handle),
+          );
+          const flagsHandle = ctx.unwrapResult(
+            ctx.callFunction(unmarshalHelpers.getRegExpFlags, ctx.undefined, handle),
+          );
+          const source = ctx.getString(srcHandle);
+          const flags = ctx.getString(flagsHandle);
+          srcHandle.dispose();
+          flagsHandle.dispose();
+          return new RegExp(source, flags);
         },
       ],
     });
@@ -562,6 +627,8 @@ export class SandboxManager {
       dispose: () => {
         clearInterval(pumpInterval);
         if (isTypedArrayInVM.alive) isTypedArrayInVM.dispose();
+        if (isRegExpInVM.alive) isRegExpInVM.dispose();
+        if (regExpCreator && regExpCreator.alive) regExpCreator.dispose();
         for (const fn of typedArrayCreators.values()) {
           if (fn.alive) fn.dispose();
         }
