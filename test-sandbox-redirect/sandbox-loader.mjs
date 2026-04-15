@@ -24,12 +24,16 @@
 
 import { createRequire } from "module";
 import { resolve as pathResolve } from "path";
-import { pathToFileURL } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const require = createRequire(import.meta.url);
 
+// All paths are resolved relative to the project root derived from this file's
+// own location (test-sandbox-redirect/../), making the loader CWD-independent.
+const projectRoot = fileURLToPath(new URL("../", import.meta.url));
+
 // Load sandbox.config.js to discover which libraries are sandboxed
-const configPath = pathResolve(".sandbox/sandbox.config.js");
+const configPath = pathResolve(projectRoot, ".sandbox/sandbox.config.js");
 let sandboxedLibs = [];
 
 try {
@@ -49,9 +53,9 @@ try {
  */
 const libData = new Map();
 for (const lib of sandboxedLibs) {
-  const proxyUrl = pathToFileURL(pathResolve(`.sandbox/${lib}-proxy.js`)).href;
-  const libRootUrl = pathToFileURL(pathResolve("node_modules", lib)).href + "/";
-  const testHarnessLibUrl = pathToFileURL(pathResolve("test-harness", lib)).href + "/";
+  const proxyUrl = pathToFileURL(pathResolve(projectRoot, `.sandbox/${lib}-proxy.js`)).href;
+  const libRootUrl = pathToFileURL(pathResolve(projectRoot, "node_modules", lib)).href + "/";
+  const testHarnessLibUrl = pathToFileURL(pathResolve(projectRoot, "test-harness", lib)).href + "/";
   libData.set(lib, { proxyUrl, libRootUrl, testHarnessLibUrl });
 }
 
@@ -62,6 +66,7 @@ for (const lib of sandboxedLibs) {
 const PACKAGE_ALIASES = {
   "quickjs-emscripten-sync": pathToFileURL(
     pathResolve(
+      projectRoot,
       "node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js"
     )
   ).href,
