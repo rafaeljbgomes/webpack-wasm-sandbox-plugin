@@ -203,7 +203,7 @@ export default _defaultProxyTarget
 
 ---
 
-## 13. `createInstance` — Arena-bypass constructor for WeakMap-private-field classes
+## 4/04/2026 - 13. `createInstance` — Arena-bypass constructor for WeakMap-private-field classes
 
 **Problem:** The `wrapReturned` mechanism (AD#9) stores a newly constructed QJS instance in `globalThis.__SANDBOX_TEMP__` by passing the host-side Arena proxy back into QJS via a setter closure:
 
@@ -227,18 +227,23 @@ The failure manifested when running `mime`'s `getAllExtensions()` test against t
 ```js
 createInstance: (ctorKey, constructorArgs) => {
   const id = tempIdCounter++;
-  arena.evalCode(`if (!globalThis.__SANDBOX_TEMP__) globalThis.__SANDBOX_TEMP__ = new Map();`);
-  const ctor = arena.evalCode(
-    `(...args) => { const _i = new __SANDBOXED_LIB__["${ctorKey}"](...args);
-                    globalThis.__SANDBOX_TEMP__.set(${id}, _i);
-                    return _i; }`
-  );
-  const result = ctor(...constructorArgs);
-  return wrapReturned(arena, result, id);   // preStoredId skips the setter
+  const result = sbHelpers.tempCreate(ctorKey, id, ...constructorArgs);
+  return wrapReturned(arena, result, id, sbHelpers);
 }
 ```
 
-Inside QJS, the constructor creates the instance and immediately stores it in `__SANDBOX_TEMP__` under a pre-allocated `id`. `wrapReturned` is then called with `preStoredId = id`, which skips the `setter(obj)` round-trip entirely — `__SANDBOX_TEMP__.get(id)` is guaranteed to be the object that was initialised by the class constructor, with all WeakMap entries intact.
+`sbHelpers.tempCreate` is a QJS function pre-compiled at sandbox startup (see AD#19) that constructs the instance and stores it in `__SANDBOX_TEMP__` **entirely inside QJS** before returning:
+
+```js
+// Compiled once; called many times with no further parse/compile cost.
+(ctorKey, id, ...args) => {
+  const inst = new __SANDBOXED_LIB__[ctorKey](...args);
+  globalThis.__SANDBOX_TEMP__.set(id, inst);
+  return inst;
+}
+```
+
+Inside QJS, the constructor creates the instance and immediately stores it in `__SANDBOX_TEMP__` under a pre-allocated `id`. `wrapReturned` is then called with `preStoredId = id`, which skips the host-side setter round-trip entirely — `__SANDBOX_TEMP__.get(id)` is guaranteed to be the object that was initialised by the class constructor, with all WeakMap entries intact.
 
 `wrapReturned` gains an optional third parameter `preStoredId`; when provided the setter step is unconditionally bypassed.
 
@@ -246,34 +251,29 @@ All proxy construct traps are updated to use `createInstance` instead of `wrapRe
 
 ---
 
-## 14. `wrapReturned` — reading primitive properties directly from the live QJS object
+## 4/04/2026 - 14. `wrapReturned` — reading primitive properties directly from the live QJS object
 
 **Problem:** In `wrapReturned`, the `get` trap of the returned Proxy read `target[key]` for all non-function, non-object values, where `target` is the Arena sync-proxy of the QJS object. The Arena materialises each QJS object via `ctx.dump()`, which performs a shallow JSON-style dump of the object's **own enumerable properties**. Class getter accessors (e.g. `get year()`, `get month()`, `get day()` on Luxon's `DateTime`) are defined on the **prototype**, not as own data properties — they are invisible to `ctx.dump()` and therefore absent from the materialised snapshot. Accessing `dt.year` on a `wrapReturned` proxy returned `NaN` (or `undefined`) instead of the actual year, causing 126 test failures across Luxon's datetime test suite.
 
 **Root cause in depth:** The Arena's `ue()` / sync-proxy mechanism serialises a QJS object once into a host plain object. Prototype-based getter properties are invoked the first time they are accessed on the live QJS object, and their results may be cached internally on the QJS instance. A JSON dump of the instance never calls those getters; it only sees data properties written directly to the object's own slot. For Luxon `DateTime` this means all computed calendar fields (`year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `weekNumber`, etc.) read as `NaN` from the Arena proxy.
 
-**Solution:** The `wrapReturned` proxy's `get` trap now reads **primitive-valued properties directly from the live QJS object** stored in `globalThis.__SANDBOX_TEMP__` under the instance's pre-allocated `id`, using the same `arena.evalCode()` pattern already used for method calls. Each key gets a cached property-getter function to avoid repeated `evalCode` calls:
+**Solution:** The `wrapReturned` proxy's `get` trap now reads **primitive-valued properties directly from the live QJS object** stored in `globalThis.__SANDBOX_TEMP__` under the instance's pre-allocated `id`. Each key gets a cached host-side closure (backed by a pre-compiled QJS helper — see AD#19) to avoid repeated `evalCode` calls:
 
 ```js
 const propGetterCache = new Map();
 
 // inside the Proxy get trap, after the function / object branches:
 if (!propGetterCache.has(key)) {
-  propGetterCache.set(
-    key,
-    arena.evalCode(
-      `() => globalThis.__SANDBOX_TEMP__.get(${id})["${key}"]`,
-    ),
-  );
+  propGetterCache.set(key, () => sbHelpers.tempGet(id, key));
 }
 return propGetterCache.get(key)();
 ```
 
-This ensures that QJS prototype getters are always invoked inside the VM with the correct `this`, and their results are returned to the host as plain host primitives via Arena's normal dump path.
+`sbHelpers.tempGet` is a QJS function compiled once at sandbox startup — `(id, key) => globalThis.__SANDBOX_TEMP__.get(id)[key]` — so the first access of a new property key pays only the cost of a QJS function call, not a parse+compile cycle. This ensures that QJS prototype getters are always invoked inside the VM with the correct `this`, and their results are returned to the host as plain host primitives via Arena's normal dump path.
 
 **Impact:** After the fix, `dst.test.js` (the primary affected file) went from 0/28 to 28/28 passing tests. Overall Luxon compatibility improved from 211 to 327 passing tests (out of 367 total). The remaining 40 failures are pre-existing issues unrelated to this fix: locale-dependent `Intl` output differences between the host node process and the QuickJS VM (whose ICU data may use different default locale), object reference identity assertions across the membrane, and an unrelated circular-JSON serialisation error in Jest's worker IPC when test modules expose raw QuickJS context objects.
 
-**Trade-off:** Every new primitive property key incurs one `evalCode` call the first time it is accessed, after which the result is served from `propGetterCache`. This is consistent with the cost already paid for method bindings and is negligible compared to the WASM call overhead.
+**Trade-off:** Every new primitive property key incurs one pre-compiled QJS call the first time it is accessed, after which the result is served from `propGetterCache`. This is consistent with the cost already paid for method bindings and is negligible compared to the WASM call overhead.
 
 ---
 
@@ -343,3 +343,110 @@ apply(_target, _thisArg, args) {
 ```
 
 This ensures that when an exported function is invoked (e.g., `z.string()`), the call is correctly intercepted and forwarded to the Arena-wrapped `proxyExports` (which internally delegates to `arena.evalCode`), preserving the execution context and returning the actual result from within the QuickJS VM.
+
+---
+
+## 04/04/2026 - 18. Performance Limitations of "Chatty" APIs (The Boundary Crossing Problem)
+
+**Problem:** Testing heavily chained APIs (like `zod` with `z.string().min(3).optional()`) revealed a significant performance degradation (7x-9x slower than native execution). Every single method call in the chain creates a new object and forces a round-trip across the WebAssembly membrane, incurring massive overhead for argument marshalling, VM execution, result marshalling, and Reverse Membrane proxy allocation.
+
+**Root Cause in depth:** The system suffers from the "Chatty vs. Chunky" IPC (Inter-Process Communication) problem. The Reverse Membrane pattern prioritizes perfect API transparency and object identity preservation. To maintain this, it cannot generically defer execution or batch chained calls because it has no way of knowing which calls are intermediate builders (e.g., `.min(3)`) and which are terminal executors (e.g., `.parse()`). As a result, every property access or method invocation pays the cost of a full boundary context switch.
+
+**Conclusion:** This performance penalty for high-frequency chained operations is an assumed and fundamental architectural trade-off of the zero-trust WebAssembly membrane. Perfect memory isolation and transparent programmatic access come at the cost of serialization and boundary-crossing latency.
+
+**Mitigation Strategy:** For libraries heavily reliant on Object-Oriented Builder patterns or immutable method chaining, the host application should shift the boundary by moving business logic into the sandbox. Instead of the host building the schema incrementally via the proxy, a small adapter module containing the schema definition should be bundled alongside the library inside the QuickJS VM. The host then makes one "chunky" call (e.g., `sandbox.validateMyData(data)`), moving the execution entirely into the Wasm heap at native QuickJS speeds. Alternatively, libraries with data-driven APIs (e.g., JSON schemas) avoid this issue entirely since the Arena can marshal plain configuration objects in a single pass.
+
+---
+
+## 04/04/2026 - 19. Pre-compiled QJS Helper Functions — eliminating per-call `evalCode` overhead
+
+**Problem:** The reverse membrane functions `wrapReturned` (AD#9, AD#14) and `createInstance` (AD#13) used `arena.evalCode()` at the point of use to create QJS-side closures:
+
+- One per wrapped object (setter: `(v) => __SANDBOX_TEMP__.set(${id}, v)`)
+- One per unique `(object, methodName)` pair (method dispatch: `(...args) => __SANDBOX_TEMP__.get(${id})["${key}"](...args)`)
+- One per unique `(object, propertyName)` pair (primitive getter: `() => __SANDBOX_TEMP__.get(${id})["${key}"]`)
+- One per `createInstance` call (constructor: `(...args) => { const _i = new ...[ctorKey](...); __SANDBOX_TEMP__.set(${id}, _i); return _i; }`)
+
+Each `arena.evalCode()` call triggers a full **parse → compile → execute** cycle inside QuickJS. For libraries that return many objects with multiple properties and methods (e.g. a Luxon `DateTime` instance exposes ~20 numeric getter properties and ~30 methods), initialising a single returned instance could issue dozens of `evalCode` calls. At scale this adds hundreds of unnecessary compile passes to steady-state execution.
+
+Additionally, the `__SANDBOX_TEMP__` Map was initialised by a guard (`if (!globalThis.__SANDBOX_TEMP__) …`) that was re-evaluated — and therefore re-compiled — on every single `wrapReturned` call, even though the condition is trivially true after the first call.
+
+**Solution:** Four generic QJS helper functions are compiled **once** at sandbox creation time, immediately after the library bundle is loaded into the VM:
+
+```js
+// Initialise storage unconditionally — no per-call guard needed.
+arena.evalCode("globalThis.__SANDBOX_TEMP__ = new Map();");
+
+const sbHelpers = {
+  // (id, value) → void  — store an object by id
+  tempSet:    arena.evalCode("(id, v) => globalThis.__SANDBOX_TEMP__.set(id, v)"),
+  // (id, key, ...args) → result  — call a stored object's method
+  tempCall:   arena.evalCode("(id, key, ...args) => globalThis.__SANDBOX_TEMP__.get(id)[key](...args)"),
+  // (id, key) → value  — read a stored object's property
+  tempGet:    arena.evalCode("(id, key) => globalThis.__SANDBOX_TEMP__.get(id)[key]"),
+  // (ctorKey, id, ...args) → instance  — construct, store, and return
+  tempCreate: arena.evalCode(
+    "(ctorKey, id, ...args) => { const inst = new __SANDBOXED_LIB__[ctorKey](...args); globalThis.__SANDBOX_TEMP__.set(id, inst); return inst; }"
+  ),
+};
+```
+
+`sbHelpers` is threaded as an explicit parameter through `wrapReturned`, `maybeWrapResult`, `bindSandboxFunction`, and `bindSandboxExport`. The call sites become:
+
+| Operation | Old (per-use `evalCode`) | New (pre-compiled call) |
+|---|---|---|
+| Store returned object | `const s = arena.evalCode(\`(v) => …set(${id}, v)\`); s(obj)` | `sbHelpers.tempSet(id, obj)` |
+| Method dispatch | `arena.evalCode(\`(...args) => …get(${id})["${key}"](...args)\`)` | host closure: `(...args) => sbHelpers.tempCall(id, key, ...args)` |
+| Primitive getter | `arena.evalCode(\`() => …get(${id})["${key}"]\`)` | host closure: `() => sbHelpers.tempGet(id, key)` |
+| Construct instance | `arena.evalCode(\`(...) => { new …[ctorKey](); …set(${id}, _i); }\`)` | `sbHelpers.tempCreate(ctorKey, id, ...args)` |
+
+After this change, the only `evalCode` calls that remain on the hot path are in `bindSandboxFunction` — one per unique export access path (e.g. `(...args) => __SANDBOXED_LIB__["parse"](...args)`). These are bounded by the library's public API surface, already cached after the first property access, and do not grow with the number of returned objects.
+
+**Scope of change:** The optimisation is entirely internal to `sandbox-manager.js`. The public interface of `createSandbox` (`exports`, `wrapResult`, `createInstance`, `dispose`) is unchanged.
+
+**Disposal:** The four `sbHelpers` handles are QJS function objects that must be freed with the sandbox. They are added to the `dispose()` routine alongside the existing pre-compiled handles (`isTypedArrayInVM`, `typedArrayCreators`, `unmarshalHelpers`):
+
+```js
+for (const fn of Object.values(sbHelpers)) {
+  if (fn.alive) fn.dispose();
+}
+```
+
+---
+
+## 04/04/2026 - 20. Date objects must not be wrapped by `wrapReturned`
+
+**Problem:** Functions from date-processing libraries (e.g. `date-fns`) return `Date` objects. These results passed through `maybeWrapResult`, which checks `typeof result === "object"` and routes non-TypedArray objects into `wrapReturned`. `wrapReturned` then creates a `Proxy` over the host `Date`.
+
+This Proxy is transparent for `instanceof Date` (JavaScript's `instanceof` delegates `[[GetPrototypeOf]]` through Proxy, so the prototype chain is correctly resolved to `Date.prototype`). Tests using `toBeInstanceOf(Date)` therefore pass. However, `Object.prototype.toString.call(proxy)` returns `"[object Object]"` instead of `"[object Date]"`, because the `[[DateValue]]` internal slot check performed by `Object.prototype.toString` is **not** delegated through a Proxy.
+
+Vitest's `toEqual` uses `Object.prototype.toString` to determine whether two values are Dates before comparing their timestamps. When the result is a `wrapReturned` Proxy, `toString` returns `"[object Object]"`, so `toEqual` falls through to generic deep-object comparison, finds the Arena-dumped Date shell to be `{}` (Date has no own enumerable properties), and fails with `expected <Anonymous Class>{} to deeply equal 2014-12-01T22:59:59.999Z`.
+
+**Root cause:** `wrapReturned` was designed for OOP objects whose state lives in QJS private fields or prototype getters (e.g. Luxon `DateTime`, Mime). Applying it to plain value-type objects like `Date` is incorrect: the value is fully captured in a single primitive (the timestamp) that the Arena already extracts correctly.
+
+**Why the Arena already handles Dates:** `quickjs-emscripten-sync` has a built-in Date marshaller/unmarshaller pair:
+- **Host → QJS** (line 158 of the Arena source): `n instanceof Date ? new Date(d)` — converts a host Date to a QJS Date via its timestamp.
+- **QJS → Host** (function `fe`, line 394): checks `a instanceof Date` inside QJS and returns `new Date(timestamp)` — converts a QJS Date back to a proper host Date before any sync-proxy is created.
+
+By the time `maybeWrapResult` receives the result of a sandboxed call, it is already a proper host `Date` instance. Wrapping it in `wrapReturned` is both redundant and destructive.
+
+**Solution:** Add `!(result instanceof Date)` guards in the three places where `wrapReturned` is invoked with an object-typed value:
+
+1. **`maybeWrapResult`** — prevents wrapping Date objects returned directly from `bindSandboxFunction`'s `apply` trap.
+2. **`wrapReturned` → `fnCache` handler** — prevents wrapping Date objects returned from method calls dispatched via `sbHelpers.tempCall`.
+3. **`wrapReturned` → `get` trap object branch** — prevents wrapping Date-valued properties accessed on a `wrapReturned` Proxy.
+
+```js
+// maybeWrapResult
+if (result !== null && typeof result === "object" && !isTypedArrayView(result) && !(result instanceof Date)) { ... }
+
+// wrapReturned fnCache handler
+if (result !== null && typeof result === "object" && !isTypedArrayView(result) && !(result instanceof Date)) { ... }
+
+// wrapReturned get trap — object property branch
+if (typeof value === "object" && value !== null && !isTypedArrayView(value) && !(value instanceof Date)) { ... }
+```
+
+**Impact:** Resolves the `<Anonymous Class>{}` pattern for Date-returning library functions (e.g. `endOfHour`, `setSeconds`, `endOfMinute` in date-fns). `toEqual(new Date(...))` assertions now pass because the result is a genuine host `Date` instance with correct `Object.prototype.toString` semantics.
+
+**Note on Date subclasses (`UTCDate`, `TZDate`):** Libraries that use Date subclasses (e.g. `@date-fns/utc`, `@date-fns/tz`) inside the sandbox will still not satisfy `instanceof UTCDate` or `instanceof TZDate` on the host, because the Arena's built-in Date unmarshaller always produces `new Date(timestamp)` — a plain Date. The subclass type information is lost at the QJS→host boundary. Tests asserting on Date subclass identity remain expected failures under the membrane constraints documented in §6.
