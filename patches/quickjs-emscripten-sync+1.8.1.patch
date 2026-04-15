@@ -1,0 +1,13 @@
+diff --git a/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js b/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js
+index 90f76ea..50c18bf 100644
+--- a/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js
++++ b/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js
+@@ -358,7 +358,7 @@ function ue(n, e, t, r, s) {
+           const [h] = r(
+             y(n, "(Cls, ...args) => new Cls(...args)", p, e, ...l)
+           );
+-          return Object.defineProperties(this, Object.getOwnPropertyDescriptors(h)), this;
++          return h;
+         }
+         const f = n.unwrapResult(n.callFunction(e, p, ...l)), [d, m] = r(f);
+         return m && f.dispose(), d;
