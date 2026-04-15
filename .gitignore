@@ -6,6 +6,7 @@ dist/
 webpack-sandbox-plugin/src/*.js
 webpack-sandbox-plugin/src/*/*.js
 test-harness/*/
+lib-test/*
 docs/context/*.md
 docs/analysis/*.md
 conductor/
