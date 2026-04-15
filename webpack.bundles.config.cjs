@@ -9,9 +9,10 @@
  */
 
 const path = require("path");
+require("tsx/cjs");
 const {
   WebpackSandboxPlugin,
-} = require("./webpack-sandbox-plugin/src/plugin.js");
+} = require("./webpack-sandbox-plugin/src/plugin.ts");
 
 module.exports = {
   // Minimal entry — nothing is actually bundled here.
