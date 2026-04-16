@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Compiler, NormalModuleReplacementPlugin } from "webpack";
-import { ProxyGenerator } from "./proxy-generator.js";
-import { Parser } from "./core/parser.js";
-import { findAllDtsFiles } from "./utils/file-utils.js";
+import { ProxyGenerator } from "./proxy-generator.ts";
+import { Parser } from "./core/parser.ts";
+import { findAllDtsFiles } from "./utils/file-utils.ts";
 
 export interface SandboxPluginOptions {
   configPath: string;
