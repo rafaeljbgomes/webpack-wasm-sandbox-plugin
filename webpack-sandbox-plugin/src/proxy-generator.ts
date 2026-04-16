@@ -13,7 +13,8 @@ export class ProxyGenerator {
     content += `  const { resolve, dirname } = await import('path');\n`;
     content += `  const { fileURLToPath } = await import('url');\n`;
     content += `  const __proxyDir = dirname(fileURLToPath(import.meta.url));\n`;
-    content += `  libraryCode = readFileSync(resolve(__proxyDir, '..', 'dist', '${libraryName}.bundle.js'), 'utf-8');\n`;
+    content += `  const __projectRoot = resolve(__proxyDir, '..', '..');\n`;
+    content += `  libraryCode = readFileSync(resolve(__projectRoot, 'dist', '${libraryName}.bundle.js'), 'utf-8');\n`;
     content += `} else {\n`;
     content += `  libraryCode = await fetch('/dist/${libraryName}.bundle.js').then(r => r.text());\n`;
     content += `}\n`;
