@@ -8,6 +8,8 @@
 
 import { createTypedArrayMarshaller } from "./typed-array.js";
 import { createRegExpMarshaller } from "./regexp.js";
+import { createArgumentsMarshaller } from "./arguments.js";
+import { createErrorMarshaller } from "./error.js";
 
 /**
  * Builds the Arena options object and a paired dispose() for a given VM.
@@ -17,6 +19,8 @@ export function createArenaConfig(vm) {
   const marshallers = [
     createTypedArrayMarshaller(vm),
     createRegExpMarshaller(vm),
+    createArgumentsMarshaller(vm),
+    createErrorMarshaller(vm),
   ];
 
   const arenaOptions = {
