@@ -7,6 +7,40 @@ import { isTypedArrayView } from "../core/sb-utils.js";
 const exportBindCache = new WeakMap();
 const returnedObjCache = new WeakMap();
 let tempIdCounter = 0;
+const ARG_TAG = "[object Arguments]";
+
+function isArgumentsObject(value) {
+  return Object.prototype.toString.call(value) === ARG_TAG;
+}
+
+function isPlainObject(value) {
+  const proto = Object.getPrototypeOf(value);
+  return proto === Object.prototype || proto === null;
+}
+
+function shouldWrapReturned(value) {
+  if (value === null) return false;
+
+  const valueType = typeof value;
+  if (valueType !== "object" && valueType !== "function") return false;
+
+  if (
+    isTypedArrayView(value) ||
+    value instanceof ArrayBuffer ||
+    value instanceof Date ||
+    value instanceof RegExp ||
+    value instanceof Error ||
+    Array.isArray(value) ||
+    isArgumentsObject(value)
+  ) {
+    return false;
+  }
+
+  if (valueType === "function") return true;
+  if (isPlainObject(value)) return false;
+
+  return true;
+}
 
 /**
  * Builds the shared `get` trap used by both bindSandboxFunction and
@@ -42,12 +76,7 @@ export function nextTempId() {
  * non-TypedArray, non-Date object, applies wrapReturned to preserve QJS `this`.
  */
 export function maybeWrapResult(arena, result, sbHelpers) {
-  if (
-    result !== null &&
-    typeof result === "object" &&
-    !isTypedArrayView(result) &&
-    !(result instanceof Date)
-  ) {
+  if (shouldWrapReturned(result)) {
     return wrapReturned(arena, result, undefined, sbHelpers);
   }
   return result;
@@ -114,8 +143,7 @@ export function bindSandboxExport(arena, obj, accessPath, depth = 0, sbHelpers) 
  *   parse+compile overhead.
  */
 export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
-  if (obj === null || typeof obj !== "object") return obj;
-  if (isTypedArrayView(obj)) return obj;
+  if (!shouldWrapReturned(obj)) return obj;
   if (returnedObjCache.has(obj)) return returnedObjCache.get(obj);
 
   let id;
@@ -170,7 +198,7 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
         }
         return fnCache.get(key);
       }
-      if (typeof value === "object" && value !== null && !isTypedArrayView(value) && !(value instanceof Date)) {
+      if (shouldWrapReturned(value)) {
         return maybeWrapResult(arena, value, sbHelpers);
       }
       // For primitive-typed properties (numbers, strings, booleans, null,
