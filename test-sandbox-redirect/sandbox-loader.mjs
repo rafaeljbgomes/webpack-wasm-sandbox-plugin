@@ -53,7 +53,7 @@ try {
  */
 const libData = new Map();
 for (const lib of sandboxedLibs) {
-  const proxyUrl = pathToFileURL(pathResolve(projectRoot, `.sandbox/${lib}-proxy.js`)).href;
+  const proxyUrl = pathToFileURL(pathResolve(projectRoot, `.sandbox/proxys/${lib}-proxy.js`)).href;
   const libRootUrl = pathToFileURL(pathResolve(projectRoot, "node_modules", lib)).href + "/";
   const testHarnessLibUrl = pathToFileURL(pathResolve(projectRoot, "test-harness", lib)).href + "/";
   libData.set(lib, { proxyUrl, libRootUrl, testHarnessLibUrl });

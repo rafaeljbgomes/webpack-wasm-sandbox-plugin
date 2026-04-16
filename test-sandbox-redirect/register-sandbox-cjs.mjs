@@ -64,7 +64,7 @@ try {
 // Build per-library data
 const libData = new Map();
 for (const lib of sandboxedLibs) {
-  const proxyPath = pathResolve(`.sandbox/${lib}-proxy.js`);
+  const proxyPath = pathResolve(`.sandbox/proxys/${lib}-proxy.js`);
   libData.set(lib, {
     proxyPath,
     proxyUrl: pathToFileURL(proxyPath).href,
