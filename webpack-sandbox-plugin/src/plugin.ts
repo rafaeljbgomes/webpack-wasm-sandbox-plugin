@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Compiler, NormalModuleReplacementPlugin } from "webpack";
-import { ProxyGenerator } from "./proxy-generator.ts";
-import { Parser } from "./core/parser.ts";
-import { findAllDtsFiles } from "./utils/file-utils.ts";
+import { ProxyGenerator } from "./proxy-generator";
+import { Parser } from "./core/parser";
+import { findAllDtsFiles } from "./utils/file-utils";
 
 export interface SandboxPluginOptions {
   configPath: string;
@@ -110,37 +110,6 @@ export class WebpackSandboxPlugin {
               [new EnableLibraryPlugin("var")],
             );
 
-            /* // Resolve the Node.js entry of the library (not the browser variant).
-            // QuickJS is not a browser: it has no DOM or browser globals, and host
-            // Web APIs are injected explicitly via the sandbox permissions membrane.
-            // Without this, webpack's default target:'web' picks up the `browser`
-            // field in package.json, which can produce subtly broken bundles
-            // (e.g. nanoid's browser customRandom uses `===` instead of `>=` for
-            // the termination check, causing an infinite loop inside QJS when called
-            // with a non-integer size argument).
-            // QuickJS is not a browser — force Node.js entry points.
-            // Child compilers inherit the parent's compiled resolver, so setting
-            // resolve options after creation is too late. Instead, we use a
-            // NormalModuleReplacementPlugin to rewrite browser entries back to
-            // Node entries, and an externals mapping for node:crypto.
-            new NormalModuleReplacementPlugin(
-              /\.browser\.(c?js|mjs)$/,
-              (resource: any) => {
-                resource.request = resource.request.replace(/\.browser\.(c?js|mjs)$/, '.$1');
-              },
-            ).apply(childCompiler);
-            // node:crypto (used by nanoid's Node entry and others) is not available
-            // inside QuickJS. Map it to the global `crypto` object, which is already
-            // injected by the sandbox permissions membrane when the library's config
-            // includes the "crypto" permission.
-            childCompiler.options.externals = [
-              ...(Array.isArray(childCompiler.options.externals)
-                ? childCompiler.options.externals
-                : childCompiler.options.externals
-                  ? [childCompiler.options.externals]
-                  : []),
-              { "node:crypto": "crypto" },
-            ]; */
             // We need to resolve the actual path of the library from node_modules
             // For a simple spike, we resolve the package root.
             let libEntryPath;

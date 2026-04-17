@@ -1,4 +1,4 @@
-import { LibraryData } from "./domain/types.js";
+import { LibraryData } from "./domain/types";
 
 export class ProxyGenerator {
   public generate(libraryData: LibraryData, libraryName: string): string {
