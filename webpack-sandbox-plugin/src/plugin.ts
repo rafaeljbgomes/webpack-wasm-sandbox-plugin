@@ -52,20 +52,16 @@ export class WebpackSandboxPlugin {
       );
     }
 
-    // 3. Generate Proxies BEFORE compilation starts
-    compiler.hooks.beforeCompile.tapAsync(
-      "WebpackSandboxPlugin",
-      (params, callback) => {
-        try {
-          configuredLibraries.forEach((libName) => {
-            this.generateProxyForLibrary(libName, compiler.context);
-          });
-          callback();
-        } catch (err: any) {
-          callback(err);
-        }
-      },
-    );
+    // 3. Generate proxies before the main compilation starts.
+    // Use `compile` instead of `beforeCompile` because webpack copies
+    // `beforeCompile` taps into child compilers created by `runAsChild()`.
+    // That caused proxy generation to run once for the root compiler and
+    // again for each child compiler.
+    compiler.hooks.compile.tap("WebpackSandboxPlugin", () => {
+      configuredLibraries.forEach((libName) => {
+        this.generateProxyForLibrary(libName, compiler.context);
+      });
+    });
 
     // 4. Intercept imports and replace with proxy
     configuredLibraries.forEach((libName) => {
