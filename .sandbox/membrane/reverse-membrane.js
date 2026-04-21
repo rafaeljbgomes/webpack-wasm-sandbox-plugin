@@ -3,11 +3,21 @@
 // object identity across the host boundary.
 
 import { isTypedArrayView } from "../core/sb-utils.js";
+import {
+  observeTempObjectCreated,
+  observeWrappedReturn,
+  recordCrossing,
+  recordMembraneCall,
+} from "../../performance-harness/runtime-metrics.js";
 
 const exportBindCache = new WeakMap();
 const returnedObjCache = new WeakMap();
 let tempIdCounter = 0;
 const ARG_TAG = "[object Arguments]";
+
+function nowMs() {
+  return globalThis.performance?.now?.() ?? Date.now();
+}
 
 function isArgumentsObject(value) {
   return Object.prototype.toString.call(value) === ARG_TAG;
@@ -77,6 +87,7 @@ export function nextTempId() {
  */
 export function maybeWrapResult(arena, result, sbHelpers) {
   if (shouldWrapReturned(result)) {
+    observeWrappedReturn();
     return wrapReturned(arena, result, undefined, sbHelpers);
   }
   return result;
@@ -93,7 +104,14 @@ export function bindSandboxFunction(arena, fn, fnAccessPath, depth, sbHelpers) {
 
   return new Proxy(fn, {
     apply(_target, _thisArg, args) {
-      return maybeWrapResult(arena, callFn(...args), sbHelpers);
+      for (const arg of args) {
+        recordCrossing("host_to_vm", arg);
+      }
+      const startedAt = nowMs();
+      const result = callFn(...args);
+      recordMembraneCall(nowMs() - startedAt);
+      recordCrossing("vm_to_host", result);
+      return maybeWrapResult(arena, result, sbHelpers);
     },
     construct(target, args) {
       // Delegate to the original — the proxy-generator's construct trap
@@ -154,6 +172,7 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
   } else {
     id = nextTempId();
     sbHelpers.tempSet(id, obj);
+    observeTempObjectCreated();
   }
 
   const fnCache = new Map();
@@ -193,7 +212,14 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
       if (typeof value === "function") {
         if (!fnCache.has(key)) {
           fnCache.set(key, (...args) => {
-            return maybeWrapResult(arena, sbHelpers.tempCall(id, key, ...args), sbHelpers);
+            for (const arg of args) {
+              recordCrossing("host_to_vm", arg);
+            }
+            const startedAt = nowMs();
+            const result = sbHelpers.tempCall(id, key, ...args);
+            recordMembraneCall(nowMs() - startedAt);
+            recordCrossing("vm_to_host", result);
+            return maybeWrapResult(arena, result, sbHelpers);
           });
         }
         return fnCache.get(key);
@@ -207,7 +233,13 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
       // DateTime.month) are actually invoked inside the VM rather than read
       // from Arena's ctx.dump() snapshot which omits prototype getters.
       if (!propGetterCache.has(key)) {
-        propGetterCache.set(key, () => sbHelpers.tempGet(id, key));
+        propGetterCache.set(key, () => {
+          const startedAt = nowMs();
+          const result = sbHelpers.tempGet(id, key);
+          recordMembraneCall(nowMs() - startedAt);
+          recordCrossing("vm_to_host", result);
+          return result;
+        });
       }
       return propGetterCache.get(key)();
     },

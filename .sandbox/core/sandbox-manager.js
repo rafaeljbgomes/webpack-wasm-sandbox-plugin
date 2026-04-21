@@ -8,8 +8,20 @@ import {
   wrapReturned,
   nextTempId,
 } from "../membrane/reverse-membrane.js";
+import {
+  observeCreateInstance,
+  observeTempObjectCreated,
+  observeTempObjectReset,
+  recordCrossing,
+  recordDuration,
+  recordMembraneCall,
+} from "../../performance-harness/runtime-metrics.js";
 
 export { bindWebApi } from "../membrane/forward-membrane.js";
+
+function nowMs() {
+  return globalThis.performance?.now?.() ?? Date.now();
+}
 
 /**
  * Shared sandbox construction logic. Called by both createSandboxSync and
@@ -26,7 +38,9 @@ function buildSandbox(vm, libraryName, libraryCode) {
 
   // Evaluate the library code.
   // Assuming libraryCode sets a global __SANDBOXED_LIB__.
+  const bundleEvalStartedAt = nowMs();
   const libExports = arena.evalCode(`${libraryCode}; __SANDBOXED_LIB__;`);
+  recordDuration("bundle_eval_ms", nowMs() - bundleEvalStartedAt);
 
   // Pre-compile __SANDBOX_TEMP__ helpers once.
   // Replaces per-call arena.evalCode() inside wrapReturned / createInstance
@@ -79,6 +93,17 @@ function buildSandbox(vm, libraryName, libraryCode) {
     vm,
     arena,
     exports: boundExports,
+    callRootExport: (callExpression, args) => {
+      for (const arg of args) {
+        recordCrossing("host_to_vm", arg);
+      }
+
+      const callStartedAt = nowMs();
+      const result = callExpression(...args);
+      recordMembraneCall(nowMs() - callStartedAt);
+      recordCrossing("vm_to_host", result);
+      return maybeWrapResult(arena, result, sbHelpers);
+    },
     // Wrap a raw Arena sync-proxy returned by a construct-trap call through
     // wrapReturned so that method calls on the constructed instance preserve
     // QJS `this` (required for private class fields).
@@ -93,13 +118,23 @@ function buildSandbox(vm, libraryName, libraryCode) {
      * field emulation (the TypeScript `__classPrivateFieldGet` pattern).
      */
     createInstance: (ctorKey, constructorArgs) => {
+      observeCreateInstance();
+      for (const arg of constructorArgs) {
+        recordCrossing("host_to_vm", arg);
+      }
+
       const id = nextTempId();
+      const callStartedAt = nowMs();
       const result = sbHelpers.tempCreate(ctorKey, id, ...constructorArgs);
+      recordMembraneCall(nowMs() - callStartedAt);
+      recordCrossing("vm_to_host", result);
+      observeTempObjectCreated();
       return wrapReturned(arena, result, id, sbHelpers);
     },
     unrefPump: () => pumpInterval.unref(),
     dispose: () => {
       clearInterval(pumpInterval);
+      observeTempObjectReset();
       disposeMarshallers();
       for (const fn of Object.values(sbHelpers)) {
         if (fn.alive) fn.dispose();
@@ -112,12 +147,18 @@ function buildSandbox(vm, libraryName, libraryCode) {
 
 export class SandboxManager {
   static createSandboxSync(libraryName, libraryCode) {
+    const startedAt = nowMs();
     const qjs = getQuickJSSync();
-    return buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    const sandbox = buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    recordDuration("sandbox_create_ms", nowMs() - startedAt);
+    return sandbox;
   }
 
   static async createSandbox(libraryName, libraryCode) {
+    const startedAt = nowMs();
     const qjs = await newQuickJSAsyncWASMModule();
-    return buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    const sandbox = buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    recordDuration("sandbox_create_ms", nowMs() - startedAt);
+    return sandbox;
   }
 }

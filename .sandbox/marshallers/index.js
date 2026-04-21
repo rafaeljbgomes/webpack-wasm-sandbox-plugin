@@ -10,6 +10,14 @@ import { createTypedArrayMarshaller } from "./typed-array.js";
 import { createRegExpMarshaller } from "./regexp.js";
 import { createArgumentsMarshaller } from "./arguments.js";
 import { createErrorMarshaller } from "./error.js";
+import {
+  recordMarshal,
+  recordUnmarshal,
+} from "../../performance-harness/runtime-metrics.js";
+
+function nowMs() {
+  return globalThis.performance?.now?.() ?? Date.now();
+}
 
 /**
  * Builds the Arena options object and a paired dispose() for a given VM.
@@ -35,9 +43,23 @@ export function createArenaConfig(vm) {
     isHandleWrappable: (handle, ctx) =>
       marshallers.every((m) => m.isHandleWrappable(handle, ctx)),
 
-    customMarshaller: marshallers.map((m) => (value, ctx) => m.marshal(value, ctx)),
+    customMarshaller: marshallers.map((m) => (value, ctx) => {
+      const startedAt = nowMs();
+      const result = m.marshal(value, ctx);
+      if (result !== undefined) {
+        recordMarshal(nowMs() - startedAt, "host_to_vm", value);
+      }
+      return result;
+    }),
 
-    customUnmarshaller: marshallers.map((m) => (handle, ctx) => m.unmarshal(handle, ctx)),
+    customUnmarshaller: marshallers.map((m) => (handle, ctx) => {
+      const startedAt = nowMs();
+      const result = m.unmarshal(handle, ctx);
+      if (result !== undefined) {
+        recordUnmarshal(nowMs() - startedAt, "vm_to_host", result);
+      }
+      return result;
+    }),
   };
 
   function dispose() {
