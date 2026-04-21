@@ -43,7 +43,7 @@ export class ProxyGenerator {
       content += `export default new Proxy(_callable_target, {\n`;
       content += `  apply(_t, _thisArg, args) {\n`;
       content += `    _callFn ??= librarySandbox.arena.evalCode(\`(...args) => __SANDBOXED_LIB__(...args)\`);\n`;
-      content += `    return librarySandbox.wrapResult(_callFn(...args));\n`;
+      content += `    return librarySandbox.callRootExport(_callFn, args);\n`;
       content += `  },\n`;
       content += `  get(_t, key, receiver) {\n`;
       content += `    if (typeof key === "symbol") return Reflect.get(proxyExports, key, receiver);\n`;
@@ -51,7 +51,7 @@ export class ProxyGenerator {
       content += `  },\n`;
       content += `  construct(_t, args) {\n`;
       content += `    _callFn ??= librarySandbox.arena.evalCode(\`(...args) => __SANDBOXED_LIB__(...args)\`);\n`;
-      content += `    return librarySandbox.wrapResult(_callFn(...args));\n`;
+      content += `    return librarySandbox.callRootExport(_callFn, args);\n`;
       content += `  },\n`;
       content += `});\n\n`;
 
