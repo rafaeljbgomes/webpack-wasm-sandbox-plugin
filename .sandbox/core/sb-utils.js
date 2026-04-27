@@ -8,4 +8,4 @@ export function isTypedArrayView(value) {
 
 // Matches all known engine phrasings for "this is a constructor, call it with new".
 export const REQUIRES_NEW_RE =
-  /requires 'new'|must be called with new|cannot be invoked without 'new'/i;
+  /requires 'new'|must be called with new|cannot be invoked without 'new'|use the 'new' operator|cannot be called as a function/i;

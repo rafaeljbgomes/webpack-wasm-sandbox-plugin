@@ -3,6 +3,14 @@
 
 import sandboxConfig from "../sandbox.config.js";
 import { bindWebApi, makeCallable } from "../membrane/forward-membrane.js";
+import {
+  incrementCounter,
+  recordDuration,
+} from "../../performance-harness/runtime-metrics.js";
+
+function nowMs() {
+  return globalThis.performance?.now?.() ?? Date.now();
+}
 
 /**
  * Iterates the permission list for libraryName, wraps each allowed host global
@@ -13,8 +21,10 @@ import { bindWebApi, makeCallable } from "../membrane/forward-membrane.js";
  * so their methods stay bound to the native host instance.
  */
 export function exposeWebAPIs(arena, libraryName) {
+  const startedAt = nowMs();
   const config = sandboxConfig[libraryName] || { permissions: [] };
   const exposedAPIs = {};
+  let exposedCount = 0;
 
   for (const apiName of config.permissions) {
     if (typeof globalThis[apiName] !== "undefined") {
@@ -25,8 +35,11 @@ export function exposeWebAPIs(arena, libraryName) {
         rootAPI = bindWebApi(rootAPI);
       }
       exposedAPIs[apiName] = arena.sync(rootAPI);
+      exposedCount += 1;
     }
   }
 
   arena.expose(exposedAPIs);
+  incrementCounter("webapi_exposed_count", exposedCount);
+  recordDuration("webapi_expose_ms", nowMs() - startedAt);
 }
