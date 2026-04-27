@@ -1,4 +1,5 @@
 const PERF_STATE_KEY = Symbol.for("spike-quickjs.performanceMetrics");
+const PERF_ENABLED_KEY = Symbol.for("spike-quickjs.performanceMetrics.enabled");
 const MB = 1024 * 1024;
 const MAX_ESTIMATE_DEPTH = 4;
 const MAX_ESTIMATE_NODES = 256;
@@ -30,6 +31,10 @@ const HISTOGRAM_BOUNDS = [
 ];
 
 function isPerfEnabled() {
+  if (globalThis[PERF_ENABLED_KEY] === true) {
+    return true;
+  }
+
   return (
     typeof process !== "undefined" &&
     process?.env?.SANDBOX_PERF_ENABLED === "1"
@@ -60,6 +65,8 @@ function createState() {
     events: {
       sandbox_create_ms: 0,
       bundle_eval_ms: 0,
+      webapi_expose_ms: 0,
+      webapi_exposed_count: 0,
       membrane_call_count: 0,
       membrane_call_ms: 0,
       marshal_count: 0,
@@ -223,6 +230,11 @@ function quantileFromHistogram(summary, quantile) {
 
 export function initializeRuntimeMetrics() {
   return getState();
+}
+
+export function setRuntimeMetricsEnabled(enabled = true) {
+  globalThis[PERF_ENABLED_KEY] = Boolean(enabled);
+  return enabled ? initializeRuntimeMetrics() : null;
 }
 
 export function recordDuration(metricName, durationMs) {

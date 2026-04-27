@@ -6,6 +6,7 @@ import {
   convertBytesToMb,
   getRuntimeMetricsSnapshot,
   initializeRuntimeMetrics,
+  setRuntimeMetricsEnabled,
 } from "./runtime-metrics.js";
 
 const outputPath = process.env.SANDBOX_PERF_OUTPUT;
@@ -13,6 +14,7 @@ const outputDir = process.env.SANDBOX_PERF_OUTPUT_DIR;
 const sampleIntervalMs = Number(process.env.SANDBOX_PERF_SAMPLE_MS ?? "100");
 
 if (process.env.SANDBOX_PERF_ENABLED === "1" && (outputPath || outputDir)) {
+  setRuntimeMetricsEnabled(true);
   initializeRuntimeMetrics();
 
   const startedAt = performance.now();
