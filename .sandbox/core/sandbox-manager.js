@@ -58,12 +58,10 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
       return workloadExports[workload.name];
     }
 
-    const workloadEvalStartedAt = nowMs();
     const workloadGlobalName = workload.globalName;
     const rawWorkloadExports = arena.evalCode(
       `${workload.code}; ${workloadGlobalName};`,
     );
-    recordDuration("workload_bundle_eval_ms", nowMs() - workloadEvalStartedAt);
     workloadExports[workload.name] = bindSandboxExport(
       arena,
       rawWorkloadExports,
@@ -108,14 +106,7 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     workloads: workloadExports,
     loadWorkload,
     callRootExport: (callExpression, args) => {
-      for (const arg of args) {
-        recordCrossing("host_to_vm", arg);
-      }
-
-      const callStartedAt = nowMs();
       const result = callExpression(...args);
-      recordMembraneCall(nowMs() - callStartedAt);
-      recordCrossing("vm_to_host", result);
       return maybeWrapResult(arena, result, sbHelpers);
     },
     // Wrap a raw Arena sync-proxy returned by a construct-trap call through
@@ -151,7 +142,6 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
 
 export class SandboxManager {
   static createSandboxSync(libraryName, libraryCode, options = {}) {
-    const startedAt = nowMs();
     const qjs = getQuickJSSync();
     const sandbox = buildSandbox(
       qjs.newContext(),
@@ -159,12 +149,10 @@ export class SandboxManager {
       libraryCode,
       options,
     );
-    recordDuration("sandbox_create_ms", nowMs() - startedAt);
     return sandbox;
   }
 
   static async createSandbox(libraryName, libraryCode, options = {}) {
-    const startedAt = nowMs();
     const qjs = await newQuickJSAsyncWASMModule();
     const sandbox = buildSandbox(
       qjs.newContext(),
@@ -172,7 +160,6 @@ export class SandboxManager {
       libraryCode,
       options,
     );
-    recordDuration("sandbox_create_ms", nowMs() - startedAt);
     return sandbox;
   }
 }
