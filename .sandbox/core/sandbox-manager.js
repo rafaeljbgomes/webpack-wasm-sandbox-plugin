@@ -18,7 +18,7 @@ export { bindWebApi } from "../membrane/forward-membrane.js";
  * Returns the sandbox object: { vm, arena, exports, wrapResult, createInstance,
  * unrefPump, dispose }.
  */
-function buildSandbox(vm, libraryName, libraryCode) {
+function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   const { arenaOptions, dispose: disposeMarshallers } = createArenaConfig(vm);
   const arena = new Arena(vm, arenaOptions);
 
@@ -52,6 +52,32 @@ function buildSandbox(vm, libraryName, libraryCode) {
     ),
   };
 
+  const workloadExports = {};
+  function loadWorkload(workload) {
+    if (workloadExports[workload.name]) {
+      return workloadExports[workload.name];
+    }
+
+    const workloadEvalStartedAt = nowMs();
+    const workloadGlobalName = workload.globalName;
+    const rawWorkloadExports = arena.evalCode(
+      `${workload.code}; ${workloadGlobalName};`,
+    );
+    recordDuration("workload_bundle_eval_ms", nowMs() - workloadEvalStartedAt);
+    workloadExports[workload.name] = bindSandboxExport(
+      arena,
+      rawWorkloadExports,
+      workloadGlobalName,
+      0,
+      sbHelpers,
+    );
+    return workloadExports[workload.name];
+  }
+
+  for (const workload of options.workloads ?? []) {
+    loadWorkload(workload);
+  }
+
   // Bind exports so method calls preserve the original QJS `this`,
   // fixing private fields (mime) and object identity (luxon) issues.
   const boundExports = bindSandboxExport(
@@ -79,6 +105,19 @@ function buildSandbox(vm, libraryName, libraryCode) {
     vm,
     arena,
     exports: boundExports,
+    workloads: workloadExports,
+    loadWorkload,
+    callRootExport: (callExpression, args) => {
+      for (const arg of args) {
+        recordCrossing("host_to_vm", arg);
+      }
+
+      const callStartedAt = nowMs();
+      const result = callExpression(...args);
+      recordMembraneCall(nowMs() - callStartedAt);
+      recordCrossing("vm_to_host", result);
+      return maybeWrapResult(arena, result, sbHelpers);
+    },
     // Wrap a raw Arena sync-proxy returned by a construct-trap call through
     // wrapReturned so that method calls on the constructed instance preserve
     // QJS `this` (required for private class fields).
@@ -111,13 +150,29 @@ function buildSandbox(vm, libraryName, libraryCode) {
 }
 
 export class SandboxManager {
-  static createSandboxSync(libraryName, libraryCode) {
+  static createSandboxSync(libraryName, libraryCode, options = {}) {
+    const startedAt = nowMs();
     const qjs = getQuickJSSync();
-    return buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    const sandbox = buildSandbox(
+      qjs.newContext(),
+      libraryName,
+      libraryCode,
+      options,
+    );
+    recordDuration("sandbox_create_ms", nowMs() - startedAt);
+    return sandbox;
   }
 
-  static async createSandbox(libraryName, libraryCode) {
+  static async createSandbox(libraryName, libraryCode, options = {}) {
+    const startedAt = nowMs();
     const qjs = await newQuickJSAsyncWASMModule();
-    return buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    const sandbox = buildSandbox(
+      qjs.newContext(),
+      libraryName,
+      libraryCode,
+      options,
+    );
+    recordDuration("sandbox_create_ms", nowMs() - startedAt);
+    return sandbox;
   }
 }
