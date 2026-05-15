@@ -65,6 +65,7 @@ function createState() {
     events: {
       sandbox_create_ms: 0,
       bundle_eval_ms: 0,
+      workload_bundle_eval_ms: 0,
       webapi_expose_ms: 0,
       webapi_exposed_count: 0,
       membrane_call_count: 0,

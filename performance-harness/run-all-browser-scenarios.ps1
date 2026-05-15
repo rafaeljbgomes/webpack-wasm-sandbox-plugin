@@ -4,7 +4,7 @@ param(
 
   [int]$Iterations = 5,
   [int]$Warmup = 1,
-  [int]$Repetitions = 100,
+  [int]$Repetitions = 50,
   [int]$SampleMs = 100,
   [string]$OutDir = "performance-harness/results-browser"
 )
@@ -16,8 +16,10 @@ Set-Location $repoRoot
 
 $scenarios = @(
   @{ Library = "lodash"; WorkloadId = "collection"; Scenario = "performance-harness/browser/scenarios/lodash/collection.scenario.js" }
+  @{ Library = "lodash"; WorkloadId = "collection-adapter"; Scenario = "performance-harness/browser/scenarios/lodash/collection-adapter.scenario.js" }
   @{ Library = "marked"; WorkloadId = "parser"; Scenario = "performance-harness/browser/scenarios/marked/parser.scenario.js" }
   @{ Library = "zod"; WorkloadId = "validation"; Scenario = "performance-harness/browser/scenarios/zod/validation.scenario.js" }
+  @{ Library = "zod"; WorkloadId = "validation-adapter"; Scenario = "performance-harness/browser/scenarios/zod/validation-adapter.scenario.js" }
   @{ Library = "date-fns"; WorkloadId = "calendar"; Scenario = "performance-harness/browser/scenarios/date-fns/calendar.scenario.js" }
   @{ Library = "image-js"; WorkloadId = "transform"; Scenario = "performance-harness/browser/scenarios/image-js/transform.scenario.js" }
   @{ Library = "luxon"; WorkloadId = "scheduling"; Scenario = "performance-harness/browser/scenarios/luxon/scheduling.scenario.js" }

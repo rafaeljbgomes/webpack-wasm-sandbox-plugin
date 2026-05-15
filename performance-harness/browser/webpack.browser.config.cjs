@@ -52,6 +52,20 @@ function createBrowserWebpackConfig({
       },
       alias: {
         "__SANDBOX_PERF_SCENARIO__": scenarioPath,
+        "sandbox-workload/lodash/collection": path.resolve(
+          repoRoot,
+          "performance-harness/browser/workloads/lodash/collection-workload.js",
+        ),
+        "sandbox-workload/zod/validation": path.resolve(
+          repoRoot,
+          "performance-harness/browser/workloads/zod/validation-workload.js",
+        ),
+        "sandbox-real/lodash": require.resolve("lodash", {
+          paths: [repoRoot],
+        }),
+        "sandbox-real/zod": require.resolve("zod", {
+          paths: [repoRoot],
+        }),
         "quickjs-emscripten-sync": path.resolve(
           repoRoot,
           "node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js",

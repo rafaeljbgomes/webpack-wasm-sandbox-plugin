@@ -47,6 +47,7 @@ const EVENTS_FIELDS = [
   "warmup",
   "sandbox_create_ms",
   "bundle_eval_ms",
+  "workload_bundle_eval_ms",
   "membrane_call_count",
   "membrane_call_ms",
   "marshal_count",
@@ -247,6 +248,7 @@ function emptyEvents() {
   return {
     sandbox_create_ms: 0,
     bundle_eval_ms: 0,
+    workload_bundle_eval_ms: 0,
     membrane_call_count: 0,
     membrane_call_ms: 0,
     marshal_count: 0,
