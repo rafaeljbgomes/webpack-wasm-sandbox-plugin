@@ -9,6 +9,7 @@ import pandas as pd
 GROUP_COLUMNS = ["environment", "library", "workload_id", "repetitions"]
 
 NUMERIC_FIELDS = {
+    "iteration",
     "wall_ms",
     "cpu_user_ms",
     "cpu_system_ms",
@@ -65,6 +66,10 @@ SANDBOX_DETAIL_METRICS = [
     "webapi_exposed_count",
     "membrane_call_count",
     "membrane_call_ms",
+    "host_to_vm_count",
+    "vm_to_host_count",
+    "host_to_vm_total_bytes",
+    "vm_to_host_total_bytes",
     "crossing_count",
     "crossing_size_median_bytes",
     "crossing_size_p95_bytes",
@@ -89,6 +94,13 @@ CORRELATION_INPUTS = [
     ("median crossing size", "crossing_size_median_bytes"),
     ("p95 crossing size", "crossing_size_p95_bytes"),
     ("total crossing bytes", "crossing_total_bytes"),
+]
+
+DIRECTIONAL_CORRELATION_INPUTS = [
+    ("host->VM crossings", "host_to_vm_count"),
+    ("VM->host crossings", "vm_to_host_count"),
+    ("host->VM bytes", "host_to_vm_total_bytes"),
+    ("VM->host bytes", "vm_to_host_total_bytes"),
 ]
 
 RUNTIME_CORRELATION_TARGETS = [
@@ -122,6 +134,7 @@ def prepare_runs(runs):
         "workload_id": "",
         "repetitions": 1.0,
         "mode": "",
+        "iteration": 0.0,
         "warmup": False,
         "completed": True,
         "exit_code": 0.0,
@@ -248,6 +261,45 @@ def build_overhead_rows(summaries, sandbox_details):
     ]
 
 
+def workload_label(row):
+    return f'{row.library}:{row.workload_id}:reps={row.repetitions:.0f}'
+
+
+def build_runtime_ratio_samples(runs):
+    if runs.empty:
+        return pd.DataFrame(columns=[*GROUP_COLUMNS, "sample_index", "wall_ratio"])
+
+    pairs = runs[[*GROUP_COLUMNS, "mode", "iteration", "wall_ms"]].copy()
+    pairs = pairs[pairs["mode"].isin(["native", "sandbox"])]
+    if pairs.empty:
+        return pd.DataFrame(columns=[*GROUP_COLUMNS, "sample_index", "wall_ratio"])
+
+    pairs["source_index"] = range(len(pairs))
+    pairs = pairs.sort_values([*GROUP_COLUMNS, "mode", "iteration", "source_index"])
+    pairs["sample_index"] = pairs.groupby(
+        [*GROUP_COLUMNS, "mode"], sort=False, dropna=False
+    ).cumcount()
+
+    native = pairs[pairs["mode"] == "native"]
+    sandbox = pairs[pairs["mode"] == "sandbox"]
+    if native.empty or sandbox.empty:
+        return pd.DataFrame(columns=[*GROUP_COLUMNS, "sample_index", "wall_ratio"])
+
+    ratios = sandbox.merge(
+        native,
+        on=[*GROUP_COLUMNS, "sample_index"],
+        how="inner",
+        suffixes=("_sandbox", "_native"),
+    )
+    ratios["wall_ratio"] = ratios["wall_ms_sandbox"] / ratios[
+        "wall_ms_native"
+    ].replace(0, math.nan)
+    ratios = ratios.replace([math.inf, -math.inf], pd.NA).dropna(
+        subset=["wall_ratio"]
+    )
+    return ratios[[*GROUP_COLUMNS, "sample_index", "wall_ratio"]]
+
+
 def spearman(xs, ys):
     values = pd.DataFrame({"x": xs, "y": ys}).replace([math.inf, -math.inf], pd.NA)
     values = values.apply(pd.to_numeric, errors="coerce").dropna()
@@ -294,6 +346,11 @@ def print_correlations(overhead_rows):
                 f"  {target_label} vs {input_label}:",
                 f"{spearman(overhead_rows[input_column], overhead_rows[target_column]):.3f}",
             )
+        for input_label, input_column in DIRECTIONAL_CORRELATION_INPUTS:
+            print(
+                f"  {target_label} vs {input_label}:",
+                f"{spearman(overhead_rows[input_column], overhead_rows[target_column]):.3f}",
+            )
 
     print("\nSpearman memory overhead correlations:")
     for target_label, target_column in MEMORY_CORRELATION_TARGETS:
@@ -302,9 +359,144 @@ def print_correlations(overhead_rows):
                 f"  {target_label} vs {input_label}:",
                 f"{spearman(overhead_rows[input_column], overhead_rows[target_column]):.3f}",
             )
+        for input_label, input_column in DIRECTIONAL_CORRELATION_INPUTS:
+            print(
+                f"  {target_label} vs {input_label}:",
+                f"{spearman(overhead_rows[input_column], overhead_rows[target_column]):.3f}",
+            )
 
 
-def maybe_plot(overhead_rows, output_dir):
+def plot_runtime_overhead_boxplot(plt, runtime_ratio_samples, overhead_rows, output_path):
+    if runtime_ratio_samples.empty:
+        return
+
+    samples = runtime_ratio_samples.copy()
+    samples["label"] = [workload_label(row) for row in samples.itertuples()]
+
+    if overhead_rows.empty:
+        labels = list(dict.fromkeys(samples["label"]))
+    else:
+        labels = [workload_label(row) for row in overhead_rows.itertuples()]
+        labels = [label for label in labels if label in set(samples["label"])]
+
+    if not labels:
+        return
+
+    grouped = samples.groupby("label", sort=False)["wall_ratio"]
+    box_values = [grouped.get_group(label).tolist() for label in labels]
+
+    figure_width = max(14, len(labels) * 2.5)
+    figure = plt.figure(figsize=(figure_width, 8), constrained_layout=True)
+    grid = figure.add_gridspec(2, len(labels), height_ratios=[1, 2.2])
+    overview_axis = figure.add_subplot(grid[0, :])
+    detail_axes = [figure.add_subplot(grid[1, index]) for index in range(len(labels))]
+    figure.suptitle("Runtime Overhead Distribution by Workload")
+
+    box_style = {
+        "patch_artist": True,
+        "showfliers": False,
+        "boxprops": {"facecolor": "#d9e8fb", "edgecolor": "#2f5f98"},
+        "medianprops": {"color": "#111111", "linewidth": 1.6},
+        "whiskerprops": {"color": "#2f5f98"},
+        "capprops": {"color": "#2f5f98"},
+    }
+
+    overview_axis.boxplot(
+        box_values,
+        tick_labels=labels,
+        **box_style,
+    )
+
+    for position, values in enumerate(box_values, start=1):
+        if not values:
+            continue
+        if len(values) == 1:
+            offsets = [0]
+        else:
+            step = min(0.08, 0.28 / max(len(values) - 1, 1))
+            start = -step * (len(values) - 1) / 2
+            offsets = [start + index * step for index in range(len(values))]
+        overview_axis.scatter(
+            [position + offset for offset in offsets],
+            values,
+            color="#1f77b4",
+            alpha=0.65,
+            s=20,
+            zorder=3,
+        )
+        overview_axis.text(
+            position,
+            max(values),
+            f"n={len(values)}",
+            ha="center",
+            va="bottom",
+            fontsize=8,
+        )
+
+    all_values = [value for values in box_values for value in values]
+    positive_values = [value for value in all_values if value > 0]
+    use_log_scale = (
+        len(positive_values) == len(all_values)
+        and positive_values
+        and max(positive_values) / min(positive_values) >= 20
+    )
+
+    overview_axis.axhline(1.0, color="#666666", linestyle="--", linewidth=1)
+    if use_log_scale:
+        overview_axis.set_yscale("log")
+        overview_axis.set_ylabel("Absolute ratio (log scale)")
+    else:
+        overview_axis.set_ylabel("Absolute ratio")
+    overview_axis.set_title("Shared-scale overview")
+    overview_axis.margins(y=0.12)
+    overview_axis.tick_params(axis="x", rotation=45, labelsize=8)
+    for tick in overview_axis.get_xticklabels():
+        tick.set_ha("right")
+
+    for axis, label, values in zip(detail_axes, labels, box_values):
+        axis.boxplot([values], tick_labels=[""], widths=0.45, **box_style)
+        if len(values) == 1:
+            offsets = [0]
+        else:
+            step = min(0.06, 0.22 / max(len(values) - 1, 1))
+            start = -step * (len(values) - 1) / 2
+            offsets = [start + index * step for index in range(len(values))]
+        axis.scatter(
+            [1 + offset for offset in offsets],
+            values,
+            color="#1f77b4",
+            alpha=0.7,
+            s=22,
+            zorder=3,
+        )
+
+        series = pd.Series(values)
+        median = series.median()
+        q1 = series.quantile(0.25)
+        q3 = series.quantile(0.75)
+        span = max(values) - min(values)
+        pad = span * 0.45 if span > 0 else max(abs(median) * 0.05, 0.05)
+        axis.set_ylim(min(values) - pad, max(values) + pad)
+        axis.set_title(label, fontsize=9)
+        axis.text(
+            0.5,
+            0.98,
+            f"median={median:.2f}x\nIQR={q1:.2f}-{q3:.2f}x",
+            transform=axis.transAxes,
+            ha="center",
+            va="top",
+            fontsize=8,
+            bbox={"boxstyle": "round,pad=0.25", "fc": "white", "alpha": 0.85, "lw": 0},
+        )
+        axis.tick_params(axis="x", bottom=False)
+        axis.grid(axis="y", alpha=0.25)
+
+    detail_axes[0].set_ylabel("Local ratio scale")
+    plt.savefig(output_path)
+    plt.close()
+
+
+def maybe_plot(overhead_rows, runtime_ratio_samples, output_dir):
     if overhead_rows.empty:
         return
 
@@ -318,20 +510,14 @@ def maybe_plot(overhead_rows, output_dir):
         return
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    labels = [
-        f'{row.library}:{row.workload_id}:reps={row.repetitions:.0f}'
-        for row in overhead_rows.itertuples()
-    ]
     wall_ratios = overhead_rows["wall_ratio"]
 
-    plt.figure(figsize=(12, 6))
-    plt.bar(labels, wall_ratios)
-    plt.xticks(rotation=45, ha="right")
-    plt.ylabel("Sandbox / Native Runtime Ratio")
-    plt.title("Runtime Overhead by Workload")
-    plt.tight_layout()
-    plt.savefig(output_dir / "runtime_overhead.png")
-    plt.close()
+    plot_runtime_overhead_boxplot(
+        plt,
+        runtime_ratio_samples,
+        overhead_rows,
+        output_dir / "runtime_overhead.png",
+    )
 
     plot_labeled_scatter(
         plt,
@@ -346,13 +532,13 @@ def maybe_plot(overhead_rows, output_dir):
 
     plot_labeled_scatter(
         plt,
-        overhead_rows["crossing_size_median_bytes"],
+        overhead_rows["crossing_total_bytes"],
         wall_ratios,
         overhead_rows["library"],
-        "Median Crossing Size (bytes)",
+        "Total Crossing Bytes",
         "Sandbox / Native Runtime Ratio",
-        "Overhead vs Median Crossing Size",
-        output_dir / "overhead_vs_crossing_size.png",
+        "Overhead vs Total Crossing Bytes",
+        output_dir / "overhead_vs_crossing_bytes.png",
     )
 
     plot_labeled_scatter(
@@ -404,6 +590,7 @@ def main():
     summaries = summarize_runs(measured_runs)
     sandbox_details = summarize_sandbox_details(measured_runs, events, crossings)
     overhead_rows = build_overhead_rows(summaries, sandbox_details)
+    runtime_ratio_samples = build_runtime_ratio_samples(measured_runs)
 
     print("Median runtime summaries:")
     for row in summaries.itertuples():
@@ -463,7 +650,7 @@ def main():
     if not overhead_rows.empty:
         print_correlations(overhead_rows)
 
-    maybe_plot(overhead_rows, plots_dir)
+    maybe_plot(overhead_rows, runtime_ratio_samples, plots_dir)
 
 
 if __name__ == "__main__":
