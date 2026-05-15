@@ -30,7 +30,7 @@ function nowMs() {
  * Returns the sandbox object: { vm, arena, exports, wrapResult, createInstance,
  * unrefPump, dispose }.
  */
-function buildSandbox(vm, libraryName, libraryCode) {
+function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   const { arenaOptions, dispose: disposeMarshallers } = createArenaConfig(vm);
   const arena = new Arena(vm, arenaOptions);
 
@@ -66,6 +66,30 @@ function buildSandbox(vm, libraryName, libraryCode) {
     ),
   };
 
+  const workloadExports = {};
+  function loadWorkload(workload) {
+    if (workloadExports[workload.name]) {
+      return workloadExports[workload.name];
+    }
+
+    const workloadGlobalName = workload.globalName;
+    const rawWorkloadExports = arena.evalCode(
+      `${workload.code}; ${workloadGlobalName};`,
+    );
+    workloadExports[workload.name] = bindSandboxExport(
+      arena,
+      rawWorkloadExports,
+      workloadGlobalName,
+      0,
+      sbHelpers,
+    );
+    return workloadExports[workload.name];
+  }
+
+  for (const workload of options.workloads ?? []) {
+    loadWorkload(workload);
+  }
+
   // Bind exports so method calls preserve the original QJS `this`,
   // fixing private fields (mime) and object identity (luxon) issues.
   const boundExports = bindSandboxExport(
@@ -93,6 +117,8 @@ function buildSandbox(vm, libraryName, libraryCode) {
     vm,
     arena,
     exports: boundExports,
+    workloads: workloadExports,
+    loadWorkload,
     callRootExport: (callExpression, args) => {
       for (const arg of args) {
         recordCrossing("host_to_vm", arg);
@@ -146,18 +172,28 @@ function buildSandbox(vm, libraryName, libraryCode) {
 }
 
 export class SandboxManager {
-  static createSandboxSync(libraryName, libraryCode) {
+  static createSandboxSync(libraryName, libraryCode, options = {}) {
     const startedAt = nowMs();
     const qjs = getQuickJSSync();
-    const sandbox = buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    const sandbox = buildSandbox(
+      qjs.newContext(),
+      libraryName,
+      libraryCode,
+      options,
+    );
     recordDuration("sandbox_create_ms", nowMs() - startedAt);
     return sandbox;
   }
 
-  static async createSandbox(libraryName, libraryCode) {
+  static async createSandbox(libraryName, libraryCode, options = {}) {
     const startedAt = nowMs();
     const qjs = await newQuickJSAsyncWASMModule();
-    const sandbox = buildSandbox(qjs.newContext(), libraryName, libraryCode);
+    const sandbox = buildSandbox(
+      qjs.newContext(),
+      libraryName,
+      libraryCode,
+      options,
+    );
     recordDuration("sandbox_create_ms", nowMs() - startedAt);
     return sandbox;
   }

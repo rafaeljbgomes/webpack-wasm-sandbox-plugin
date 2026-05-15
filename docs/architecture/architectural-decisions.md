@@ -450,3 +450,49 @@ if (typeof value === "object" && value !== null && !isTypedArrayView(value) && !
 **Impact:** Resolves the `<Anonymous Class>{}` pattern for Date-returning library functions (e.g. `endOfHour`, `setSeconds`, `endOfMinute` in date-fns). `toEqual(new Date(...))` assertions now pass because the result is a genuine host `Date` instance with correct `Object.prototype.toString` semantics.
 
 **Note on Date subclasses (`UTCDate`, `TZDate`):** Libraries that use Date subclasses (e.g. `@date-fns/utc`, `@date-fns/tz`) inside the sandbox will still not satisfy `instanceof UTCDate` or `instanceof TZDate` on the host, because the Arena's built-in Date unmarshaller always produces `new Date(timestamp)` — a plain Date. The subclass type information is lost at the QJS→host boundary. Tests asserting on Date subclass identity remain expected failures under the membrane constraints documented in §6.
+
+---
+
+## 29/04/2026 - 21. Explicit workload adapters for coarse-grained performance mode
+
+**Problem:** Transparent sandboxing keeps application imports unchanged, but it exposes every public library call through the host/sandbox membrane. This is acceptable for low-frequency calls and for libraries whose workload is dominated by one large operation, but it is a poor fit for chatty APIs. Lodash collection pipelines and Zod validation workflows can trigger many boundary crossings and large serialized payloads. Browser performance results showed these two scenarios as clear outliers in execution time and heap usage.
+
+**Decision:** Keep transparent import redirection as the default mode, and add an opt-in explicit workload-adapter path for measured hot spots. In this mode, selected developer-written workload modules are bundled into QuickJS alongside the target library. The host calls a coarse-grained workload function instead of driving the fine-grained library API directly.
+
+**Implementation:** `.sandbox/sandbox.config.js` can define workload entries under a configured library:
+
+```js
+"zod": {
+  permissions: [],
+  workloads: {
+    validation: {
+      entry: "performance-harness/browser/workloads/zod/validation-workload.js",
+      exports: ["validateOrders"],
+    },
+  },
+}
+```
+
+For each configured workload, `WebpackSandboxPlugin`:
+
+1. Generates `.sandbox/proxys/<library>-<workload>-workload-proxy.js`.
+2. Creates a child compiler that emits `dist/<library>.<workload>.workload.bundle.js`.
+3. Rewrites host imports of `sandbox-workload/<library>/<workload>` to the generated workload proxy.
+4. Compiles `sandbox-real/<library>` as an external reference to the already-loaded `__SANDBOXED_LIB__` global, so the workload bundle does not include a second copy of the library and does not recursively import the normal generated library proxy.
+
+The normal generated library proxy owns the QuickJS sandbox. It creates one sandbox for the configured library and exposes the transparent API as before. When a workload proxy is imported, it imports an internal async helper from the library proxy, lazily loads the workload bundle, evaluates it inside the existing library sandbox through `librarySandbox.loadWorkload(...)`, and exports host-callable functions that delegate to those workload exports.
+
+This keeps transparent library-only imports from paying workload evaluation cost, while ensuring that code importing both `lodash` and `sandbox-workload/lodash/collection` shares the same `lodash` sandbox, loaded library instance, permission policy, async-job pump, and disposal lifecycle.
+
+**Proof-of-concept workloads:**
+
+- `lodash/collection` exposes `summarizeOrders(orders)`, keeping Lodash filtering, grouping, chaining, and aggregation inside QuickJS.
+- `zod/validation` exposes `validateOrders(orders, invalidOrder)`, keeping schema construction and validation inside QuickJS.
+
+The browser harness includes adapter scenarios for both workloads so native and sandbox adapter-level execution can be measured with the same CSV pipeline as transparent scenarios.
+
+**Security impact:** The third-party library still runs inside the same isolated QuickJS/WebAssembly boundary with the same permission configuration. The optimized path can improve security for hot workflows because selected developer-written adapter code also runs inside the sandbox. The host sends plain input data and receives a deliberately small result object instead of manipulating many intermediate untrusted library objects.
+
+**Trade-off:** The developer must explicitly move performance-sensitive logic into a workload module and configure it. This is less transparent than bare import redirection, but it is still a small, inspectable change and avoids broad application rewrites. The transparent mode remains the default compatibility story.
+
+**Future work:** Annotation-based lifting could reduce the manual work by letting the developer mark a function for sandbox execution and letting the webpack plugin generate the workload bundle and proxy automatically. This should remain conservative: captured values must be serializable or explicitly supported, DOM references and mutable host state should be rejected by default, and the plugin should fail closed with clear diagnostics.

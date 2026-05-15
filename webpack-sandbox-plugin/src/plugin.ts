@@ -9,6 +9,20 @@ export interface SandboxPluginOptions {
   configPath: string;
 }
 
+interface WorkloadConfig {
+  entry: string;
+  exports: string[];
+}
+
+interface ConfiguredWorkload extends WorkloadConfig {
+  libraryName: string;
+  workloadName: string;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export class WebpackSandboxPlugin {
   private options: SandboxPluginOptions;
   private sandboxCacheDir: string;
@@ -27,6 +41,7 @@ export class WebpackSandboxPlugin {
     // 2. Load the Sandbox Config to know which libraries to intercept
     const configPath = path.resolve(compiler.context, this.options.configPath);
     let configuredLibraries: string[] = [];
+    let configuredWorkloads: ConfiguredWorkload[] = [];
 
     try {
       if (fs.existsSync(configPath)) {
@@ -37,6 +52,16 @@ export class WebpackSandboxPlugin {
         const sandboxConfig = configModule.default || configModule;
 
         configuredLibraries = Object.keys(sandboxConfig);
+        configuredWorkloads = configuredLibraries.flatMap((libraryName) => {
+          const workloads = sandboxConfig[libraryName]?.workloads ?? {};
+          return Object.entries(workloads).map(
+            ([workloadName, workloadConfig]) => ({
+              libraryName,
+              workloadName,
+              ...(workloadConfig as WorkloadConfig),
+            }),
+          );
+        });
         console.log(
           `[SandboxPlugin] Loaded configuration for ${configuredLibraries.length} libraries: ${configuredLibraries.join(", ")}`,
         );
@@ -59,7 +84,16 @@ export class WebpackSandboxPlugin {
     // again for each child compiler.
     compiler.hooks.compile.tap("WebpackSandboxPlugin", () => {
       configuredLibraries.forEach((libName) => {
-        this.generateProxyForLibrary(libName, compiler.context);
+        this.generateProxyForLibrary(
+          libName,
+          compiler.context,
+          configuredWorkloads.filter(
+            (workload) => workload.libraryName === libName,
+          ),
+        );
+      });
+      configuredWorkloads.forEach((workload) => {
+        this.generateProxyForWorkload(workload, compiler.context);
       });
     });
 
@@ -81,11 +115,29 @@ export class WebpackSandboxPlugin {
       ).apply(compiler);
     });
 
+    configuredWorkloads.forEach((workload) => {
+      const proxyPath = path.resolve(
+        this.sandboxCacheDir,
+        `${workload.libraryName}-${workload.workloadName}-workload-proxy.js`,
+      );
+      const requestPattern = `sandbox-workload/${workload.libraryName}/${workload.workloadName}`;
+
+      new NormalModuleReplacementPlugin(
+        new RegExp(`^${escapeRegExp(requestPattern)}$`),
+        (resource: any) => {
+          console.log(
+            `[SandboxPlugin] Intercepted workload ${requestPattern}, redirecting to proxy.`,
+          );
+          resource.request = proxyPath;
+        },
+      ).apply(compiler);
+    });
+
     // 5. Setup Child Compiler to bundle the original library into an IIFE/UMD string
     compiler.hooks.make.tapAsync(
       "WebpackSandboxPlugin",
       (compilation, callback) => {
-        const promises = configuredLibraries.map((libName) => {
+        const libraryBundlePromises = configuredLibraries.map((libName) => {
           return new Promise<void>((resolve, reject) => {
             const outputOptions = {
               filename: `${libName}.bundle.js`,
@@ -152,15 +204,86 @@ export class WebpackSandboxPlugin {
             });
           });
         });
+        const workloadBundlePromises = configuredWorkloads.map((workload) => {
+          return new Promise<void>((resolve, reject) => {
+            const bundleName = `${workload.libraryName}.${workload.workloadName}.workload.bundle.js`;
+            const workloadGlobalName = `__SANDBOXED_WORKLOAD_${workload.workloadName.replace(/[^a-zA-Z0-9_$]/g, "_")}__`;
+            const outputOptions = {
+              filename: bundleName,
+              path: path.resolve(compiler.options.output.path || "dist"),
+              library: {
+                type: "var" as const,
+                name: workloadGlobalName,
+              },
+            };
 
-        Promise.all(promises)
+            const { EnableLibraryPlugin } = compiler.webpack.library;
+            const childCompiler = compilation.createChildCompiler(
+              `SandboxWorkloadCompiler-${workload.libraryName}-${workload.workloadName}`,
+              outputOptions,
+              [new EnableLibraryPlugin("var")],
+            );
+
+            const workloadEntryPath = path.resolve(
+              compiler.context,
+              workload.entry,
+            );
+            if (!fs.existsSync(workloadEntryPath)) {
+              console.warn(
+                `[SandboxPlugin] Warning: Could not resolve workload entry ${workload.entry}. Skipping workload bundle.`,
+              );
+              return resolve();
+            }
+
+            const { ExternalsPlugin } = compiler.webpack;
+            new ExternalsPlugin("var", {
+              [`sandbox-real/${workload.libraryName}`]: "__SANDBOXED_LIB__",
+            }).apply(childCompiler);
+
+            const EntryPlugin = compiler.webpack.EntryPlugin;
+            new EntryPlugin(compiler.context, workloadEntryPath, {
+              name: `${workload.libraryName}-${workload.workloadName}-workload`,
+            }).apply(childCompiler);
+
+            childCompiler.runAsChild((err, entries, childCompilation) => {
+              if (err) {
+                console.error(
+                  `[SandboxPlugin] Child compiler error for ${workload.libraryName}/${workload.workloadName}:`,
+                  err,
+                );
+                reject(err);
+              } else if (
+                childCompilation &&
+                childCompilation.errors &&
+                childCompilation.errors.length > 0
+              ) {
+                console.error(
+                  `[SandboxPlugin] Child compilation errors for ${workload.libraryName}/${workload.workloadName}:`,
+                  childCompilation.errors,
+                );
+                reject(childCompilation.errors[0]);
+              } else {
+                console.log(
+                  `[SandboxPlugin] Successfully built isolated workload bundle for ${workload.libraryName}/${workload.workloadName}`,
+                );
+                resolve();
+              }
+            });
+          });
+        });
+
+        Promise.all([...libraryBundlePromises, ...workloadBundlePromises])
           .then(() => callback())
           .catch((err) => callback(err));
       },
     );
   }
 
-  private generateProxyForLibrary(libraryName: string, context: string) {
+  private generateProxyForLibrary(
+    libraryName: string,
+    context: string,
+    workloads: ConfiguredWorkload[] = [],
+  ) {
     const proxyPath = path.resolve(
       this.sandboxCacheDir,
       `${libraryName}-proxy.js`,
@@ -178,7 +301,12 @@ export class WebpackSandboxPlugin {
     }
 
     if (dtsFiles.length === 0) {
-      const atTypesPath = path.resolve(context, "node_modules", "@types", libraryName);
+      const atTypesPath = path.resolve(
+        context,
+        "node_modules",
+        "@types",
+        libraryName,
+      );
       if (fs.existsSync(atTypesPath)) {
         console.log(
           `[SandboxPlugin] No .d.ts files found in ${libraryName} folder. Falling back to @types/${libraryName}.`,
@@ -202,11 +330,48 @@ export class WebpackSandboxPlugin {
     const libraryData = parser.parse();
 
     const generator = new ProxyGenerator();
-    const proxyContent = generator.generate(libraryData, libraryName);
+    const proxyContent = generator.generate(libraryData, libraryName, workloads);
 
     fs.writeFileSync(proxyPath, proxyContent);
     console.log(
       `[SandboxPlugin] Generated Sandbox Proxy for ${libraryName} at ${proxyPath}`,
+    );
+  }
+
+  private generateProxyForWorkload(
+    workload: ConfiguredWorkload,
+    context: string,
+  ) {
+    const proxyPath = path.resolve(
+      this.sandboxCacheDir,
+      `${workload.libraryName}-${workload.workloadName}-workload-proxy.js`,
+    );
+    const exportLines = workload.exports.map((exportName) => {
+      const safeName = exportName.replace(/[^a-zA-Z0-9_$]/g, "_");
+      const safeIdentifier = `_workload_${safeName}`;
+      return [
+        `const ${safeIdentifier} = await __getSandboxWorkloadExport("${workload.workloadName}", "${exportName}");`,
+        `export function ${safeName}(...args) {`,
+        `  return ${safeIdentifier}(...args);`,
+        `}`,
+        "",
+      ].join("\n");
+    });
+
+    const proxyContent = [
+      `// Auto-generated Sandbox Workload Proxy for ${workload.libraryName}/${workload.workloadName}`,
+      `import { __getSandboxWorkloadExport } from "./${workload.libraryName}-proxy.js";`,
+      "",
+      ...exportLines,
+      `export function disposeWorkload() {`,
+      `  // Workloads share the owning library sandbox; dispose the library proxy instead.`,
+      `}`,
+      "",
+    ].join("\n");
+
+    fs.writeFileSync(proxyPath, proxyContent);
+    console.log(
+      `[SandboxPlugin] Generated Sandbox Workload Proxy for ${workload.libraryName}/${workload.workloadName} at ${proxyPath}`,
     );
   }
 }

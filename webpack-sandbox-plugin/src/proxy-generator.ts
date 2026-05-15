@@ -1,7 +1,16 @@
 import { LibraryData } from "./domain/types";
 
+export interface ProxyWorkload {
+  workloadName: string;
+  exports: string[];
+}
+
 export class ProxyGenerator {
-  public generate(libraryData: LibraryData, libraryName: string): string {
+  public generate(
+    libraryData: LibraryData,
+    libraryName: string,
+    workloads: ProxyWorkload[] = [],
+  ): string {
     let content = `// Auto-generated Sandbox Proxy for ${libraryName}\n`;
     content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
 
@@ -19,6 +28,7 @@ export class ProxyGenerator {
     content += `  libraryCode = await fetch('/dist/${libraryName}.bundle.js').then(r => r.text());\n`;
     content += `}\n`;
     content += `\n`;
+
     content += `// 2. Initialize QuickJS Wasm Sandbox\n`;
     content += `const librarySandbox = await SandboxManager.createSandbox(\n`;
     content += `  "${libraryName}",\n`;
@@ -29,6 +39,7 @@ export class ProxyGenerator {
     content += `  librarySandbox.unrefPump();\n`;
     content += `}\n\n`;
     content += `const proxyExports = librarySandbox.exports;\n\n`;
+    content += this.generateWorkloadAccessHelpers(libraryName, workloads);
 
     // 2a. Callable singleton export — `export = identifier` pattern (e.g. lodash `_`).
     // proxyExports IS the exported value (e.g. the _ function).  Emit a single default
@@ -147,5 +158,63 @@ export class ProxyGenerator {
     content += `}\n`;
 
     return content;
+  }
+
+  private generateWorkloadAccessHelpers(
+    libraryName: string,
+    workloads: ProxyWorkload[],
+  ): string {
+    if (workloads.length === 0) {
+      return "";
+    }
+
+    let content = `const workloadManifest = {\n`;
+    for (const workload of workloads) {
+      content += `  "${workload.workloadName}": {\n`;
+      content += `    globalName: "__SANDBOXED_WORKLOAD_${this.toSafeGlobalName(workload.workloadName)}__"\n`;
+      content += `  },\n`;
+    }
+    content += `};\n\n`;
+
+    content += `async function loadWorkloadBundle(workloadName) {\n`;
+    content += `  const bundleName = \`${libraryName}.\${workloadName}.workload.bundle.js\`;\n`;
+    content += `  if (typeof process !== 'undefined' && process.versions?.node) {\n`;
+    content += `    const { readFileSync } = await import('fs');\n`;
+    content += `    const { resolve, dirname } = await import('path');\n`;
+    content += `    const { fileURLToPath } = await import('url');\n`;
+    content += `    const __proxyDir = dirname(fileURLToPath(import.meta.url));\n`;
+    content += `    const __projectRoot = resolve(__proxyDir, '..', '..');\n`;
+    content += `    return readFileSync(resolve(__projectRoot, 'dist', bundleName), 'utf-8');\n`;
+    content += `  }\n`;
+    content += `  return fetch(\`/dist/\${bundleName}\`).then(r => r.text());\n`;
+    content += `}\n`;
+    content += `\n`;
+    content += `export async function __getSandboxWorkloadExport(workloadName, exportName) {\n`;
+    content += `  const manifest = workloadManifest[workloadName];\n`;
+    content += `  if (!manifest) {\n`;
+    content += `    throw new Error(\`Sandbox workload not configured: \${workloadName}\`);\n`;
+    content += `  }\n`;
+    content += `  if (!librarySandbox.workloads[workloadName]) {\n`;
+    content += `    librarySandbox.loadWorkload({\n`;
+    content += `      name: workloadName,\n`;
+    content += `      globalName: manifest.globalName,\n`;
+    content += `      code: await loadWorkloadBundle(workloadName)\n`;
+    content += `    });\n`;
+    content += `  }\n`;
+    content += `  const workload = librarySandbox.workloads[workloadName];\n`;
+    content += `  if (!workload) {\n`;
+    content += `    throw new Error(\`Sandbox workload not found: \${workloadName}\`);\n`;
+    content += `  }\n`;
+    content += `  const exportedValue = workload[exportName];\n`;
+    content += `  if (exportedValue === undefined) {\n`;
+    content += `    throw new Error(\`Sandbox workload export not found: \${workloadName}.\${exportName}\`);\n`;
+    content += `  }\n`;
+    content += `  return exportedValue;\n`;
+    content += `}\n\n`;
+    return content;
+  }
+
+  private toSafeGlobalName(value: string): string {
+    return value.replace(/[^a-zA-Z0-9_$]/g, "_");
   }
 }
