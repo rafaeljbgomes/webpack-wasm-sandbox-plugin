@@ -72,8 +72,13 @@ The analyzer reports native-vs-sandbox overhead for both execution and browser
 heap usage. Runtime correlations use `wall_ratio`; memory overhead correlations
 use `peak_heap_ratio`, calculated as sandbox peak JS heap divided by native peak
 JS heap for the same workload. The memory section correlates that ratio against
-crossing count, median crossing size, p95 crossing size, and total crossing
-bytes.
+crossing count, median crossing size, p95 crossing size, total crossing bytes,
+and the direction-specific host-to-VM and VM-to-host count/byte totals.
+Generated plots include a runtime overhead box plot based on per-run
+sandbox/native ratios, with a shared-scale overview and per-workload local
+detail panels, runtime overhead vs crossing count, runtime overhead vs total
+crossing bytes, peak heap delta vs crossing count, and peak heap delta vs total
+crossing bytes.
 
 ## Run all browser scenarios
 
