@@ -72,10 +72,12 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
       return workloadExports[workload.name];
     }
 
+    const workloadEvalStartedAt = nowMs();
     const workloadGlobalName = workload.globalName;
     const rawWorkloadExports = arena.evalCode(
       `${workload.code}; ${workloadGlobalName};`,
     );
+    recordDuration("workload_bundle_eval_ms", nowMs() - workloadEvalStartedAt);
     workloadExports[workload.name] = bindSandboxExport(
       arena,
       rawWorkloadExports,
