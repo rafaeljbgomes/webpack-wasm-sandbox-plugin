@@ -169,7 +169,12 @@ The metrics in this document do not all have the same methodological role.
 - Crossing-size estimates are heuristic and should be interpreted as approximate indicators rather than exact byte-accurate transfer measurements.
 - Execution overhead correlations use runtime ratios such as `wall_ratio`.
 - Memory overhead correlations use `peak_heap_ratio` against crossing count,
-  median crossing size, p95 crossing size, and total crossing bytes.
+  median crossing size, p95 crossing size, total crossing bytes, and the
+  direction-specific host-to-VM and VM-to-host crossing counts and byte totals.
+- Direction-specific correlations help identify whether overhead aligns more
+  strongly with traffic entering the VM or leaving it, but they still show
+  association rather than proving that one membrane path is intrinsically more
+  expensive.
 
 This distinction is important because the diagnostic instrumentation itself can influence the measured execution cost. For that reason, the final analysis should clearly separate end-to-end claims from explanatory internal measurements.
 

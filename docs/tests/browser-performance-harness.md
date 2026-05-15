@@ -314,7 +314,11 @@ overhead metric. For memory-overhead analysis, correlations use
 `peak_heap_ratio`, calculated as sandbox peak JS heap divided by native peak JS
 heap for the same workload. The memory-overhead section correlates
 `peak_heap_ratio` with crossing count, median crossing size, p95 crossing size,
-and total crossing bytes.
+and total crossing bytes. Generated plots include a runtime overhead box plot
+based on per-run sandbox/native ratios, with a shared-scale overview and
+per-workload local detail panels, runtime overhead against crossing count and
+total crossing bytes, and peak heap delta against crossing count and total
+crossing bytes.
 
 ## CLI Reference
 
