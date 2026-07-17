@@ -58,6 +58,7 @@ export class ProxyGenerator {
       content += `  },\n`;
       content += `  get(_t, key, receiver) {\n`;
       content += `    if (typeof key === "symbol") return Reflect.get(proxyExports, key, receiver);\n`;
+      content += `    if (key === "prototype") return Reflect.get(_t, key, receiver);\n`;
       content += `    return proxyExports[key];\n`;
       content += `  },\n`;
       content += `  construct(_t, args) {\n`;
@@ -117,6 +118,7 @@ export class ProxyGenerator {
         content += `      },\n`;
         content += `      get(_target, key, receiver) {\n`;
         content += `        if (typeof key === "symbol") return Reflect.get(_target, key, receiver);\n`;
+        content += `        if (key === "prototype") return Reflect.get(_target, key, receiver);\n`;
         content += `        const val = _defaultProxyTarget?.[key];\n`;
         content += `        if (val !== undefined) return val;\n`;
         content += `        return _defaultSingleton?.[key];\n`;
@@ -139,6 +141,7 @@ export class ProxyGenerator {
         content += `      },\n`;
         content += `      get(_target, key, receiver) {\n`;
         content += `        if (typeof key === "symbol") return Reflect.get(proxyExports["${name}"], key, receiver);\n`;
+        content += `        if (key === "prototype") return Reflect.get(_target, key, receiver);\n`;
         content += `        return proxyExports["${name}"][key];\n`;
         content += `      }\n`;
         content += `    })\n`;
