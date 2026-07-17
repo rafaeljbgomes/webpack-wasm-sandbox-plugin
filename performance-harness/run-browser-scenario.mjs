@@ -14,7 +14,7 @@ const sandboxConfigPath = path.resolve(repoRoot, ".sandbox", "sandbox.config.js"
 const defaultOutputDir = path.resolve(
   repoRoot,
   "performance-harness",
-  "results-browser",
+  "results-browser-scenarios",
 );
 
 const RUNS_FIELDS = [
@@ -22,12 +22,15 @@ const RUNS_FIELDS = [
   "timestamp",
   "library",
   "workload_id",
+  "scenario_variant",
   "label",
   "mode",
   "iteration",
   "warmup",
   "command",
-  "wall_ms",
+  "scenario_total_ms",
+  "scenario_ms",
+  "completed_repetitions",
   "cpu_user_ms",
   "cpu_system_ms",
   "peak_rss_mb",
@@ -43,13 +46,12 @@ const RUNS_FIELDS = [
   "scenario_path",
   "repetitions",
   "browser_elapsed_ms",
+  "browser_non_scenario_ms",
   "browser_task_ms",
   "browser_script_ms",
 ];
 
-const EVENTS_FIELDS = [
-  "run_id",
-  "warmup",
+const EVENT_METRIC_FIELDS = [
   "sandbox_create_ms",
   "bundle_eval_ms",
   "workload_bundle_eval_ms",
@@ -66,9 +68,7 @@ const EVENTS_FIELDS = [
   "temp_object_peak_count",
 ];
 
-const CROSSINGS_FIELDS = [
-  "run_id",
-  "warmup",
+const CROSSING_BASE_METRIC_FIELDS = [
   "host_to_vm_count",
   "vm_to_host_count",
   "host_to_vm_total_bytes",
@@ -76,6 +76,31 @@ const CROSSINGS_FIELDS = [
   "crossing_size_median_bytes",
   "crossing_size_p95_bytes",
   "crossing_size_max_bytes",
+];
+
+const CROSSING_METRIC_FIELDS = [
+  ...CROSSING_BASE_METRIC_FIELDS,
+  ...["forward", "reverse"].flatMap((membrane) =>
+    CROSSING_BASE_METRIC_FIELDS.map((field) => `${membrane}_${field}`),
+  ),
+];
+
+const MEASURED_PHASES = ["startup", "scenario"];
+
+const EVENTS_FIELDS = [
+  "run_id",
+  "warmup",
+  ...EVENT_METRIC_FIELDS,
+  ...MEASURED_PHASES.flatMap((phase) =>
+    EVENT_METRIC_FIELDS.map((field) => `${phase}_${field}`)),
+];
+
+const CROSSINGS_FIELDS = [
+  "run_id",
+  "warmup",
+  ...CROSSING_METRIC_FIELDS,
+  ...MEASURED_PHASES.flatMap((phase) =>
+    CROSSING_METRIC_FIELDS.map((field) => `${phase}_${field}`)),
 ];
 
 const MIME_TYPES = {
@@ -96,11 +121,12 @@ function usage() {
       "",
       "Options:",
       "  --label <label>         Optional label recorded in CSV output",
+      "  --variant <name>        Scenario variant: transparent or workload; defaults to transparent",
       "  --iterations <n>        Measured runs; defaults to 5",
       "  --warmup <n>            Warmup runs; defaults to 1",
       "  --repetitions <n>       Workload executions per run; defaults to 1",
       "  --sample-ms <n>         CDP sampling interval in ms; defaults to 100",
-      "  --out-dir <path>        Output directory; defaults to performance-harness/results-browser",
+      "  --out-dir <path>        Output directory; defaults to performance-harness/results-browser-scenarios",
     ].join("\n"),
   );
 }
@@ -108,6 +134,7 @@ function usage() {
 function parseArgs(argv) {
   const options = {
     label: "",
+    variant: "transparent",
     iterations: 5,
     repetitions: 1,
     warmup: 1,
@@ -138,6 +165,10 @@ function parseArgs(argv) {
         break;
       case "--label":
         options.label = next;
+        index += 1;
+        break;
+      case "--variant":
+        options.variant = next;
         index += 1;
         break;
       case "--iterations":
@@ -178,6 +209,9 @@ function parseArgs(argv) {
   if (!options.scenario) {
     throw new Error("Expected --scenario <path>.");
   }
+  if (!["transparent", "workload"].includes(options.variant)) {
+    throw new Error("--variant must be transparent or workload.");
+  }
   if (!Number.isInteger(options.iterations) || options.iterations < 1) {
     throw new Error("--iterations must be a positive integer.");
   }
@@ -212,6 +246,9 @@ function formatInvocation(options) {
 
   if (options.label) {
     segments.push("--label", options.label);
+  }
+  if (options.variant !== "transparent") {
+    segments.push("--variant", options.variant);
   }
   if (options.iterations !== 5) {
     segments.push("--iterations", String(options.iterations));
@@ -328,15 +365,15 @@ function emptyEvents() {
 }
 
 function emptyCrossings() {
-  return {
-    host_to_vm_count: 0,
-    vm_to_host_count: 0,
-    host_to_vm_total_bytes: 0,
-    vm_to_host_total_bytes: 0,
-    crossing_size_median_bytes: 0,
-    crossing_size_p95_bytes: 0,
-    crossing_size_max_bytes: 0,
-  };
+  return Object.fromEntries(
+    CROSSING_METRIC_FIELDS.map((field) => [field, 0]),
+  );
+}
+
+function prefixMetrics(prefix, metrics, fields) {
+  return Object.fromEntries(
+    fields.map((field) => [`${prefix}_${field}`, metrics?.[field] ?? 0]),
+  );
 }
 
 function createTempSiteRoot(mode, library, workloadId) {
@@ -456,11 +493,14 @@ function bytesToMb(value) {
 
 function createFailureResult(error) {
   return {
-    wall_ms: 0,
+    scenario_total_ms: 0,
+    scenario_ms: 0,
+    completed_repetitions: 0,
     completed: false,
     exit_code: 1,
     events: emptyEvents(),
     crossings: emptyCrossings(),
+    phase_metrics: {},
     error: {
       name: error.name ?? "Error",
       message: error.message ?? String(error),
@@ -509,6 +549,7 @@ async function runIteration(browser, origin, sampleMs) {
         const result = globalThis.__SANDBOX_PERF_RESULT__;
         return result && result.status === "finished" ? result : undefined;
       },
+      undefined,
       { timeout: 0 },
     );
     const result = await handle.jsonValue();
@@ -611,6 +652,7 @@ async function main() {
         options.sampleMs,
       );
       const browserElapsedMs = performance.now() - browserIterationStartedAt;
+      const scenarioTotalMs = pageResult.scenario_total_ms ?? 0;
       const exitCode = pageResult.exit_code ?? (pageResult.completed ? 0 : 1);
       if (exitCode != 0 && pageResult.error) {
         console.error(
@@ -623,12 +665,15 @@ async function main() {
         timestamp: new Date().toISOString(),
         library: options.library,
         workload_id: options.workloadId,
+        scenario_variant: options.variant,
         label: options.label,
         mode: options.mode,
         iteration,
         warmup,
         command: formattedCommand,
-        wall_ms: pageResult.wall_ms ?? 0,
+        scenario_total_ms: scenarioTotalMs,
+        scenario_ms: pageResult.scenario_ms ?? (scenarioTotalMs / options.repetitions),
+        completed_repetitions: pageResult.completed_repetitions ?? 0,
         cpu_user_ms: 0,
         cpu_system_ms: 0,
         peak_rss_mb: 0,
@@ -644,6 +689,7 @@ async function main() {
         scenario_path: options.scenarioPathRelative,
         repetitions: options.repetitions,
         browser_elapsed_ms: browserElapsedMs,
+        browser_non_scenario_ms: browserElapsedMs - scenarioTotalMs,
         browser_task_ms: browserMetrics.browser_task_ms ?? 0,
         browser_script_ms: browserMetrics.browser_script_ms ?? 0,
       });
@@ -653,6 +699,16 @@ async function main() {
         warmup,
         ...emptyEvents(),
         ...(pageResult.events ?? {}),
+        ...prefixMetrics(
+          "startup",
+          pageResult.phase_metrics?.startup?.events,
+          EVENT_METRIC_FIELDS,
+        ),
+        ...prefixMetrics(
+          "scenario",
+          pageResult.phase_metrics?.scenario?.events,
+          EVENT_METRIC_FIELDS,
+        ),
       });
 
       appendCsvRow(crossingsCsvPath, CROSSINGS_FIELDS, {
@@ -660,6 +716,16 @@ async function main() {
         warmup,
         ...emptyCrossings(),
         ...(pageResult.crossings ?? {}),
+        ...prefixMetrics(
+          "startup",
+          pageResult.phase_metrics?.startup?.crossings,
+          CROSSING_METRIC_FIELDS,
+        ),
+        ...prefixMetrics(
+          "scenario",
+          pageResult.phase_metrics?.scenario?.crossings,
+          CROSSING_METRIC_FIELDS,
+        ),
       });
     }
   } finally {
