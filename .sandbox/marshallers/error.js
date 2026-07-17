@@ -21,6 +21,79 @@ function isErrorLike(value) {
   return value instanceof Error;
 }
 
+const EXTRA_ERROR_FIELDS = [
+  "errors",
+  "inner",
+  "path",
+  "type",
+  "value",
+  "params",
+  "issues",
+];
+
+function copyJsonSafe(value, depth = 0, seen = new Set()) {
+  if (value === null || value === undefined) return value;
+  const valueType = typeof value;
+  if (valueType === "string" || valueType === "number" || valueType === "boolean") return value;
+  if (valueType === "bigint") return String(value);
+  if (valueType === "symbol" || valueType === "function") return undefined;
+  if (depth > 4 || seen.has(value)) return undefined;
+
+  seen.add(value);
+  if (value instanceof Error) {
+    return copyErrorPayload(value, depth + 1, seen);
+  }
+  if (value instanceof Set) {
+    return Array.from(value, (entry) => copyJsonSafe(entry, depth + 1, seen)).slice(0, 100);
+  }
+  if (value instanceof Map) {
+    return Array.from(value, ([key, entry]) => [
+      copyJsonSafe(key, depth + 1, seen),
+      copyJsonSafe(entry, depth + 1, seen),
+    ]).slice(0, 100);
+  }
+  if (Array.isArray(value)) {
+    return value.map((entry) => copyJsonSafe(entry, depth + 1, seen)).slice(0, 100);
+  }
+
+  const proto = Object.getPrototypeOf(value);
+  if (proto !== Object.prototype && proto !== null) {
+    return String(value);
+  }
+
+  const output = {};
+  for (const key of Object.keys(value).slice(0, 50)) {
+    const copied = copyJsonSafe(value[key], depth + 1, seen);
+    if (copied !== undefined) output[key] = copied;
+  }
+  return output;
+}
+
+function copyErrorPayload(error, depth = 0, seen = new Set()) {
+  const payload = {
+    name: error.name,
+    message: error.message,
+    stack: error.stack,
+  };
+  for (const key of EXTRA_ERROR_FIELDS) {
+    if (key in error) {
+      const copied = copyJsonSafe(error[key], depth + 1, seen);
+      if (copied !== undefined) payload[key] = copied;
+    }
+  }
+  return payload;
+}
+
+function applyErrorPayload(error, payload) {
+  if (!payload || typeof payload !== "object") return error;
+  for (const [key, value] of Object.entries(payload)) {
+    try {
+      error[key] = value;
+    } catch (_e) {}
+  }
+  return error;
+}
+
 export function createErrorMarshaller(vm) {
   const isErrorInVM = vm.unwrapResult(
     vm.evalCode("(h) => h instanceof Error"),
@@ -30,6 +103,7 @@ export function createErrorMarshaller(vm) {
   let getName = null;
   let getMessage = null;
   let getStack = null;
+  let getPayload = null;
 
   return {
     isWrappable(value) {
@@ -52,7 +126,7 @@ export function createErrorMarshaller(vm) {
       if (!creator) {
         creator = ctx.unwrapResult(
           ctx.evalCode(`
-            (name, message, stack) => {
+            (name, message, stack, payloadJson) => {
               const ErrorCtor = globalThis[name] instanceof Function ? globalThis[name] : Error;
               const err = new ErrorCtor(message);
               if (typeof stack === "string" && stack.length > 0) {
@@ -60,6 +134,9 @@ export function createErrorMarshaller(vm) {
               }
               if (typeof name === "string" && name.length > 0) {
                 try { err.name = name; } catch (_e) {}
+              }
+              if (typeof payloadJson === "string" && payloadJson.length > 0) {
+                try { Object.assign(err, JSON.parse(payloadJson)); } catch (_e) {}
               }
               return err;
             }
@@ -70,12 +147,14 @@ export function createErrorMarshaller(vm) {
       const nameHandle = ctx.newString(value.name || value.constructor?.name || "Error");
       const messageHandle = ctx.newString(value.message || "");
       const stackHandle = ctx.newString(value.stack || "");
+      const payloadHandle = ctx.newString(JSON.stringify(copyErrorPayload(value)) || "{}");
       const result = ctx.unwrapResult(
-        ctx.callFunction(creator, ctx.undefined, nameHandle, messageHandle, stackHandle),
+        ctx.callFunction(creator, ctx.undefined, nameHandle, messageHandle, stackHandle, payloadHandle),
       );
       nameHandle.dispose();
       messageHandle.dispose();
       stackHandle.dispose();
+      payloadHandle.dispose();
       return result;
     },
 
@@ -93,6 +172,42 @@ export function createErrorMarshaller(vm) {
         getName = ctx.unwrapResult(ctx.evalCode("(h) => h.name"));
         getMessage = ctx.unwrapResult(ctx.evalCode("(h) => h.message"));
         getStack = ctx.unwrapResult(ctx.evalCode("(h) => h.stack"));
+        getPayload = ctx.unwrapResult(ctx.evalCode(`(err) => {
+          const fields = ["errors", "inner", "path", "type", "value", "params", "issues"];
+          const seen = new Set();
+          function copy(value, depth = 0) {
+            if (value === null || value === undefined) return value;
+            const valueType = typeof value;
+            if (valueType === "string" || valueType === "number" || valueType === "boolean") return value;
+            if (valueType === "bigint") return String(value);
+            if (valueType === "symbol" || valueType === "function") return undefined;
+            if (depth > 4 || seen.has(value)) return undefined;
+            seen.add(value);
+            if (value instanceof Error) return copyError(value, depth + 1);
+            if (value instanceof Set) return Array.from(value).slice(0, 100).map((entry) => copy(entry, depth + 1));
+            if (value instanceof Map) return Array.from(value).slice(0, 100).map(([key, entry]) => [copy(key, depth + 1), copy(entry, depth + 1)]);
+            if (Array.isArray(value)) return value.slice(0, 100).map((entry) => copy(entry, depth + 1));
+            const proto = Object.getPrototypeOf(value);
+            if (proto !== Object.prototype && proto !== null) return String(value);
+            const output = {};
+            for (const key of Object.keys(value).slice(0, 50)) {
+              const copied = copy(value[key], depth + 1);
+              if (copied !== undefined) output[key] = copied;
+            }
+            return output;
+          }
+          function copyError(error, depth = 0) {
+            const output = { name: error.name, message: error.message, stack: error.stack };
+            for (const key of fields) {
+              if (key in error) {
+                const copied = copy(error[key], depth + 1);
+                if (copied !== undefined) output[key] = copied;
+              }
+            }
+            return output;
+          }
+          return copyError(err);
+        }`));
       }
 
       const nameHandle = ctx.unwrapResult(
@@ -104,13 +219,18 @@ export function createErrorMarshaller(vm) {
       const stackHandle = ctx.unwrapResult(
         ctx.callFunction(getStack, ctx.undefined, handle),
       );
+      const payloadHandle = ctx.unwrapResult(
+        ctx.callFunction(getPayload, ctx.undefined, handle),
+      );
 
       const name = ctx.dump(nameHandle) || "Error";
       const message = ctx.dump(messageHandle) || "";
       const stack = ctx.dump(stackHandle) || "";
+      const payload = ctx.dump(payloadHandle) || {};
       nameHandle.dispose();
       messageHandle.dispose();
       stackHandle.dispose();
+      payloadHandle.dispose();
 
       const ErrorCtor = getHostErrorCtor(name);
       const error =
@@ -122,7 +242,7 @@ export function createErrorMarshaller(vm) {
       if (typeof stack === "string" && stack.length > 0) {
         try { error.stack = stack; } catch (_e) {}
       }
-      return error;
+      return applyErrorPayload(error, payload);
     },
 
     dispose() {
@@ -131,6 +251,7 @@ export function createErrorMarshaller(vm) {
       if (getName && getName.alive) getName.dispose();
       if (getMessage && getMessage.alive) getMessage.dispose();
       if (getStack && getStack.alive) getStack.dispose();
+      if (getPayload && getPayload.alive) getPayload.dispose();
     },
   };
 }
