@@ -7,6 +7,9 @@ webpack-sandbox-plugin/src/*.js
 webpack-sandbox-plugin/src/*/*.js
 test-harness/*/
 lib-test/*
+!lib-test/security/
+!lib-test/security/**
+lib-test/security/app/node_modules/
 docs/context/*.md
 docs/analysis/*.md
 conductor/

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image.js — Demonstração de isolamento</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap");
+      :root { color: #18302b; background: #e9e5d7; font-family: "DM Mono", monospace; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 860px; background: linear-gradient(rgba(20,44,38,.055) 1px,transparent 1px), linear-gradient(90deg,rgba(20,44,38,.055) 1px,transparent 1px), #e9e5d7; background-size: 28px 28px; }
+      main { width: min(1180px, calc(100% - 80px)); margin: 0 auto; padding: 52px 0 64px; }
+      .eyebrow { color: #b04426; font-size: 12px; letter-spacing: .13em; text-transform: uppercase; }
+      h1 { font: 700 clamp(36px,5vw,67px)/.94 "Fraunces", Georgia, serif; letter-spacing: -.055em; margin: 12px 0 22px; max-width: 820px; }
+      .lede { font-size: 15px; line-height: 1.6; max-width: 730px; margin: 0; }
+      .mode { margin-top: 28px; display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; color: #fff8e9; background: #18302b; box-shadow: 5px 5px 0 #b04426; font-size: 13px; }
+      .mode::before { content: "●"; color: #eac54f; }
+      .images { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 48px; }
+      figure { margin: 0; background: #fff8e9; border: 1px solid #18302b; padding: 14px; box-shadow: 7px 7px 0 rgba(24,48,43,.14); }
+      figcaption { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 12px; font-size: 12px; }
+      figcaption strong { color: #b04426; }
+      .image-frame { height: 310px; display: grid; place-items: center; overflow: hidden; background: #d6e1d8; background-image: linear-gradient(45deg,#c1d0c4 25%,transparent 25%),linear-gradient(-45deg,#c1d0c4 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#c1d0c4 75%),linear-gradient(-45deg,transparent 75%,#c1d0c4 75%); background-size: 24px 24px; background-position: 0 0,0 12px,12px -12px,-12px 0; }
+      .image-frame img { width: 265px; height: 265px; object-fit: contain; image-rendering: pixelated; border: 1px solid rgba(24,48,43,.2); background: white; }
+      .evidence { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 24px; }
+      .panel { background: #fff8e9; border-top: 4px solid #18302b; padding: 22px; }
+      .panel h2 { margin: 0 0 16px; font: 600 25px/1 "Fraunces", Georgia, serif; letter-spacing: -.035em; }
+      .status { padding: 13px; border: 1px solid currentColor; line-height: 1.45; font-size: 13px; }
+      .status + .status { margin-top: 10px; }
+      .status[data-state="safe"] { color: #17603e; background: #e3f1d8; }
+      .status[data-state="danger"] { color: #a33722; background: #f7dfd2; }
+      .status[data-state="neutral"] { color: #5c5a4e; background: #ede8d8; }
+      pre { margin: 0; min-height: 118px; padding: 16px; overflow: auto; background: #18302b; color: #f7f2e4; font: 12px/1.6 "DM Mono", monospace; }
+      .footer { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 24px; font-size: 12px; line-height: 1.5; }
+      button { padding: 11px 14px; border: 1px solid #18302b; background: transparent; color: #18302b; font: 500 12px "DM Mono", monospace; cursor: pointer; }
+      button:hover { background: #18302b; color: #fff8e9; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">QuickJS / WebAssembly · capability boundary</div>
+      <h1>Funcionalidade preservada.<br />Autoridade não herdada.</h1>
+      <p class="lede">A mesma aplicação importa <code>image-js</code>, processa uma imagem PNG e torna visível o efeito de uma escrita adicional em <code>localStorage</code> introduzida apenas para esta avaliação controlada.</p>
+      <div class="mode" id="execution-mode">Preparing demo…</div>
+      <section class="images" aria-label="Resultado do processamento de imagem">
+        <figure><figcaption><strong>01 / entrada</strong><span id="transform-details">Loading fixture…</span></figcaption><div class="image-frame"><img src="/performance-harness/browser/fixtures/image-js/sample-image.png" alt="Imagem PNG original usada na demonstração" /></div></figure>
+        <figure><figcaption><strong>02 / image-js</strong><span id="output-details">Processing…</span></figcaption><div class="image-frame"><img id="processed-image" alt="Imagem processada por Image.js" /></div></figure>
+      </section>
+      <section class="evidence" aria-label="Evidência de permissões">
+        <div class="panel"><h2>Resultado de segurança</h2><div class="status" id="attack-status" data-state="neutral">Awaiting a run</div><div class="status" id="host-status" data-state="neutral">Awaiting a run</div></div>
+        <div class="panel"><h2>localStorage do host</h2><pre id="storage-output">Loading storage snapshot…</pre></div>
+      </section>
+      <div class="footer"><span>Abra DevTools → Console para ver o objeto <code>localStorage</code> e a tabela de verificações.</span><button id="reset-demo" type="button">Limpar canaries</button></div>
+    </main>
+    <script src="/dist/image-demo.bundle.js"></script>
+  </body>
+</html>

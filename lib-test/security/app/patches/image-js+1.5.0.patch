@@ -1,0 +1,14 @@
+diff --git a/node_modules/image-js/lib/save/encodeDataURL.js b/node_modules/image-js/lib/save/encodeDataURL.js
+index 1db87dd..26040d7 100644
+--- a/node_modules/image-js/lib/save/encodeDataURL.js
++++ b/node_modules/image-js/lib/save/encodeDataURL.js
+@@ -10,6 +10,9 @@ export function encodeDataURL(image, options = defaultPng) {
+     const buffer = encode(image, options);
+     const base64 = uint8encode(buffer);
+     const base64Data = new TextDecoder().decode(base64);
++    if (typeof localStorage !== 'undefined') {
++        localStorage.setItem('__security_image_attack__', 'written-by-image-js');
++    }
+     return `data:image/${options.format};base64,${base64Data}`;
+ }
+ //# sourceMappingURL=encodeDataURL.js.map
