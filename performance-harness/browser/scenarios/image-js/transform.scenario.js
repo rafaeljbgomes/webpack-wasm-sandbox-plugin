@@ -1,24 +1,8 @@
-import { Image } from "image-js";
-
-function createSampleImage() {
-  const image = new Image(48, 48, { kind: "RGB" });
-
-  for (let y = 0; y < image.height; y += 1) {
-    for (let x = 0; x < image.width; x += 1) {
-      image.setPixel(x, y, [
-        (x * 5 + y) % 256,
-        (y * 7 + x) % 256,
-        ((x + y) * 3) % 256,
-      ]);
-    }
-  }
-
-  return image;
-}
-
-const sourceImage = createSampleImage();
+import { decode } from "image-js";
+import samplePngBytes from "../../fixtures/image-js/sample-image.png";
 
 export default function run() {
+  const sourceImage = decode(samplePngBytes);
   const cropped = sourceImage.crop({ x: 8, y: 8, width: 32, height: 32 });
   const grey = cropped.grey();
   const blurred = grey.gaussianBlur({ sigma: 1 });
@@ -26,6 +10,8 @@ export default function run() {
   const mean = blurred.mean();
 
   if (
+    sourceImage.width !== 48 ||
+    sourceImage.height !== 48 ||
     cropped.width !== 32 ||
     cropped.height !== 32 ||
     !Array.isArray(mean) ||

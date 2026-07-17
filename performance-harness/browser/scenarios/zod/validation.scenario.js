@@ -1,22 +1,24 @@
 import { z } from "zod";
 
-const orderSchema = z.object({
-  id: z.string().startsWith("order-"),
-  customer: z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    tier: z.enum(["standard", "premium"]),
-  }),
-  items: z.array(
-    z.object({
-      sku: z.string().min(3),
-      quantity: z.number().int().positive(),
-      price: z.number().positive(),
+function createOrderSchema() {
+  return z.object({
+    id: z.string().startsWith("order-"),
+    customer: z.object({
+      name: z.string().min(1),
+      email: z.string().email(),
+      tier: z.enum(["standard", "premium"]),
     }),
-  ).min(1),
-  coupon: z.string().optional(),
-  paid: z.boolean(),
-});
+    items: z.array(
+      z.object({
+        sku: z.string().min(3),
+        quantity: z.number().int().positive(),
+        price: z.number().positive(),
+      }),
+    ).min(1),
+    coupon: z.string().optional(),
+    paid: z.boolean(),
+  });
+}
 
 function createOrders() {
   return Array.from({ length: 60 }, (_, index) => ({
@@ -44,8 +46,19 @@ function createOrders() {
 }
 
 const orders = createOrders();
+const invalidOrder = {
+  id: "invalid",
+  customer: {
+    name: "",
+    email: "not-an-email",
+    tier: "standard",
+  },
+  items: [],
+  paid: true,
+};
 
 export default function run() {
+  const orderSchema = createOrderSchema();
   const parsedOrders = orders.map((order) => orderSchema.parse(order));
   const paidOrders = parsedOrders.filter((order) => order.paid);
   const totalRevenue = paidOrders.reduce(
@@ -53,19 +66,9 @@ export default function run() {
       sum + order.items.reduce((orderSum, item) => orderSum + item.quantity * item.price, 0),
     0,
   );
+  const invalidResult = orderSchema.safeParse(invalidOrder);
 
-  const invalidOrder = orderSchema.safeParse({
-    id: "invalid",
-    customer: {
-      name: "",
-      email: "not-an-email",
-      tier: "standard",
-    },
-    items: [],
-    paid: true,
-  });
-
-  if (paidOrders.length === 0 || totalRevenue <= 0 || invalidOrder.success) {
+  if (paidOrders.length === 0 || totalRevenue <= 0 || invalidResult.success) {
     throw new Error("Zod scenario produced invalid validation output.");
   }
 }

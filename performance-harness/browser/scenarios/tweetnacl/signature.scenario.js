@@ -8,9 +8,9 @@ for (let index = 0; index < seed.length; index += 1) {
 const message = new TextEncoder().encode(
   "Performance harness message signed with TweetNaCl for sandbox compatibility.",
 );
-const keyPair = nacl.sign.keyPair.fromSeed(seed);
 
 export default function run() {
+  const keyPair = nacl.sign.keyPair.fromSeed(seed);
   const signature = nacl.sign.detached(message, keyPair.secretKey);
   const verified = nacl.sign.detached.verify(message, signature, keyPair.publicKey);
   const digest = nacl.hash(message);

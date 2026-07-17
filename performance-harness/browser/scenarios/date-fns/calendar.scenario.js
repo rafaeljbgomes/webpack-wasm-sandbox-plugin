@@ -8,10 +8,11 @@ import {
   startOfWeek,
 } from "date-fns";
 
-const projectStart = parseISO("2026-04-01T09:00:00.000Z");
-const projectEnd = addDays(projectStart, 45);
+const projectStartIso = "2026-04-01T09:00:00.000Z";
 
 export default function run() {
+  const projectStart = parseISO(projectStartIso);
+  const projectEnd = addDays(projectStart, 45);
   const days = eachDayOfInterval({ start: projectStart, end: projectEnd });
   const workingDays = days.filter((day) => !isWeekend(day));
   const firstWeekStart = startOfWeek(projectStart, { weekStartsOn: 1 });
