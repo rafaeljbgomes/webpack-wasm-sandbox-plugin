@@ -123,13 +123,13 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     loadWorkload,
     callRootExport: (callExpression, args) => {
       for (const arg of args) {
-        recordCrossing("host_to_vm", arg);
+        recordCrossing("reverse", "host_to_vm", arg);
       }
 
       const callStartedAt = nowMs();
       const result = callExpression(...args);
       recordMembraneCall(nowMs() - callStartedAt);
-      recordCrossing("vm_to_host", result);
+      recordCrossing("reverse", "vm_to_host", result);
       return maybeWrapResult(arena, result, sbHelpers);
     },
     // Wrap a raw Arena sync-proxy returned by a construct-trap call through
@@ -148,14 +148,14 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     createInstance: (ctorKey, constructorArgs) => {
       observeCreateInstance();
       for (const arg of constructorArgs) {
-        recordCrossing("host_to_vm", arg);
+        recordCrossing("reverse", "host_to_vm", arg);
       }
 
       const id = nextTempId();
       const callStartedAt = nowMs();
       const result = sbHelpers.tempCreate(ctorKey, id, ...constructorArgs);
       recordMembraneCall(nowMs() - callStartedAt);
-      recordCrossing("vm_to_host", result);
+      recordCrossing("reverse", "vm_to_host", result);
       observeTempObjectCreated();
       return wrapReturned(arena, result, id, sbHelpers);
     },

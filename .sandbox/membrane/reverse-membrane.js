@@ -107,12 +107,12 @@ export function bindSandboxFunction(arena, fn, fnAccessPath, depth, sbHelpers) {
   return new Proxy(fn, {
     apply(_target, _thisArg, args) {
       for (const arg of args) {
-        recordCrossing("host_to_vm", arg);
+        recordCrossing("reverse", "host_to_vm", arg);
       }
       const startedAt = nowMs();
       const result = callFn(...args);
       recordMembraneCall(nowMs() - startedAt);
-      recordCrossing("vm_to_host", result);
+      recordCrossing("reverse", "vm_to_host", result);
       return maybeWrapResult(arena, result, sbHelpers);
     },
     construct(target, args) {
@@ -215,12 +215,12 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
         if (!fnCache.has(key)) {
           fnCache.set(key, (...args) => {
             for (const arg of args) {
-              recordCrossing("host_to_vm", arg);
+              recordCrossing("reverse", "host_to_vm", arg);
             }
             const startedAt = nowMs();
             const result = sbHelpers.tempCall(id, key, ...args);
             recordMembraneCall(nowMs() - startedAt);
-            recordCrossing("vm_to_host", result);
+            recordCrossing("reverse", "vm_to_host", result);
             return maybeWrapResult(arena, result, sbHelpers);
           });
         }
@@ -239,7 +239,7 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
           const startedAt = nowMs();
           const result = sbHelpers.tempGet(id, key);
           recordMembraneCall(nowMs() - startedAt);
-          recordCrossing("vm_to_host", result);
+          recordCrossing("reverse", "vm_to_host", result);
           return result;
         });
       }

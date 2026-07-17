@@ -2,6 +2,7 @@
 // Prevents internal-slot errors by binding methods to their native owner.
 
 import { isTypedArrayView, REQUIRES_NEW_RE } from "../core/sb-utils.js";
+import { recordCrossing } from "../../performance-harness/runtime-metrics.js";
 
 const wrapperCache = new WeakMap();
 
@@ -13,6 +14,10 @@ const wrapperCache = new WeakMap();
  */
 export function makeCallable(fn, thisArg) {
   return (...args) => {
+    for (const arg of args) {
+      recordCrossing("forward", "vm_to_host", arg);
+    }
+
     let result;
     try {
       result = Reflect.apply(fn, thisArg, args);
@@ -28,8 +33,10 @@ export function makeCallable(fn, thisArg) {
     // internal slots (e.g. Intl.DateTimeFormat), where Proxy breaks slot checks.
     // TypedArrays are excluded — they're handled by the custom marshaller.
     if (result !== null && typeof result === "object" && !isTypedArrayView(result)) {
-      return bindWebApi(result);
+      result = bindWebApi(result);
     }
+
+    recordCrossing("forward", "host_to_vm", result);
     return result;
   };
 }
@@ -74,8 +81,13 @@ export function bindWebApi(apiObject) {
         boundObject[key] = makeCallable(apiObject[key], apiObject);
       } else {
         Object.defineProperty(boundObject, key, {
-          get: () => bindWebApi(apiObject[key]),
+          get: () => {
+            const result = bindWebApi(apiObject[key]);
+            recordCrossing("forward", "host_to_vm", result);
+            return result;
+          },
           set: (val) => {
+            recordCrossing("forward", "vm_to_host", val);
             apiObject[key] = val;
           },
         });
