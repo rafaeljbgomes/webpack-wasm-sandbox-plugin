@@ -40,6 +40,8 @@ function shouldWrapReturned(value) {
     value instanceof Date ||
     value instanceof RegExp ||
     value instanceof Error ||
+    value instanceof Set ||
+    value instanceof Map ||
     Array.isArray(value) ||
     isArgumentsObject(value)
   ) {
@@ -71,7 +73,7 @@ function makeGetTrap(arena, accessPath, fnCache, depth, sbHelpers) {
       return fnCache.get(key);
     }
     if (typeof value === "object" && value !== null && !isTypedArrayView(value)) {
-      return bindSandboxExport(arena, value, `${accessPath}["${key}"]`, depth + 1, sbHelpers);
+      return bindSandboxExport(arena, value, `${accessPath}["${key}"]`, sbHelpers, depth + 1);
     }
     return value;
   };
@@ -127,7 +129,7 @@ export function bindSandboxFunction(arena, fn, fnAccessPath, depth, sbHelpers) {
  * access and routes function calls through QJS-side bound closures, bypassing
  * Arena's ue() re-marshalling which would lose private fields / object identity.
  */
-export function bindSandboxExport(arena, obj, accessPath, depth = 0, sbHelpers) {
+export function bindSandboxExport(arena, obj, accessPath, sbHelpers, depth = 0) {
   if (obj === null || obj === undefined) return obj;
   if (typeof obj !== "object" && typeof obj !== "function") return obj;
   if (depth > 3) return obj;
