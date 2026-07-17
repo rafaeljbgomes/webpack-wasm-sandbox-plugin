@@ -167,14 +167,14 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
   if (returnedObjCache.has(obj)) return returnedObjCache.get(obj);
 
   let id;
-  if (preStoredId !== undefined) {
-    // Object was already stored in __SANDBOX_TEMP__ inside QJS by the
-    // constructor closure (createInstance). No round-trip needed.
-    id = preStoredId;
-  } else {
+  if (preStoredId == undefined) {
     id = nextTempId();
     sbHelpers.tempSet(id, obj);
     observeTempObjectCreated();
+  } else {
+    // Object was already stored in __SANDBOX_TEMP__ inside QJS by the
+    // constructor closure (createInstance). No round-trip needed.
+    id = preStoredId;
   }
 
   const fnCache = new Map();
