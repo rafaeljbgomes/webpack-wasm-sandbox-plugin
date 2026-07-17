@@ -66,8 +66,8 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
       arena,
       rawWorkloadExports,
       workloadGlobalName,
-      0,
       sbHelpers,
+      0,
     );
     return workloadExports[workload.name];
   }
@@ -82,8 +82,8 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     arena,
     libExports,
     "__SANDBOXED_LIB__",
-    0,
     sbHelpers,
+    0,
   );
 
   // Drive the QuickJS async job queue so Promises resolve inside the VM.
