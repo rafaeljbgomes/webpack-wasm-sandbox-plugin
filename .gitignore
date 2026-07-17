@@ -18,6 +18,9 @@ test-harness/luxon/**
 !test-harness/image-js/vitest.sandbox.config.ts
 !test-harness/luxon/jest.native.config.js
 !test-harness/luxon/jest.sandbox.config.js
+compatibility-results/
+compatibility-results-smoke/
+compatibility-results-heap-probe/
 lib-test/*
 docs/context/*.md
 docs/analysis/*.md
