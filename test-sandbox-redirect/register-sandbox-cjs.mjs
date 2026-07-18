@@ -22,7 +22,7 @@
 
 import { createRequire, register } from 'module';
 import { resolve as pathResolve, sep, basename as pathBasename, extname as pathExtname } from 'path';
-import { pathToFileURL } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 
 // Register the ESM loader hook so that its PACKAGE_ALIASES fix for
@@ -31,11 +31,20 @@ register('./sandbox-loader.mjs', import.meta.url);
 
 const require = createRequire(import.meta.url);
 const Module = require('module');
+const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 
 // Load config (CJS variant so require() works without ESM interop)
-const configPath = pathResolve('.sandbox/sandbox.config.cjs');
+const configPath = pathResolve(projectRoot, '.sandbox/sandbox.config.cjs');
 const config = require(configPath);
-const sandboxedLibs = Object.keys(config);
+const configuredLibs = Object.keys(config);
+const targetLibrary = process.env.SANDBOX_TARGET_LIBRARY;
+const sandboxedLibs = targetLibrary ? [targetLibrary] : configuredLibs;
+
+if (targetLibrary && !configuredLibs.includes(targetLibrary)) {
+  throw new Error(
+    `SANDBOX_TARGET_LIBRARY "${targetLibrary}" is not present in ${configPath}`,
+  );
+}
 
 console.log(`[sandbox-cjs] Pre-loading proxies for: ${sandboxedLibs.join(', ')}`);
 
@@ -44,10 +53,28 @@ function isInDir(filePath, dir) {
   return filePath.startsWith(dir + sep) || filePath.startsWith(dir + '/');
 }
 
+function createExtensibleBridge(value) {
+  if ((typeof value !== 'object' || value === null) && typeof value !== 'function') {
+    return value;
+  }
+
+  const extensions = new Map();
+  return new Proxy(value, {
+    get(target, key, receiver) {
+      if (extensions.has(key)) return extensions.get(key);
+      return Reflect.get(target, key, receiver);
+    },
+    set(_target, key, newValue) {
+      extensions.set(key, newValue);
+      return true;
+    },
+  });
+}
+
 // Build a map from npm package name → actual test-harness directory path.
 // The directory name often differs from the package name (e.g. tweetnacl-js vs tweetnacl),
 // so we scan test-harness/ subdirectories and match via each one's package.json "name".
-const testHarnessRoot = pathResolve('test-harness');
+const testHarnessRoot = pathResolve(projectRoot, 'test-harness');
 const libToTestHarnessDir = new Map();
 try {
   for (const entry of readdirSync(testHarnessRoot, { withFileTypes: true })) {
@@ -64,13 +91,14 @@ try {
 // Build per-library data
 const libData = new Map();
 for (const lib of sandboxedLibs) {
-  const proxyPath = pathResolve(`.sandbox/proxys/${lib}-proxy.js`);
+  const proxyPath = pathResolve(projectRoot, `.sandbox/proxys/${lib}-proxy.js`);
   libData.set(lib, {
     proxyPath,
     proxyUrl: pathToFileURL(proxyPath).href,
     // Prefer the directory discovered via package.json; fall back to test-harness/<lib>
-    testHarnessLibPath: libToTestHarnessDir.get(lib) ?? pathResolve('test-harness', lib),
-    nodeModulesLibPath: pathResolve('node_modules', lib),
+    testHarnessLibPath:
+      libToTestHarnessDir.get(lib) ?? pathResolve(projectRoot, 'test-harness', lib),
+    nodeModulesLibPath: pathResolve(projectRoot, 'node_modules', lib),
   });
 }
 
@@ -81,7 +109,7 @@ for (const [lib, data] of libData) {
     const ns = await import(data.proxyUrl);
     // Use the default export as CJS exports: it is the raw sandbox library object
     // (e.g. the full nacl namespace), matching what the original library exports.
-    const cjsExports = ns.default ?? ns;
+    const cjsExports = createExtensibleBridge(ns.default ?? ns);
 
     require.cache[data.proxyPath] = {
       id: data.proxyPath,
