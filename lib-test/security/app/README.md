@@ -1,19 +1,23 @@
-# Security evaluation application
+# Security validation application
 
-This isolated browser application evaluates the sandbox through its normal
+**Status:** Active browser security validation on `main`.
+
+This isolated browser application validates the sandbox through its normal
 transparent import flow. Its own `node_modules` contains the exact dependencies
 used by both execution modes.
 
 The `strip-ansi` and `image-js` installations are modified by harmless,
-checked-in `patch-package` patches. The evaluation installs the clean
+checked-in `patch-package` patches. The validation fixture installs the clean
 `strip-ansi@7.2.0` release used by the project and alters it locally to reproduce
 the security-relevant behavior associated with the historical compromise. It
 does not install the compromised package. The patches contain no original
 malware, perform no external requests, and are not part of the proposed sandbox
-solution.
+runtime.
 
 The main project dependencies, sandbox configuration, and performance harness
-are not modified by these evaluation patches.
+are not modified by these validation patches.
+
+The application is a validation fixture, not an example dependency policy for production. It executes locally, makes no intentional external requests, and writes generated bundles only under the repository's ignored `dist/` directory.
 
 The security Webpack configuration also contains the same kind of dependency
 compatibility alias used elsewhere in the prototype: `ml-xsadd` is normalized
@@ -31,7 +35,7 @@ npm install --prefix .\lib-test\security\app
 The application's `postinstall` script reapplies the patches automatically.
 `npm` reports a high-severity vulnerability in this isolated dependency tree
 because the Lodash scenario intentionally pins vulnerable `4.17.21`. Do not run
-`npm audit fix` in this application before collecting the evaluation results,
+`npm audit fix` in this application before running the scenarios,
 as upgrading Lodash would invalidate that scenario.
 
 ## Manual execution
@@ -59,13 +63,7 @@ python -m http.server 9000
 Each build writes `dist/bundle.js`. Keep the server running, rebuild the desired
 mode in another terminal, and reload the page after each build.
 
-## Dissertation video demonstration
-
-[`IMAGE_DEMO.md`](./IMAGE_DEMO.md) documents a dedicated Image.js page for the
-defence video. Unlike the comparison commands above, it demonstrates the
-developer workflow by starting with a normal Webpack configuration and then
-adding the sandbox plugin and declarative permissions before rerunning the
-same command.
+`webpack.security.config.cjs` validates both `scenario` and `mode`. Native mode does not instantiate `WebpackSandboxPlugin`. Sandbox mode loads the scenario-specific build policy and replaces the runtime sandbox configuration import with the same scenario policy.
 
 Native builds do not instantiate `WebpackSandboxPlugin`. Sandbox builds use the
 unchanged plugin behavior: read the selected configuration, resolve the package
@@ -86,6 +84,15 @@ Each run writes the same observations to the page and `console.table`, reports
 The Lodash scenario uses the real vulnerable `4.17.21` package and the
 canonical `["constructor", "prototype", canaryKey]` path described by
 CVE-2025-13465. The other two
-scenarios use clean current project versions with explicit evaluation patches:
+scenarios use clean current project versions with explicit validation patches:
 the strip-ansi patch simulates the relevant supply-chain behavior, while the
 ImageJS patch adds an additional capability probe to `encodeDataURL`.
+
+## Interpreting results
+
+Each scenario writes the same structured observations to the page and `console.table`, reports `PASS` or `FAIL`, and throws when the expected outcome is missing. A successful sandbox result requires both dimensions:
+
+1. the legitimate library operation still produces its expected result;
+2. the host-side effect observed in native mode is absent or contained.
+
+Do not treat a blocked operation alone as compatibility success, or a successful library operation alone as proof of isolation. The patches are controlled simulations and do not claim that the clean `strip-ansi` or Image.js releases are malicious.
