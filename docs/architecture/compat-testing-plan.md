@@ -1,162 +1,163 @@
-# Compatibility Testing Plan
+# Compatibility Testing Architecture
 
-**Status:** In progress
-**Date:** 2026-03-19
+**Status:** Implemented operational architecture for the compatibility campaigns on `main`.
 
----
+Compatibility testing compares the same upstream-derived library tests in native and sandbox modes. The automated runner owns execution planning, process isolation, result parsing, provenance, and comparison validity. Raw outputs are kept separate from performance measurements.
 
-## 1. Goal
+## 1. Goals
 
-Validate that the `webpack-sandbox-plugin` preserves library functionality after sandboxing, by running each library's own unit test suite against the sandboxed version of that library. A high pass rate signals that the sandbox correctly proxies the library's public API without breaking observable behaviour.
+- Exercise real package APIs rather than sandbox-specific rewrites.
+- Keep native and sandbox test selections comparable.
+- Preserve runner-specific behaviour for Jest, Vitest, AVA, QUnit, Node TAP, and CommonJS suites.
+- Isolate files or batches when one failing process would hide later results.
+- Retain complete logs and machine-readable artifacts for audit.
+- Refuse to report a compatibility ratio when the two modes are not comparable.
 
-The target is **10 libraries** of varying complexity and type.
+The harness measures compatibility for the evaluated suites. It does not prove compatibility with every package API or application workload.
 
----
+## 2. Components
 
-## 2. Core Design Decisions
-
-### 2.1 Black-box testing via import interception
-
-Tests must exercise the library through the sandbox proxy, not the real library. The proxy is the only artefact that represents the sandboxed version — it is what gets shipped to consumers. Testing through it is therefore the most accurate signal.
-
-This means all imports that resolve to the sandboxed library (whether `import 'image-js'` or `import { X } from '../../src/index.js'`) must be redirected to the proxy transparently, without modifying any test file.
-
-### 2.2 Test-runner-agnostic interception layer
-
-With a large number of libraries, normalising to a single test framework is not viable — different libraries use vitest, jest, ava, mocha, and `node:test`. Rewriting tests for each library would defeat the point of using their own test suites.
-
-The interception is therefore applied at the **Node.js ESM module resolution layer** (`sandbox-loader.mjs`), which fires before any test framework sees the import. This makes the approach framework-agnostic.
-
-In some cases (e.g. vitest), additional configuration is needed to ensure the test framework's own module resolution also maps to the proxy (see §3.2).
-
-### 2.3 One library at a time, manually first
-
-The first phase is manual: set up one library at a time, observe failures, and refine the architecture before automating. Automation (fetch/clone script) comes in phase 2 once the per-library workflow is stable.
-
----
-
-## 3. Architecture
-
-```
-[Library's own test suite]          ← unchanged, any framework
-         │
-         │  import 'image-js'
-         │  import '../../src/Mask.js'
-         ↓
-[sandbox-loader.mjs — Node ESM hook]  ← universal interception layer
-         │
-         │  all imports resolving into node_modules/<lib>/  →  proxy
-         │  relative imports from test-harness/<lib>/ that 404  →  proxy
-         ↓
-[.sandbox/<lib>-proxy.js]           ← generated proxy, exposes sandboxed API
-         │
-         ↓
-[QuickJS Wasm Context]              ← library runs here, isolated
+```text
+compatibility-harness/manifest.mjs
+        | library commands, parsers, discovery, strategies
+        v
+compatibility-harness/run-compat.mjs
+        | plans units, spawns processes, parses and aggregates
+        +----> units.mjs       discovery, selection, batching, fingerprints
+        +----> parsers.mjs     TAP, QUnit, Jest/Vitest JSON, text summaries
+        v
+test-sandbox-redirect/
+        | ESM loader or CommonJS require hook
+        v
+.sandbox/proxys/<library>-proxy.js
+        | generated API facade
+        v
+QuickJS library context
 ```
 
-### 3.1 `sandbox-loader.mjs` — interception rules
+`test-harness/<library>/` contains upstream-derived tests and runner configuration. Treat large suites as vendored fixtures: avoid stylistic rewrites or application-specific modifications.
 
-The loader intercepts in order of precedence:
+## 3. Import redirection
 
-| Case | Trigger | Action |
+Sandbox mode must execute the original test import against the generated proxy.
+
+### 3.1 ESM loader
+
+`test-sandbox-redirect/register-sandbox.mjs` registers `sandbox-loader.mjs`. The loader maps configured bare package requests and selected source paths to `.sandbox/proxys/<library>-proxy.js`.
+
+```powershell
+node --import ./test-sandbox-redirect/register-sandbox.mjs --test <test-file>
+```
+
+### 3.2 CommonJS hook
+
+`register-sandbox-cjs.mjs` installs `sandbox-require-hook.cjs` for suites that resolve packages through `require()`.
+
+### 3.3 Runner-specific mapping
+
+Some runners resolve modules internally and do not pass every request through the generic Node loader. Their manifest commands retain dedicated configuration, such as Jest `moduleNameMapper`, Vitest aliases, AVA setup, or compatibility shims. These mappings are part of the evaluated method and must remain explicit.
+
+## 4. Manifest contract
+
+`compatibilityManifest` is the source of truth for the ten evaluated libraries. Each entry defines:
+
+- library name and harness directory;
+- command factory for each mode;
+- parser for the runner's result format;
+- default strategy and optional per-mode override;
+- test discovery rules when files are isolated or batched;
+- optional fallback behaviour;
+- environment or immutable runner configuration.
+
+The configured libraries are `date-fns`, `image-js`, `lodash`, `luxon`, `marked`, `mime`, `strip-ansi`, `tweetnacl`, `yup`, and `zod`.
+
+## 5. Execution strategies
+
+The planner in `units.mjs` supports:
+
+| Strategy | Behaviour | Use |
 |---|---|---|
-| Package alias | Specifier matches `PACKAGE_ALIASES` | Redirect to aliased file (e.g. fix missing `.mjs` build) |
-| In-package file | Resolved URL starts with `node_modules/<lib>/` | Redirect to `<lib>` proxy |
-| Missing relative | `ERR_MODULE_NOT_FOUND` + parent inside `test-harness/<lib>/` | Redirect to `<lib>` proxy |
+| `suite` | One runner process for the configured suite | Default where the runner completes and reports reliably |
+| `per-file` | One process per discovered test file | Prevents an early crash from hiding later files |
+| `batch` | Fixed-size groups of discovered files | Balances isolation and execution cost |
 
-Case 2 catches: bare imports (`'image-js'`), subpath exports (`'image-js/filters'`), and relative imports that Node successfully resolves into `node_modules/<lib>/`. Case 3 catches relative imports like `../../src/Mask.js` that point at library source files that are not present locally in the test-harness directory.
+Current special cases:
 
-### 3.2 Per-library test harness (`test-harness/<lib>/`)
+- Date-fns: native suite; sandbox batches of 10 with invalid-batch fallback to individual files.
+- Yup: native suite; sandbox batches of 5 with the same fallback.
+- Zod: each v4 classic test file runs in an independent process.
+- Other evaluated libraries: suite-level execution.
 
-Each library gets a directory under `test-harness/` containing:
+A fallback occurs when a batch crashes or fails to produce a valid parsed summary. The original attempt remains in the artifacts for diagnosis but is excluded from aggregate totals and replaced by its per-file attempts.
 
-- Test files (copied from the library's source repository, unmodified)
-- Test utilities and fixtures the tests depend on
-- A `vitest.config.ts` (when the library uses vitest) that:
-  - Points `include` at the test files
-  - Maps known import aliases via `alias` (e.g. `image-js` → proxy, `quickjs-emscripten-sync` → correct dist file)
-  - Registers setup files (e.g. custom matchers, global `testUtils`)
+## 6. Selection and fingerprints
 
-For libraries using other frameworks (ava, mocha, `node:test`), the runner is invoked with `--import ./test-sandbox-redirect/register-sandbox.mjs` to register the loader hook.
+For isolated strategies, discovery applies manifest-defined directories, suffixes, and exclusions. Paths are normalized relative to the harness root. A repeated `--test-file` option selects a subset only after discovery validates it.
 
-### 3.3 `.sandbox/<lib>-proxy.js`
+The planner fingerprints the effective test set and strategy. A native/sandbox compatibility ratio is reported only when:
 
-Generated by the plugin's build step. Exposes the library's public API as named exports, each backed by the corresponding QuickJS sandbox export. Must exist before tests can run.
+1. both modes have valid complete summaries;
+2. every expected file contributes a valid included result;
+3. the test-set fingerprints match;
+4. both modes execute the same number of tests.
 
----
+When valid, the ratio is:
 
-## 4. Per-library Setup Process (Manual Phase)
+```text
+sandbox passed / native passed
+```
 
-For each library:
+This guard prevents partial sandbox execution from appearing more compatible than it is.
 
-1. **Build the sandbox bundle**
-   ```
-   npx webpack --config webpack.bundles.config.cjs
-   ```
-   This runs the `WebpackSandboxPlugin`, which builds `dist/<lib>.bundle.js` and generates `.sandbox/<lib>-proxy.js`.
+## 7. Status and interruption semantics
 
-2. **Add to sandbox config** (`.sandbox/sandbox.config.js`)
-   ```js
-   "image-js": { permissions: ["console"] }
-   ```
+Each attempt records command outcome, parsed counts, files, sequence, and inclusion state. Status classification distinguishes successful, test-failing, process-failing, invalid-result, and interrupted work.
 
-3. **Populate `test-harness/<lib>/`**
-   - Copy the library's test files from its source repository (GitHub)
-   - Copy any test utilities, fixtures, and test images they depend on
-   - Add a `vitest.config.ts` (or runner config) configured as described in §3.2
+The runner imposes no suite-level timeout. A user interruption is recorded as `interrupted`, completed artifacts are retained, and the campaign is not reported as a valid comparison.
 
-4. **Run the tests**
-   - With vitest:
-     ```
-     npx vitest run --config test-harness/<lib>/vitest.config.ts
-     ```
-   - With `node:test`:
-     ```
-     node --import ./test-sandbox-redirect/register-sandbox.mjs --test test-harness/<lib>/**/*.test.js
-     ```
-   - With ava:
-     ```
-     npx ava --import ./test-sandbox-redirect/register-sandbox.mjs test-harness/<lib>/test.js
-     ```
+## 8. Result layout
 
-5. **Observe and record results** — pass rate, failing tests, failure categories (see §6).
+Each invocation writes one directory per library and timestamp:
 
----
+```text
+compatibility-results/<library>/<timestamp>/
+  summary.csv
+  failures.csv
+  units.csv
+  run-metadata.json
+  native/
+  sandbox/
+```
 
-### `image-js` specific notes
+Mode directories contain aggregate logs/results and `units/<sequence-hash>/` attempt details. `run-metadata.json` records the resolved plan and campaign context. Result directories are ignored by Git; include relevant paths and metadata in a pull request when reporting a compatibility change.
 
-- Test harness: `test-harness/image-js/`
-- Test framework: vitest
-- Config: `test-harness/image-js/vitest.config.ts`
-- Alias requirements (implemented in `vitest.config.ts` `resolve.alias`): `image-js`, `../src/index.js`, `../../src/index.js` → proxy; `quickjs-emscripten-sync` → correct dist. **Note:** the Node ESM loader hook does not intercept Vitest's internal resolution — aliases must be set in the Vite config, not the loader.
-- Missing: sandbox bundle (`dist/image-js.bundle.js`) and proxy (`.sandbox/image-js-proxy.js`) — requires running the webpack bundle build step
-- Known complication: image-js depends on `bresenham-zingl` which has no CJS/standard ESM build; added to `webpack.bundles.config.cjs` resolve alias
+Compatibility artifacts must not be placed under `performance-harness/results*`. Compatibility counts and performance timings have different collection contracts.
 
----
+## 9. Adding a library
 
-## 6. Failure Categorisation
+1. Add the dependency and declarations.
+2. Add the library and minimum permissions to `.sandbox/sandbox.config.js`.
+3. Build bundles and inspect the generated proxy.
+4. Add or preserve the upstream-derived suite under `test-harness/<library>/`.
+5. Determine how the runner resolves imports; use the generic loader unless the framework requires explicit mapping.
+6. Add the manifest entry, parser, discovery rules, and execution strategy.
+7. Add parser/planner unit coverage where the runner introduces a new output shape or policy.
+8. Run a small native and sandbox selection before the complete campaign.
+9. Verify matching fingerprints and executed counts before interpreting the ratio.
+10. Update the operational README and supported-library documentation.
 
-When tests fail, failures should be grouped into categories to understand which are architectural limitations vs fixable bugs:
+## 10. Verification
 
-| Category | Description | Example |
-|---|---|---|
-| **API gap** | Proxy does not export a symbol the test uses | Internal class not re-exported |
-| **Type mismatch** | Proxy returns a plain object where the test expects a class instance (`instanceof`) | `result instanceof Image` fails |
-| **Serialisation loss** | Value crosses the QuickJS boundary and loses fidelity | `TypedArray` becomes plain array |
-| **Async unsupported** | Library uses async APIs not yet bridged | Promise-returning function hangs |
-| **Permission denied** | Library needs a host API not granted in `permissions` | `fetch`, `fs`, `Buffer` |
-| **Test harness gap** | Test imports a symbol not available through the proxy | Internal test utility |
+Run the harness unit suite:
 
----
+```powershell
+node --test compatibility-harness/test/parsers.test.mjs
+```
 
-## 7. Phase 2 — Automation (Fetch/Clone Script)
+Refresh proxies and execute one target library:
 
-Once the manual workflow is stable across 3–5 libraries, the per-library setup (step 3 above) will be automated by a script that:
+```powershell
+node compatibility-harness/run-compat.mjs --library zod --build
+```
 
-1. Takes a library name and GitHub repo URL as input
-2. Fetches the library's source at the tagged version matching the installed npm version
-3. Extracts test files and fixtures into `test-harness/<lib>/`
-4. Generates a starter `vitest.config.ts` (or detects the runner from `package.json`)
-5. Reports what still needs manual review (e.g. custom matchers, missing test assets)
-
-This script does not need to exist before the manual phase is complete.
+See [../../compatibility-harness/README.md](../../compatibility-harness/README.md) for all CLI options and examples.
