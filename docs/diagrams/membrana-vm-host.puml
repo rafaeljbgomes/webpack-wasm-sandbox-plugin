@@ -1,0 +1,53 @@
+@startuml
+!theme plain
+autonumber
+title Host Call to an Isolated Library Export
+hide footbox
+
+skinparam defaultFontSize 15
+
+actor "Host\nApplication" as HostApp
+
+box "Host Environment" #f1f1f1
+    participant "Generated\nProxy" as Proxy
+    participant "Reverse\nMembrane" as VmHostMembrane
+end box
+
+box "Sandbox" #e9e9e9
+    participant "Isolated\nLibrary" as Library
+end box
+
+== Call to a library export ==
+
+HostApp -> Proxy: Invokes function, constructor,\nor method
+activate HostApp
+activate Proxy
+Proxy -> VmHostMembrane: Uses mediated\nexport reference
+activate VmHostMembrane
+VmHostMembrane -> Library: Executes operation
+activate Library
+Library --> VmHostMembrane: Operation result
+deactivate Library
+
+alt Primitive or marshalled result
+    VmHostMembrane --> Proxy: Converted value
+    Proxy --> HostApp: Compatible value
+else Object or function result
+    VmHostMembrane --> Proxy: Mediated reference
+    Proxy --> HostApp: Wrapped object or function
+
+    HostApp -> Proxy: Interacts with\nthe wrapped result
+    Proxy -> VmHostMembrane: Redirects property access\nor call
+    VmHostMembrane -> Library: Operates on the\noriginal object
+    activate Library
+    Library --> VmHostMembrane: New result
+    deactivate Library
+    VmHostMembrane --> Proxy: Mediated result
+    Proxy --> HostApp: Interaction result
+end
+
+deactivate VmHostMembrane
+deactivate Proxy
+deactivate HostApp
+
+@enduml

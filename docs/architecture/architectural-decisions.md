@@ -1,6 +1,10 @@
 # Architectural Decisions & Implementation Notes
 
-This document records the key design decisions, constraints, and non-obvious fixes made during the spike. It is intended as a reference for the thesis write-up.
+**Status:** Living historical record. Decisions describe the implementation state at the time they were made. The current consolidated behaviour is defined by [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); later decisions and source code supersede conflicting earlier examples.
+
+Performance measurements and instrumented membrane code are maintained on `feat/sandbox-benchmarking`. The workload-adapter contract remains implemented on `main`, but its benchmark workloads and measurement tooling are branch-specific.
+
+This document records the key design decisions, constraints, and non-obvious fixes made during development. It provides historical context for contributors; the current implementation contract is defined by [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md).
 
 ---
 
@@ -277,11 +281,11 @@ return propGetterCache.get(key)();
 
 ---
 
-## 03/04/2026 - 15. State Sync vs. RPC Membrane (`quickjs-emscripten-sync` evaluation)
+## 03/04/2026 - 15. State Sync vs. RPC Membrane (`quickjs-emscripten-sync` assessment)
 
 **Decision:** Adopted `quickjs-emscripten-sync` (the Arena) as the core boundary synchronization layer, despite its friction with object identity preservation on VM-to-Host exports.
 
-**Rationale:** Building a robust membrane for projecting complex host graphs (like the DOM or `localStorage`) into WebAssembly is extremely complex. `quickjs-emscripten-sync` handles the **Host → VM** projection exceptionally well, creating synchronized proxies and marshaling operations automatically. This fulfills the core thesis objective of granular, policy-driven WebAPI exposure with minimal custom infrastructure.
+**Rationale:** Building a robust membrane for projecting complex host graphs (like the DOM or `localStorage`) into WebAssembly is extremely complex. `quickjs-emscripten-sync` handles the **Host → VM** projection, creating synchronized proxies and marshaling operations automatically. This supports granular, policy-driven Web API exposure with minimal custom infrastructure.
 
 **Trade-off:** The library's state-synchronization model is lossy when moving complex object graphs from the **VM → Host** (stripping prototypes, class getters, and breaking object identity/private fields). 
 
@@ -496,3 +500,33 @@ The browser harness includes adapter scenarios for both workloads so native and 
 **Trade-off:** The developer must explicitly move performance-sensitive logic into a workload module and configure it. This is less transparent than bare import redirection, but it is still a small, inspectable change and avoids broad application rewrites. The transparent mode remains the default compatibility story.
 
 **Future work:** Annotation-based lifting could reduce the manual work by letting the developer mark a function for sandbox execution and letting the webpack plugin generate the workload bundle and proxy automatically. This should remain conservative: captured values must be serializable or explicitly supported, DOM references and mutable host state should be rejected by default, and the plugin should fail closed with clear diagnostics.
+
+---
+
+## 17/07/2026 - 22. Structured errors are active boundary values
+
+**Problem:** Arena's generic conversion could surface QuickJS exceptions as bridge-specific wrapper objects. Test runners then observed the wrong host constructor and could recursively format large context graphs instead of reporting the original error.
+
+**Decision:** Register a dedicated error marshaller in `.sandbox/marshallers/index.js`. It recreates supported error constructors on the receiving side and transfers `name`, `message`, `stack`, `cause`, and bounded JSON-safe custom fields.
+
+**Consequence:** Error behaviour is closer to the originating realm and diagnostics remain finite. Exact prototypes and arbitrary non-serialisable custom fields are still not guaranteed across the boundary.
+
+---
+
+## 17/07/2026 - 23. Expose a constrained crypto facade
+
+**Problem:** TweetNaCl requires secure random bytes, but exposing the complete host `Crypto` object would grant more authority than the evaluated library needs and introduces native receiver constraints.
+
+**Decision:** Treat the `crypto` permission as a special capability. Host helpers produce random bytes and optional UUIDs; QuickJS receives a null-prototype facade implementing `getRandomValues()` and `randomUUID()` when supported. `getRandomValues()` accepts only integer typed arrays and enforces the browser-compatible 65,536-byte quota.
+
+**Consequence:** The evaluated cryptographic library receives the required entropy without a general live reference to the host `Crypto` object. Other permission names continue through the generic forward membrane.
+
+---
+
+## 19/07/2026 - 24. Recognise browser constructor-only error messages
+
+**Problem:** Arena invokes exposed functions without JavaScript `new` syntax. `makeCallable()` falls back from `Reflect.apply` to `Reflect.construct` only when the thrown `TypeError` matches a known constructor-only message. Chromium's `TextEncoder` reports “use the 'new' operator” / “cannot be called as a function”, which the original matcher missed.
+
+**Decision:** Extend `REQUIRES_NEW_RE` with the Chromium wording while retaining the existing Node and library-specific forms.
+
+**Consequence:** Browser constructors such as `TextEncoder` remain usable through configured permissions, which is required by the Image.js security scenario. Unrelated `TypeError` exceptions continue to propagate instead of being reinterpreted as constructor calls.

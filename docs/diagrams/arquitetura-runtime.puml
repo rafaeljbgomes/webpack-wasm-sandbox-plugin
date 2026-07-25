@@ -1,0 +1,82 @@
+@startuml
+!theme plain
+autonumber
+title Sandbox Runtime Sequence
+hide footbox
+
+skinparam defaultFontSize 15
+
+actor "Host\nApplication" as HostApp
+
+box "Host Environment" #f1f1f1
+    participant "Generated\nProxy" as Proxy
+    participant "Sandbox\nManager" as Manager
+    participant "Sandbox\nConfiguration" as Config
+    participant "Forward\nMembrane" as HostVmMembrane
+    participant "Reverse\nMembrane" as VmHostMembrane
+    participant "Allowed Host\nCapabilities" as HostCapabilities
+end box
+
+box "Sandbox" #e9e9e9
+    participant "Isolated\nLibrary" as Library
+end box
+
+== Isolated library initialization ==
+
+HostApp -> Proxy: Imports configured\nlibrary
+activate HostApp
+activate Proxy
+
+Proxy -> Manager: Requests sandbox\ncreation
+activate Manager
+
+Manager -> Config: Reads library\npermissions
+activate Config
+Config --> Manager: Allowed capabilities
+deactivate Config
+
+Manager -> HostVmMembrane: Prepares allowed capabilities
+activate HostVmMembrane
+HostVmMembrane -> HostCapabilities: Gets allowed\nobjects
+activate HostCapabilities
+HostCapabilities --> HostVmMembrane: Allowed objects
+deactivate HostCapabilities
+HostVmMembrane --> Manager: Mediated capabilities
+deactivate HostVmMembrane
+
+Manager -> Library: Initializes in QuickJS/WebAssembly
+activate Library
+Library --> Manager: Library exports
+deactivate Library
+
+Manager -> VmHostMembrane: Wraps library exports
+activate VmHostMembrane
+VmHostMembrane -> Library: Reads exports
+activate Library
+Library --> VmHostMembrane: Mediated exports
+deactivate Library
+VmHostMembrane --> Manager: Mediated API
+deactivate VmHostMembrane
+
+Manager --> Proxy: Sandbox initialized
+deactivate Manager
+Proxy --> HostApp: Library exposed\nthrough proxy
+deactivate Proxy
+
+== Host application call ==
+
+HostApp -> Proxy: Invokes library\noperation
+activate Proxy
+Proxy -> VmHostMembrane: Forwards mediated call
+activate VmHostMembrane
+VmHostMembrane -> Library: Executes operation
+activate Library
+Library --> VmHostMembrane: Result
+deactivate Library
+VmHostMembrane --> Proxy: Mediated result
+deactivate VmHostMembrane
+Proxy --> HostApp: Compatible result
+deactivate Proxy
+deactivate HostApp
+
+@enduml

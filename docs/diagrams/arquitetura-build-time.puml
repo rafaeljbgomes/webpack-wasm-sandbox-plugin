@@ -1,0 +1,57 @@
+@startuml
+!theme plain
+autonumber
+title Sandbox Build Sequence
+hide footbox
+
+skinparam defaultFontSize 15
+
+actor "Developer" as Developer
+
+box "Host Environment" #f1f1f1
+    participant "Sandbox\nConfiguration" as Config
+    participant "Webpack\nPlugin" as Plugin
+    participant "Proxy\nGenerator" as Generator
+    participant "Generated\nProxy" as Proxy
+    participant "Host\nApplication" as HostApp
+end box
+
+box "Sandbox" #e9e9e9
+    participant "Isolated\nLibrary" as Library
+end box
+
+Developer -> Config: Defines libraries\nand permissions
+activate Developer
+activate Config
+Plugin -> Config: Reads isolation policy
+activate Plugin
+
+Config --> Plugin: Configured libraries
+deactivate Config
+
+loop For each configured library
+    Plugin -> Generator: Requests proxy for\nthe exported surface
+    activate Generator
+    Generator -> Proxy: Creates a module compatible\nwith the expected API
+    activate Proxy
+    Proxy --> Generator: Proxy available\nfor import
+    deactivate Proxy
+    Generator --> Plugin: Generation complete
+    deactivate Generator
+
+    Plugin -> HostApp: Redirects imports to the generated proxy
+    activate HostApp
+    HostApp --> Plugin: Dependency resolves to proxy
+    deactivate HostApp
+
+    Plugin -> Library: Compiles dependency for isolated execution
+    activate Library
+    Library --> Plugin: Bundle available to the isolated runtime
+    deactivate Library
+end
+
+Plugin --> Developer: Isolation-aware build complete
+deactivate Plugin
+deactivate Developer
+
+@enduml

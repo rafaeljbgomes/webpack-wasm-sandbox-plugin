@@ -1,0 +1,49 @@
+@startuml
+title Logical Component View
+
+left to right direction
+
+skinparam defaultFontSize 15
+
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam defaultTextAlignment center
+skinparam nodesep 50
+skinparam ranksep 90
+skinparam ArrowThickness 1.1
+
+rectangle "Host\nApplication" as HostApplication <<external>>
+component "Webpack\nPlugin" as WebpackPlugin
+component "Proxy\nGenerator" as ProxyGenerator
+database "Sandbox\nConfiguration" as SandboxConfiguration
+component "Generated\nProxy" as GeneratedProxy
+component "Sandbox\nManager" as SandboxManager
+component "Forward\nMembrane" as HostVmMembrane
+component "Reverse\nMembrane" as VmHostMembrane
+component "Isolated\nLibrary" as IsolatedLibrary
+rectangle "Allowed Host\nCapabilities" as HostCapabilities <<external>>
+
+WebpackPlugin -[hidden]right-> ProxyGenerator
+ProxyGenerator -[hidden]right-> GeneratedProxy
+GeneratedProxy -[hidden]right-> SandboxManager
+SandboxManager -[hidden]right-> IsolatedLibrary
+HostVmMembrane -[hidden]right-> HostCapabilities
+
+HostApplication --> GeneratedProxy : imports and uses
+
+WebpackPlugin --> SandboxConfiguration : reads policy
+WebpackPlugin --> ProxyGenerator : requests generation
+ProxyGenerator --> GeneratedProxy : creates compatible export surface
+
+GeneratedProxy --> SandboxManager : requests sandbox initialization
+SandboxManager --> SandboxConfiguration : reads permissions
+SandboxManager --> IsolatedLibrary : creates isolated context
+
+SandboxManager --> HostVmMembrane : prepares capabilities
+HostVmMembrane --> HostCapabilities : wraps allowed access
+IsolatedLibrary --> HostVmMembrane : uses mediated capability
+
+GeneratedProxy --> VmHostMembrane : uses mediated exports
+VmHostMembrane --> IsolatedLibrary : executes operations
+
+@enduml

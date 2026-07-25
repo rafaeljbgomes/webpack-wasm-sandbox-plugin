@@ -1,5 +1,7 @@
 # Future Work: Strict and Attenuated Host Argument Modes
 
+**Status:** Design exploration only. None of the modes in this document are implemented on `main`. The current compatibility-first boundary is documented in [host-argument-capability-limitation.md](host-argument-capability-limitation.md) and [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md).
+
 ## Context
 
 The current transparent sandbox mode allows host application arguments to cross into the QuickJS VM through the Arena bridge. This preserves compatibility with common JavaScript APIs, including APIs that accept callbacks, option objects, class instances, and other non-plain values.
@@ -156,6 +158,6 @@ This sequence keeps the current transparent mode intact while creating a path to
 
 ## Research Value
 
-This future work is relevant to the thesis because it exposes the central trade-off between JavaScript compatibility and capability-safe isolation.
+This future work exposes the central trade-off between JavaScript compatibility and capability-safe isolation. Any implementation must therefore be opt-in, compatibility-tested, and documented as a change to the sandbox's authority model.
 
 Transparent sandboxing improves adoption because developers can keep using familiar APIs. Strict argument policies improve confinement but require developers to think in terms of data transfer and explicit capabilities. A practical sandbox for npm dependencies likely needs both modes, with compatibility as the default and stricter policies available for security-sensitive integrations.

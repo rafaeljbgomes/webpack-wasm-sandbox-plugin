@@ -1,8 +1,10 @@
 # Host Argument Capability Transfer Limitation
 
+**Status:** Current limitation of the transparent call path. See [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md) for the complete boundary and [host-argument-strict-mode-future-work.md](host-argument-strict-mode-future-work.md) for designs that are not implemented.
+
 ## Context
 
-The sandbox design controls the ambient host Web APIs that a sandboxed library can access. A library only receives configured globals such as `console`, `Intl`, `TextEncoder`, `localStorage`, `crypto`, or other browser/Node APIs when they are listed in `.sandbox/sandbox.config.js`.
+The sandbox design controls the ambient host Web APIs that a sandboxed library can access. A library only receives configured globals such as `Intl`, `TextEncoder`, `TextDecoder`, or the constrained `crypto` facade when they are listed in `.sandbox/sandbox.config.js`. Other globals can be configured, but configuration alone does not make a broad host API safe to expose.
 
 This document records an important boundary limitation in the current membrane design: values explicitly passed by the host application into a sandboxed library are not governed by the same Web API permission list.
 

@@ -1,0 +1,59 @@
+@startuml
+!theme plain
+autonumber
+title Permission-Selected Host Capability
+hide footbox
+
+skinparam defaultFontSize 15
+
+box "Host Environment" #f1f1f1
+    participant "Sandbox\nManager" as Manager
+    participant "Sandbox\nConfiguration" as Config
+    participant "Forward\nMembrane" as HostVmMembrane
+    participant "Allowed Host\nCapabilities" as HostCapabilities
+end box
+
+box "Sandbox" #e9e9e9
+    participant "Isolated\nLibrary" as Library
+end box
+
+== Capability exposure ==
+
+Manager -> Config: Reads library\npermissions
+activate Manager
+activate Config
+Config --> Manager: Allowed capability
+deactivate Config
+
+Manager -> HostVmMembrane: Requests capability mediation
+activate HostVmMembrane
+HostVmMembrane -> HostCapabilities: Gets allowed\nobject
+activate HostCapabilities
+HostCapabilities --> HostVmMembrane: Allowed object
+deactivate HostCapabilities
+
+HostVmMembrane --> HostVmMembrane: Wraps allowed object
+
+HostVmMembrane --> Manager: Mediated capability
+deactivate HostVmMembrane
+
+Manager -> Library: Exposes allowed reference in isolated context
+activate Library
+Library --> Manager: Capability available for controlled use
+deactivate Library
+deactivate Manager
+
+== Library use ==
+
+Library -> HostVmMembrane: Invokes mediated capability
+activate Library
+activate HostVmMembrane
+HostVmMembrane -> HostCapabilities: Executes allowed\noperation
+activate HostCapabilities
+HostCapabilities --> HostVmMembrane: Result
+deactivate HostCapabilities
+HostVmMembrane --> Library: Mediated result
+deactivate HostVmMembrane
+deactivate Library
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+title Source Implementation View
+
+top to bottom direction
+
+skinparam shadowing false
+skinparam packageStyle folder
+skinparam defaultTextAlignment center
+skinparam nodesep 95
+skinparam ranksep 80
+skinparam ArrowThickness 1.1
+
+package "webpack-sandbox-plugin" {
+}
+
+package ".sandbox/" as SandboxRoot {
+  package Core {
+  }
+
+  package Membrane {
+  }
+
+  package Marshallers {
+  }
+
+  rectangle "sandbox.config.js" as SandboxConfig
+
+  Core -[hidden]down-> Membrane
+  Membrane -[hidden]down-> Marshallers
+}
+
+"webpack-sandbox-plugin" ..> SandboxConfig : reads configuration
+"webpack-sandbox-plugin" ..> Core : generates proxies that\ninitialize the runtime
+Core ..> SandboxConfig : reads permissions
+Core ..> Membrane : uses membranes
+Core ..> Marshallers : composes conversions\nwhen required
+
+@enduml

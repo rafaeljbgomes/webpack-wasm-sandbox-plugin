@@ -1,0 +1,79 @@
+@startuml
+title Deployment View
+
+
+
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam defaultTextAlignment center
+skinparam nodesep 25
+skinparam ranksep 25
+skinparam padding 5
+skinparam ArrowThickness 1.1
+
+skinparam node {
+  BackgroundColor #F8F8F8
+  BorderColor #444444
+  FontSize 15
+}
+
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #444444
+  FontSize 15
+}
+
+skinparam artifact {
+  BackgroundColor #FFFFFF
+  BorderColor #444444
+  FontSize 15
+}
+
+node "Host Environment" as HostEnvironment {
+  node "Build Process" as BuildProcess {
+    component "Webpack\nPlugin" as WebpackPlugin
+    component "Proxy\nGenerator" as ProxyGenerator
+    database "Sandbox\nConfiguration" as SandboxConfiguration
+
+    WebpackPlugin -[hidden]right-> ProxyGenerator
+    ProxyGenerator -[hidden]right-> SandboxConfiguration
+  }
+
+  node "Host JavaScript Engine" as HostJs {
+    artifact "Host\nApplication" as HostApplication
+    component "Generated\nProxy" as GeneratedProxy
+    component "Sandbox\nManager" as SandboxManager
+    component "Reverse\nMembrane" as VmHostMembrane
+    component "Forward\nMembrane" as HostVmMembrane
+    component "Allowed Host\nCapabilities" as HostCapabilities
+
+    HostApplication -[hidden]right-> GeneratedProxy
+    GeneratedProxy -[hidden]right-> SandboxManager
+    SandboxManager -[hidden]right-> VmHostMembrane
+    HostVmMembrane -[hidden]right-> HostCapabilities
+  }
+
+  node "Runtime WebAssembly" as WasmRuntime {
+    node "QuickJS/WebAssembly Context" as QuickJsContext {
+      component "Isolated\nLibrary" as IsolatedLibrary
+    }
+  }
+}
+
+WebpackPlugin --> SandboxConfiguration : reads policy
+WebpackPlugin --> ProxyGenerator : requests generation
+ProxyGenerator --> GeneratedProxy : produces proxy
+
+HostApplication --> GeneratedProxy : imports and uses
+GeneratedProxy --> SandboxManager : initializes
+SandboxManager --> SandboxConfiguration : reads permissions
+SandboxManager --> IsolatedLibrary : creates context
+
+SandboxManager --> HostVmMembrane : prepares capabilities
+HostVmMembrane --> HostCapabilities : wraps access
+IsolatedLibrary --> HostVmMembrane : uses capability
+
+GeneratedProxy --> VmHostMembrane : uses exports
+VmHostMembrane --> IsolatedLibrary : executes operations
+
+@enduml

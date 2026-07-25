@@ -1,0 +1,74 @@
+@startuml
+!theme plain
+autonumber
+title Coarse-Grained Workload Sequence
+hide footbox
+
+skinparam defaultFontSize 15
+
+actor "Host\nApplication" as HostApp
+
+box "Host Environment" #f1f1f1
+    participant "Workload\nProxy" as WorkloadProxy
+    participant "Generated\nProxy" as LibraryProxy
+    participant "Sandbox\nManager" as Manager
+    participant "Reverse\nMembrane" as VmHostMembrane
+end box
+
+box "Sandbox" #e9e9e9
+    participant "Workload\nAdapter" as Workload
+    participant "Isolated\nLibrary" as Library
+end box
+
+== Workload initialization ==
+
+HostApp -> WorkloadProxy: Imports configured\nworkload
+activate HostApp
+activate WorkloadProxy
+
+WorkloadProxy -> LibraryProxy: Requests workload\nexport
+activate LibraryProxy
+LibraryProxy -> Manager: Loads workload into\nthe existing sandbox
+activate Manager
+Manager -> Workload: Evaluates workload in QuickJS/WebAssembly
+activate Workload
+Workload --> Manager: Workload exports
+deactivate Workload
+
+Manager -> VmHostMembrane: Requests wrappers for\nworkload exports
+activate VmHostMembrane
+VmHostMembrane --> Manager: Mediated exports
+deactivate VmHostMembrane
+
+Manager --> LibraryProxy: Workload available
+deactivate Manager
+LibraryProxy --> WorkloadProxy: Mediated export
+deactivate LibraryProxy
+WorkloadProxy --> HostApp: Workload exposed\nthrough proxy
+deactivate WorkloadProxy
+
+== Coarse-grained execution ==
+
+HostApp -> WorkloadProxy: Invokes aggregate\nfunction
+activate WorkloadProxy
+WorkloadProxy -> VmHostMembrane: Calls mediated export
+activate VmHostMembrane
+VmHostMembrane -> Workload: Executes function\nin the sandbox
+activate Workload
+
+loop Calls internal to the workload
+    Workload -> Library: Invokes library operations
+    activate Library
+    Library --> Workload: Intermediate objects\nand partial results
+    deactivate Library
+end
+
+Workload --> VmHostMembrane: Final result
+deactivate Workload
+VmHostMembrane --> WorkloadProxy: Mediated result
+deactivate VmHostMembrane
+WorkloadProxy --> HostApp: Final result
+deactivate WorkloadProxy
+deactivate HostApp
+
+@enduml
