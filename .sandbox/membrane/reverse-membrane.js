@@ -1,7 +1,3 @@
-// Reverse membrane: wraps QJS-exported objects so all method calls execute
-// inside the VM with the original QJS `this`, preserving private fields and
-// object identity across the host boundary.
-
 import { isTypedArrayView } from "../core/sb-utils.js";
 
 const exportBindCache = new WeakMap();
@@ -9,15 +5,35 @@ const returnedObjCache = new WeakMap();
 let tempIdCounter = 0;
 const ARG_TAG = "[object Arguments]";
 
+/**
+ * Detects host Arguments objects that already crossed through a marshaller.
+ *
+ * @param {unknown} value Value to inspect.
+ * @returns {boolean} Whether the value has Arguments identity.
+ */
 function isArgumentsObject(value) {
   return Object.prototype.toString.call(value) === ARG_TAG;
 }
 
+/**
+ * Tests whether a value is a data-only object that does not need live QuickJS
+ * receiver preservation.
+ *
+ * @param {object} value Object to inspect.
+ * @returns {boolean} Whether the object has a plain or null prototype.
+ */
 function isPlainObject(value) {
   const proto = Object.getPrototypeOf(value);
   return proto === Object.prototype || proto === null;
 }
 
+/**
+ * Selects results that must remain connected to their live QuickJS object.
+ * Values handled safely by copying or custom marshallers are excluded.
+ *
+ * @param {unknown} value Boundary result to classify.
+ * @returns {boolean} Whether reverse-membrane wrapping is required.
+ */
 function shouldWrapReturned(value) {
   if (value === null) return false;
 
@@ -48,6 +64,13 @@ function shouldWrapReturned(value) {
  * Builds the shared `get` trap used by both bindSandboxFunction and
  * bindSandboxExport. Caches wrapped functions in `fnCache` and lazily
  * wraps nested objects via bindSandboxExport.
+ *
+ * @param {import("quickjs-emscripten-sync").Arena} arena Source sandbox bridge.
+ * @param {string} accessPath QuickJS expression resolving the wrapped object.
+ * @param {Map<PropertyKey, Function>} fnCache Stable wrappers keyed by property.
+ * @param {number} depth Current recursive export-binding depth.
+ * @param {object} sbHelpers Precompiled temporary-object operations.
+ * @returns {Function} Proxy `get` trap shared by exported objects and functions.
  */
 function makeGetTrap(arena, accessPath, fnCache, depth, sbHelpers) {
   return function get(target, key, receiver) {
@@ -69,6 +92,11 @@ function makeGetTrap(arena, accessPath, fnCache, depth, sbHelpers) {
   };
 }
 
+/**
+ * Allocates an identifier for a live value stored in `__SANDBOX_TEMP__`.
+ *
+ * @returns {number} Process-local monotonically increasing identifier.
+ */
 export function nextTempId() {
   return tempIdCounter++;
 }
@@ -76,6 +104,11 @@ export function nextTempId() {
 /**
  * Wraps a return value from a bound method call — if it's a non-primitive,
  * non-TypedArray, non-Date object, applies wrapReturned to preserve QJS `this`.
+ *
+ * @param {import("quickjs-emscripten-sync").Arena} arena Source sandbox bridge.
+ * @param {unknown} result Boundary result to classify.
+ * @param {object} sbHelpers Precompiled temporary-object operations.
+ * @returns {unknown} Original value or an identity-preserving host proxy.
  */
 export function maybeWrapResult(arena, result, sbHelpers) {
   if (shouldWrapReturned(result)) {
@@ -88,18 +121,27 @@ export function maybeWrapResult(arena, result, sbHelpers) {
  * Creates a bound Proxy for a function (class or standalone) from the sandbox.
  * Intercepts both direct calls AND property access (for static methods).
  * Uses a QJS-side closure so calls preserve the original QJS `this`.
+ *
+ * @param {import("quickjs-emscripten-sync").Arena} arena Source sandbox bridge.
+ * @param {Function} fn Arena-exported function used as the proxy target.
+ * @param {string} fnAccessPath QuickJS expression resolving the function.
+ * @param {number} depth Current recursive export-binding depth.
+ * @param {object} sbHelpers Precompiled temporary-object operations.
+ * @returns {Function} Host-callable proxy bound to the QuickJS function.
  */
 export function bindSandboxFunction(arena, fn, fnAccessPath, depth, sbHelpers) {
   const childFnCache = new Map();
   const callFn = arena.evalCode(`(...args) => ${fnAccessPath}(...args)`);
 
   return new Proxy(fn, {
+    /** Invokes the function through its QuickJS access path. */
     apply(_target, _thisArg, args) {
       return maybeWrapResult(arena, callFn(...args), sbHelpers);
     },
+    /** Delegates construction to the layer that owns constructor handling. */
     construct(target, args) {
-      // Delegate to the original — the proxy-generator's construct trap
-      // or Arena's own construct handling will take care of `new`.
+      // Construction remains the responsibility of the outer generated proxy
+      // or Arena when no generated trap is involved.
       return Reflect.construct(target, args);
     },
     get: makeGetTrap(arena, fnAccessPath, childFnCache, depth, sbHelpers),
@@ -110,6 +152,13 @@ export function bindSandboxFunction(arena, fn, fnAccessPath, depth, sbHelpers) {
  * Creates a Proxy over an Arena-dumped export object that intercepts property
  * access and routes function calls through QJS-side bound closures, bypassing
  * Arena's ue() re-marshalling which would lose private fields / object identity.
+ *
+ * @param {import("quickjs-emscripten-sync").Arena} arena Source sandbox bridge.
+ * @param {unknown} obj Arena-exported value to bind.
+ * @param {string} accessPath QuickJS expression resolving the value.
+ * @param {object} sbHelpers Precompiled temporary-object operations.
+ * @param {number} [depth=0] Current recursive binding depth.
+ * @returns {unknown} Primitive input unchanged or an identity-cached host proxy.
  */
 export function bindSandboxExport(arena, obj, accessPath, sbHelpers, depth = 0) {
   if (obj === null || obj === undefined) return obj;
@@ -121,6 +170,7 @@ export function bindSandboxExport(arena, obj, accessPath, sbHelpers, depth = 0) 
 
   const bound = new Proxy(obj, {
     get: makeGetTrap(arena, accessPath, fnCache, depth, sbHelpers),
+    /** Mirrors host assignments onto the Arena-exported target. */
     set(target, key, value) {
       target[key] = value;
       return true;
@@ -136,13 +186,16 @@ export function bindSandboxExport(arena, obj, accessPath, sbHelpers, depth = 0) 
  * Stores the QJS-side result in __SANDBOX_TEMP__ and binds methods from that
  * reference, preserving object identity for private fields.
  *
- * @param preStoredId - If provided, the object was already stored in
+ * @param {import("quickjs-emscripten-sync").Arena} arena Source sandbox bridge.
+ * @param {unknown} obj Arena result to wrap.
+ * @param {number} [preStoredId] If provided, the object was already stored in
  *   __SANDBOX_TEMP__ by a QJS-side constructor (via createInstance).
  *   Skips the setter round-trip, which would otherwise create a new
  *   QJS object and break WeakMap-based private field emulation.
- * @param sbHelpers - Pre-compiled QJS helper functions (tempSet, tempCall,
+ * @param {object} sbHelpers Pre-compiled QJS helper functions (tempSet, tempCall,
  *   tempGet) compiled once at sandbox creation to avoid per-call evalCode
  *   parse+compile overhead.
+ * @returns {unknown} Original value or an identity-cached host proxy.
  */
 export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
   if (!shouldWrapReturned(obj)) return obj;
@@ -150,8 +203,8 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
 
   let id;
   if (preStoredId !== undefined) {
-    // Object was already stored in __SANDBOX_TEMP__ inside QJS by the
-    // constructor closure (createInstance). No round-trip needed.
+    // Constructor-created objects are stored before crossing the boundary, so
+    // storing them again would replace their identity inside QuickJS.
     id = preStoredId;
   } else {
     id = nextTempId();
@@ -159,33 +212,25 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
   }
 
   const fnCache = new Map();
-  // Stores host-side property overrides (e.g. from mock.method / direct assignment).
-  // These take priority over fnCache so that mocked methods are visible both on the
-  // host side (mock.calls) and when the object is marshalled back into QJS.
+  // Host overrides take priority over cached QuickJS methods so test mocks and
+  // direct assignments remain observable on the host.
   const hostOverrides = new Map();
 
-  // Cache for QJS-side property getters (for primitive-typed properties such
-  // as Luxon DateTime.year / .month / .day that are defined as class getters).
-  // Arena's sync-proxy materialises the object via ctx.dump() — a JSON dump
-  // that never calls QJS prototype getters — so target[key] returns NaN/undefined
-  // for those properties. We read them directly from the live QJS object instead.
+  // Arena dumps omit prototype getters, so primitive properties are read from
+  // the live QuickJS object and their accessor closures are cached.
   const propGetterCache = new Map();
 
   const bound = new Proxy(obj, {
+    /** Resolves overrides, methods, nested objects, or live QuickJS properties. */
     get(target, key, receiver) {
       if (typeof key === "symbol") return Reflect.get(target, key, receiver);
 
-      // Return any host-side override set via the set trap (e.g. mock.method).
       if (hostOverrides.has(key)) {
         return hostOverrides.get(key);
       }
 
-      // Proxy invariant: if the target has a non-configurable, non-writable
-      // data property, the trap MUST return the exact same value as target[key].
-      // Wrapping it in a new Proxy (even with identical content) would produce
-      // a different object reference and throw a TypeError at the engine level.
-      // This surfaces for Arena-dumped objects where ctx.dump() materialises
-      // properties like ZodError.issues as sealed own data properties.
+      // ECMAScript requires the exact target value for frozen data properties;
+      // wrapping such a value would violate the Proxy invariant.
       const desc = Object.getOwnPropertyDescriptor(target, key);
       if (desc && !desc.configurable && desc.writable === false) {
         return Reflect.get(target, key, receiver);
@@ -203,19 +248,15 @@ export function wrapReturned(arena, obj, preStoredId, sbHelpers) {
       if (shouldWrapReturned(value)) {
         return maybeWrapResult(arena, value, sbHelpers);
       }
-      // For primitive-typed properties (numbers, strings, booleans, null,
-      // undefined) read the value directly from the live QJS object so that
-      // class getter properties defined on the prototype (e.g. DateTime.year,
-      // DateTime.month) are actually invoked inside the VM rather than read
-      // from Arena's ctx.dump() snapshot which omits prototype getters.
       if (!propGetterCache.has(key)) {
         propGetterCache.set(key, () => sbHelpers.tempGet(id, key));
       }
       return propGetterCache.get(key)();
     },
+    /** Stores a host override and invalidates any cached method wrapper. */
     set(target, key, value) {
-      // Persist the host value so get() returns it directly (bypassing fnCache),
-      // and invalidate any stale fnCache entry for the same key.
+      // Invalidate the QuickJS method wrapper so subsequent reads observe the
+      // host-side replacement.
       hostOverrides.set(key, value);
       fnCache.delete(key);
       target[key] = value;

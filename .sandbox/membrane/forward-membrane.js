@@ -1,6 +1,3 @@
-// Forward membrane: wraps host objects and functions before exposure to the QJS Arena.
-// Prevents internal-slot errors by binding methods to their native owner.
-
 import { isTypedArrayView, REQUIRES_NEW_RE } from "../core/sb-utils.js";
 
 const wrapperCache = new WeakMap();
@@ -10,6 +7,10 @@ const wrapperCache = new WeakMap();
  * can still invoke constructors correctly.
  * Constructor return values that are non-TypedArray objects are recursively
  * wrapped with bindWebApi to preserve internal-slot safety.
+ *
+ * @param {Function} fn Host function or constructor to expose.
+ * @param {unknown} thisArg Native receiver used for ordinary calls.
+ * @returns {Function} Boundary-safe callable wrapper.
  */
 export function makeCallable(fn, thisArg) {
   return (...args) => {
@@ -23,10 +24,8 @@ export function makeCallable(fn, thisArg) {
         throw e;
       }
     }
-    // Wrap returned objects so their methods stay bound to the real host instance.
-    // This prevents Arena from creating a sync Proxy over objects with native
-    // internal slots (e.g. Intl.DateTimeFormat), where Proxy breaks slot checks.
-    // TypedArrays are excluded — they're handled by the custom marshaller.
+    // Native instances must keep their real receivers; TypedArrays instead use
+    // copy-based custom marshalling.
     if (result !== null && typeof result === "object" && !isTypedArrayView(result)) {
       return bindWebApi(result);
     }
@@ -40,6 +39,9 @@ export function makeCallable(fn, thisArg) {
  *  - Binds each function to its native owner (preserves internal slots)
  *  - Lazily wraps nested objects via a get accessor
  * Uses a WeakMap cache to handle circular references and preserve identity.
+ *
+ * @param {unknown} apiObject Host value permitted by the sandbox policy.
+ * @returns {unknown} Primitive input unchanged or an identity-cached wrapper.
  */
 export function bindWebApi(apiObject) {
   if (typeof apiObject !== "object" || apiObject === null) {
@@ -55,10 +57,7 @@ export function bindWebApi(apiObject) {
 
   let keys = [];
   try {
-    // Walk the full prototype chain so methods defined on built-in prototypes
-    // (e.g. Crypto.prototype.getRandomValues, Intl.ListFormat.prototype.format)
-    // are included. Object.getOwnPropertyNames is used at each level to capture
-    // non-enumerable properties that for...in would miss.
+    // Built-in methods are commonly non-enumerable and live on prototypes.
     const seen = new Set();
     let proto = apiObject;
     while (proto && proto !== Object.prototype) {
@@ -74,7 +73,9 @@ export function bindWebApi(apiObject) {
         boundObject[key] = makeCallable(apiObject[key], apiObject);
       } else {
         Object.defineProperty(boundObject, key, {
+          /** Reads and recursively wraps the current host property value. */
           get: () => bindWebApi(apiObject[key]),
+          /** Applies an allowed assignment to the underlying host object. */
           set: (val) => {
             apiObject[key] = val;
           },

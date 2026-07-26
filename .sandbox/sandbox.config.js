@@ -1,4 +1,4 @@
-// example config
+/** Sandbox permissions and optional workloads configured per dependency. */
 export default {
   "strip-ansi": {
     permissions: ["console", "localStorage", "location", "document", "alert", "fetch", "CookieStore", "Animation"],

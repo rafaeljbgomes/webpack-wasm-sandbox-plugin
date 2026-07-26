@@ -1,6 +1,3 @@
-// WebAPI exposure: reads the sandbox config permissions for a library and
-// exposes the corresponding host globals to the Arena under safe wrappers.
-
 import sandboxConfig from "../sandbox.config.js";
 import { bindWebApi, makeCallable } from "../membrane/forward-membrane.js";
 
@@ -16,6 +13,13 @@ const INTEGER_TYPED_ARRAY_NAMES = new Set([
   "BigUint64Array",
 ]);
 
+/**
+ * Creates a constrained crypto facade instead of exposing the host crypto
+ * object and its ambient authority directly.
+ *
+ * @param {import("quickjs-emscripten-sync").Arena} arena Target sandbox bridge.
+ * @returns {{exposed: object, install: string}|null} Host callbacks and QuickJS installer source.
+ */
 function createCryptoCapability(arena) {
   if (
     typeof globalThis.crypto !== "object" ||
@@ -25,6 +29,12 @@ function createCryptoCapability(arena) {
     return null;
   }
 
+  /**
+   * Generates random bytes after enforcing the Web Crypto length contract.
+   *
+   * @param {unknown} byteLength Requested byte count.
+   * @returns {Uint8Array} Random bytes copied across the boundary.
+   */
   const getRandomBytes = (byteLength) => {
     const length = Number(byteLength);
     if (!Number.isSafeInteger(length) || length < 0) {
@@ -54,6 +64,7 @@ function createCryptoCapability(arena) {
         const randomUUID = globalThis.__sandboxCryptoRandomUUID;
         const integerTypedArrayNames = new Set(${JSON.stringify([...INTEGER_TYPED_ARRAY_NAMES])});
 
+        /** Creates the DOM-compatible error used for oversized requests. */
         const makeQuotaExceededError = () => {
           const error = new Error("The requested length exceeds 65,536 bytes.");
           error.name = "QuotaExceededError";
@@ -64,6 +75,7 @@ function createCryptoCapability(arena) {
         Object.defineProperty(cryptoCapability, "getRandomValues", {
           enumerable: true,
           configurable: true,
+          /** Fills an integer TypedArray without exposing the host crypto object. */
           value(target) {
             if (
               target === null ||
@@ -89,6 +101,7 @@ function createCryptoCapability(arena) {
           Object.defineProperty(cryptoCapability, "randomUUID", {
             enumerable: true,
             configurable: true,
+            /** Returns a UUID produced by the host capability. */
             value() {
               return randomUUID();
             },
@@ -116,6 +129,10 @@ function createCryptoCapability(arena) {
  * Functions (constructors like TextEncoder, Crypto) go through makeCallable so
  * the Arena can invoke them without `new`. Plain objects go through bindWebApi
  * so their methods stay bound to the native host instance.
+ *
+ * @param {import("quickjs-emscripten-sync").Arena} arena Target sandbox bridge.
+ * @param {string} libraryName Policy key whose permissions are applied.
+ * @returns {void}
  */
 export function exposeWebAPIs(arena, libraryName) {
   const config = sandboxConfig[libraryName] || { permissions: [] };
