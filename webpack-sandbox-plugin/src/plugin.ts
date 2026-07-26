@@ -5,50 +5,73 @@ import { ProxyGenerator } from "./proxy-generator";
 import { Parser } from "./core/parser";
 import { findAllDtsFiles } from "./utils/file-utils";
 
+/** Configuration accepted by {@link WebpackSandboxPlugin}. */
 export interface SandboxPluginOptions {
+  /** Path to the sandbox policy, resolved from the Webpack compiler context. */
   configPath: string;
 }
 
+/** Workload definition read from a library's sandbox policy. */
 interface WorkloadConfig {
+  /** Project-relative module bundled and evaluated inside the library sandbox. */
   entry: string;
+  /** Named workload exports exposed through the generated workload proxy. */
   exports: string[];
 }
 
+/** Workload definition enriched with its owning library and policy key. */
 interface ConfiguredWorkload extends WorkloadConfig {
   libraryName: string;
   workloadName: string;
 }
 
+/**
+ * Escapes a literal module request for use in a regular expression.
+ *
+ * @param value Module request to escape.
+ * @returns The escaped expression fragment.
+ */
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+/**
+ * Bundles configured dependencies for QuickJS and redirects host imports to
+ * generated proxy modules.
+ */
 export class WebpackSandboxPlugin {
   private options: SandboxPluginOptions;
   private sandboxCacheDir: string;
 
+  /**
+   * Creates a plugin instance and selects the generated-proxy directory.
+   *
+   * @param options Sandbox policy location.
+   */
   constructor(options: SandboxPluginOptions) {
     this.options = options;
     this.sandboxCacheDir = path.resolve(process.cwd(), ".sandbox/proxys");
   }
 
+  /**
+   * Registers proxy generation, import replacement, and isolated child
+   * compilations with a Webpack compiler.
+   *
+   * @param compiler Compiler receiving the sandbox integration.
+   */
   apply(compiler: Compiler) {
-    // 1. Ensure cache directory exists
     if (!fs.existsSync(this.sandboxCacheDir)) {
       fs.mkdirSync(this.sandboxCacheDir, { recursive: true });
     }
 
-    // 2. Load the Sandbox Config to know which libraries to intercept
     const configPath = path.resolve(compiler.context, this.options.configPath);
     let configuredLibraries: string[] = [];
     let configuredWorkloads: ConfiguredWorkload[] = [];
 
     try {
       if (fs.existsSync(configPath)) {
-        // Since we are running in a build environment, we can dynamically require the configuration
-        // We use a dynamic import/require query. Assuming it's standard JS (like sandbox.config.js)
         let configModule = require(configPath);
-        // Handle both CommonJS and ES Modules default exports
+        // Webpack configurations may load the policy through either module shape.
         const sandboxConfig = configModule.default || configModule;
 
         configuredLibraries = Object.keys(sandboxConfig);
@@ -77,7 +100,6 @@ export class WebpackSandboxPlugin {
       );
     }
 
-    // 3. Generate proxies before the main compilation starts.
     // Use `compile` instead of `beforeCompile` because webpack copies
     // `beforeCompile` taps into child compilers created by `runAsChild()`.
     // That caused proxy generation to run once for the root compiler and
@@ -97,7 +119,6 @@ export class WebpackSandboxPlugin {
       });
     });
 
-    // 4. Intercept imports and replace with proxy
     configuredLibraries.forEach((libName) => {
       const proxyPath = path.resolve(
         this.sandboxCacheDir,
@@ -133,7 +154,8 @@ export class WebpackSandboxPlugin {
       ).apply(compiler);
     });
 
-    // 5. Setup Child Compiler to bundle the original library into an IIFE/UMD string
+    // Child compilers keep dependency code out of the host bundle while still
+    // participating in the parent compilation lifecycle.
     compiler.hooks.make.tapAsync(
       "WebpackSandboxPlugin",
       (compilation, callback) => {
@@ -144,10 +166,8 @@ export class WebpackSandboxPlugin {
               path: path.resolve(compiler.options.output.path || "dist"),
               library: {
                 type: "var" as const,
-                //type: "global" as const,
                 name: "__SANDBOXED_LIB__",
               },
-              //globalObject: "globalThis",
             };
 
             const { EnableLibraryPlugin } = compiler.webpack.library;
@@ -158,8 +178,6 @@ export class WebpackSandboxPlugin {
               [new EnableLibraryPlugin("var")],
             );
 
-            // We need to resolve the actual path of the library from node_modules
-            // For a simple spike, we resolve the package root.
             let libEntryPath;
             try {
               libEntryPath = require.resolve(libName, {
@@ -172,7 +190,6 @@ export class WebpackSandboxPlugin {
               return resolve();
             }
 
-            // Webpack API requires requiring its internal EntryPlugin
             const EntryPlugin = compiler.webpack.EntryPlugin;
             new EntryPlugin(compiler.context, libEntryPath, {
               name: libName,
@@ -279,6 +296,13 @@ export class WebpackSandboxPlugin {
     );
   }
 
+  /**
+   * Parses a dependency's declarations and writes its generated sandbox proxy.
+   *
+   * @param libraryName Package request configured for isolation.
+   * @param context Webpack project context used for module resolution.
+   * @param workloads Workloads sharing the library's QuickJS context.
+   */
   private generateProxyForLibrary(
     libraryName: string,
     context: string,
@@ -338,6 +362,13 @@ export class WebpackSandboxPlugin {
     );
   }
 
+  /**
+   * Writes a proxy that exposes selected workload functions from an owning
+   * library sandbox.
+   *
+   * @param workload Workload definition from the sandbox policy.
+   * @param context Webpack project context used to resolve its entry module.
+   */
   private generateProxyForWorkload(
     workload: ConfiguredWorkload,
     context: string,

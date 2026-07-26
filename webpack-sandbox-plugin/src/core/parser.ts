@@ -2,13 +2,24 @@ import * as ts from "typescript";
 import * as path from "path";
 import { LibraryData } from "../domain/types";
 
+/** Extracts runtime-relevant export names from TypeScript declarations. */
 export class Parser {
   private program: ts.Program;
 
+  /**
+   * Creates a declaration program for the files belonging to one dependency.
+   *
+   * @param filePaths Declaration files to inspect.
+   */
   constructor(filePaths: string[]) {
     this.program = ts.createProgram(filePaths, {});
   }
 
+  /**
+   * Collects the dependency exports required by proxy generation.
+   *
+   * @returns Runtime-relevant export metadata.
+   */
   public parse(): LibraryData {
     const libraryData: LibraryData = {
       exportedNames: [],
@@ -35,10 +46,8 @@ export class Parser {
       }
     }
 
-    // For `export = identifier` libraries (e.g. lodash), checker.getExportsOfModule()
-    // returns TypeScript type-level names from the namespace declaration — not runtime
-    // values. Clear them so the proxy generator doesn't emit stubs for names that
-    // don't exist at runtime.
+    // For `export =` libraries, TypeScript reports namespace type members that
+    // do not exist as independent runtime exports.
     if (libraryData.callableSingletonExport) {
       libraryData.exportedNames = [];
     }
@@ -46,11 +55,17 @@ export class Parser {
     return libraryData;
   }
 
+  /**
+   * Finds the first CommonJS-style `export = identifier` assignment in a
+   * declaration tree.
+   *
+   * @param node Declaration node to inspect recursively.
+   * @param data Export metadata updated when an assignment is found.
+   */
   private checkSingletonExport(node: ts.Node, data: LibraryData) {
     if (ts.isExportAssignment(node) && node.isExportEquals && ts.isIdentifier(node.expression)) {
-      // `export = identifier` — CJS-style re-export (e.g. `export = _` in lodash).
-      // Use first-wins: index.d.ts is visited before per-function files (e.g. zipWith.d.ts),
-      // so the first assignment captures the library's main export identifier.
+      // Root declarations are visited before supporting declaration files, so
+      // first-wins selects the package's primary assignment.
       if (!data.callableSingletonExport) {
         data.callableSingletonExport = node.expression.text;
       }

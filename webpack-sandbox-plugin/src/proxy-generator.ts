@@ -1,11 +1,23 @@
 import { LibraryData } from "./domain/types";
 
+/** Workload metadata used when generating lazy proxy accessors. */
 export interface ProxyWorkload {
+  /** Policy key identifying the workload within its library sandbox. */
   workloadName: string;
+  /** Workload exports made available to host code. */
   exports: string[];
 }
 
+/** Produces ESM proxy modules backed by a per-library QuickJS sandbox. */
 export class ProxyGenerator {
+  /**
+   * Generates the complete proxy module for one configured dependency.
+   *
+   * @param libraryData Runtime export information parsed from declarations.
+   * @param libraryName Package request used to locate the isolated bundle.
+   * @param workloads Workloads that share the dependency's sandbox.
+   * @returns JavaScript source for the generated proxy module.
+   */
   public generate(
     libraryData: LibraryData,
     libraryName: string,
@@ -14,8 +26,7 @@ export class ProxyGenerator {
     let content = `// Auto-generated Sandbox Proxy for ${libraryName}\n`;
     content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
 
-    // 1. Core Sandbox Initialization using Top-Level Await
-    content += `// 1. Load library bundle (Node.js or browser)\n`;
+    content += `// Load the isolated bundle from the active runtime.\n`;
     content += `let libraryCode;\n`;
     content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;
     content += `  const { readFileSync } = await import('fs');\n`;
@@ -29,26 +40,22 @@ export class ProxyGenerator {
     content += `}\n`;
     content += `\n`;
 
-    content += `// 2. Initialize QuickJS Wasm Sandbox\n`;
+    content += `// Initialize the per-library QuickJS context before exposing exports.\n`;
     content += `const librarySandbox = await SandboxManager.createSandbox(\n`;
     content += `  "${libraryName}",\n`;
     content += `  libraryCode\n`;
     content += `);\n\n`;
-    content += `// Allow Node.js to exit after initialization (pump was kept ref'd during await)\n`;
+    content += `// Initialization needs a referenced job pump; steady-state Node.js usage does not.\n`;
     content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;
     content += `  librarySandbox.unrefPump();\n`;
     content += `}\n\n`;
     content += `const proxyExports = librarySandbox.exports;\n\n`;
     content += this.generateWorkloadAccessHelpers(libraryName, workloads);
 
-    // 2a. Callable singleton export — `export = identifier` pattern (e.g. lodash `_`).
-    // proxyExports IS the exported value (e.g. the _ function).  Emit a single default
-    // export with apply + get + construct traps so both _(value) and _.map() work.
+    // An `export =` declaration represents one callable value whose properties
+    // must remain accessible through the same default export.
     if (libraryData.callableSingletonExport) {
-      content += `// Callable singleton — library uses \`export = ${libraryData.callableSingletonExport}\`.\n`;
-      content += `// proxyExports is the exported value itself; expose it as the default export\n`;
-      content += `// with an apply trap so \`_(value)\` works for chaining, and a get trap for\n`;
-      content += `// \`_.map\`, \`_.filter\`, etc. (delegated to bindSandboxExport's get trap).\n`;
+      content += `// Preserve both calls and property access on the callable singleton export.\n`;
       content += `let _callFn;\n`;
       content += `function _callable_target() {}\n`;
       content += `export default new Proxy(_callable_target, {\n`;
@@ -67,7 +74,7 @@ export class ProxyGenerator {
       content += `  },\n`;
       content += `});\n\n`;
 
-      content += `// Sandbox Lifecycle Management\n`;
+      content += `/** Disposes the QuickJS context and its boundary resources. */\n`;
       content += `export function disposeLibrary() {\n`;
       content += `  if (librarySandbox) {\n`;
       content += `    librarySandbox.dispose();\n`;
@@ -76,26 +83,24 @@ export class ProxyGenerator {
       return content;
     }
 
-    // Keep track of exported names to handle TS overloads or multiple files
+    // Declaration files can report the same runtime export more than once.
     const exportedNames = new Set<string>();
 
-    // 2b. Export Everything (Functions, Classes, Namespaces, Variables)
     libraryData.exportedNames.forEach((name) => {
       if (exportedNames.has(name)) {
-        return; // Skip duplicates
+        return;
       }
       exportedNames.add(name);
 
       if (name === "default") {
-        // Find the first named (non-default) export to use as a fallback constructor
-        // when proxyExports.default is a singleton object rather than a class.
+        // Some declaration sets describe a singleton default alongside the
+        // named class that actually supports construction.
         const fallbackName = libraryData.exportedNames.find((n) => n !== "default") ?? null;
         const fallbackExpr = fallbackName
           ? `(typeof proxyExports.${fallbackName} === "function" ? proxyExports.${fallbackName} : null)`
           : `null`;
         const fallbackCtorKey = fallbackName ?? "default";
 
-        content += `// Default Export\n`;
         content += `// If proxyExports.default is a singleton (not a constructor), fall back to the\n`;
         content += `// first named class export so that both \`new Default()\` and singleton method\n`;
         content += `// access (\`default.someMethod()\`) work via the get-trap fallthrough.\n`;
@@ -103,7 +108,7 @@ export class ProxyGenerator {
         content += `  ? proxyExports.default\n`;
         content += `  : ${fallbackExpr};\n`;
         content += `const _defaultSingleton = typeof proxyExports.default !== "function" ? proxyExports.default : null;\n`;
-        content += `// Plain constructable function as Proxy target: Arena-wrapped QJS functions are\n`;
+        content += `// Use a constructable target because Arena-wrapped QJS functions are\n`;
         content += `// arrow functions (no [[Construct]]), so using them directly as Proxy target\n`;
         content += `// makes the Proxy non-constructable even when a construct trap is present.\n`;
         content += `function _default_target() {}\n`;
@@ -128,8 +133,7 @@ export class ProxyGenerator {
       } else {
         const safeName = name.replace(/[^a-zA-Z0-9_$]/g, '_');
         const safeIdentifier = `_export_${safeName}`;
-        content += `// Export: ${name}\n`;
-        content += `// Plain constructable function as Proxy target — see default export comment.\n`;
+        content += `// Use a constructable host target while routing calls into ${name}.\n`;
         content += `function _${safeName}_target() {}\n`;
         content += `const ${safeIdentifier} = typeof proxyExports["${name}"] === "function"\n`;
         content += `  ? new Proxy(_${safeName}_target, {\n`;
@@ -146,14 +150,12 @@ export class ProxyGenerator {
         content += `      }\n`;
         content += `    })\n`;
         content += `  : proxyExports["${name}"];\n`;
-        // Using quotes in export { _val as "name" } is only supported in very modern ES, but
-        // exporting reserved words like export { _val as null } is supported.
+        // Identifier aliases also support declaration names that are reserved words.
         content += `export { ${safeIdentifier} as ${name} };\n\n`;
       }
     });
 
-    // 3. Dispose utility
-    content += `// Sandbox Lifecycle Management\n`;
+    content += `/** Disposes the QuickJS context and its boundary resources. */\n`;
     content += `export function disposeLibrary() {\n`;
     content += `  if (librarySandbox) {\n`;
     content += `    librarySandbox.dispose();\n`;
@@ -163,6 +165,13 @@ export class ProxyGenerator {
     return content;
   }
 
+  /**
+   * Generates the lazy loader shared by configured workload proxy modules.
+   *
+   * @param libraryName Owning dependency's package request.
+   * @param workloads Workloads available within the dependency sandbox.
+   * @returns JavaScript source for the manifest and access helpers.
+   */
   private generateWorkloadAccessHelpers(
     libraryName: string,
     workloads: ProxyWorkload[],
@@ -179,6 +188,7 @@ export class ProxyGenerator {
     }
     content += `};\n\n`;
 
+    content += `/** Loads a workload bundle in Node.js or the browser. */\n`;
     content += `async function loadWorkloadBundle(workloadName) {\n`;
     content += `  const bundleName = \`${libraryName}.\${workloadName}.workload.bundle.js\`;\n`;
     content += `  if (typeof process !== 'undefined' && process.versions?.node) {\n`;
@@ -192,6 +202,7 @@ export class ProxyGenerator {
     content += `  return fetch(\`/dist/\${bundleName}\`).then(r => r.text());\n`;
     content += `}\n`;
     content += `\n`;
+    content += `/** Loads a workload once and returns one of its sandbox-bound exports. */\n`;
     content += `export async function __getSandboxWorkloadExport(workloadName, exportName) {\n`;
     content += `  const manifest = workloadManifest[workloadName];\n`;
     content += `  if (!manifest) {\n`;
@@ -217,6 +228,12 @@ export class ProxyGenerator {
     return content;
   }
 
+  /**
+   * Converts a policy key into a valid suffix for a generated global name.
+   *
+   * @param value Workload name from the sandbox policy.
+   * @returns A JavaScript-identifier-safe name fragment.
+   */
   private toSafeGlobalName(value: string): string {
     return value.replace(/[^a-zA-Z0-9_$]/g, "_");
   }

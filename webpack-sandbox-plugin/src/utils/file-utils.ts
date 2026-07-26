@@ -1,6 +1,13 @@
 import * as fs from "fs";
 import * as path from "path";
 
+/**
+ * Recursively collects TypeScript declaration files beneath a directory.
+ *
+ * @param dir Directory to scan.
+ * @param fileList Accumulator used by recursive calls.
+ * @returns The accumulator containing every discovered `.d.ts` path.
+ */
 export function findAllDtsFiles(
   dir: string,
   fileList: string[] = [],
