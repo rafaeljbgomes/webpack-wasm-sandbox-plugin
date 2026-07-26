@@ -1,6 +1,7 @@
-// Error custom marshaller: preserves Error subclass identity across the host↔QJS
-// boundary. Without this, QJS errors can surface as generic proxies/objects on
-// the host and fail `instanceof TypeError` / `assert.raises(..., TypeError)`.
+/**
+ * Preserves Error subclass identity and selected structured fields across the
+ * boundary instead of exposing errors as generic proxied objects.
+ */
 
 const ERROR_CTORS = new Map([
   ["Error", Error],
@@ -13,10 +14,22 @@ const ERROR_CTORS = new Map([
   ["AggregateError", typeof AggregateError === "function" ? AggregateError : Error],
 ]);
 
+/**
+ * Resolves a supported host Error constructor by name.
+ *
+ * @param {string} name Error subclass name from QuickJS.
+ * @returns {ErrorConstructor} Matching constructor or the base Error class.
+ */
 function getHostErrorCtor(name) {
   return ERROR_CTORS.get(name) || Error;
 }
 
+/**
+ * Tests whether a host value should use the Error marshaller.
+ *
+ * @param {unknown} value Value to inspect.
+ * @returns {boolean} Whether the value inherits from Error.
+ */
 function isErrorLike(value) {
   return value instanceof Error;
 }
@@ -31,6 +44,14 @@ const EXTRA_ERROR_FIELDS = [
   "issues",
 ];
 
+/**
+ * Produces a bounded, cycle-safe representation of an error field.
+ *
+ * @param {unknown} value Field value to copy.
+ * @param {number} [depth=0] Current traversal depth.
+ * @param {Set<object>} [seen] Objects already visited during this copy.
+ * @returns {unknown} JSON-compatible value, or undefined when unsupported.
+ */
 function copyJsonSafe(value, depth = 0, seen = new Set()) {
   if (value === null || value === undefined) return value;
   const valueType = typeof value;
@@ -69,6 +90,14 @@ function copyJsonSafe(value, depth = 0, seen = new Set()) {
   return output;
 }
 
+/**
+ * Extracts standard Error data and supported library-specific fields.
+ *
+ * @param {Error} error Error to serialize.
+ * @param {number} [depth=0] Current traversal depth.
+ * @param {Set<object>} [seen] Objects already visited during this copy.
+ * @returns {object} Bounded JSON-compatible error payload.
+ */
 function copyErrorPayload(error, depth = 0, seen = new Set()) {
   const payload = {
     name: error.name,
@@ -84,6 +113,13 @@ function copyErrorPayload(error, depth = 0, seen = new Set()) {
   return payload;
 }
 
+/**
+ * Applies deserialized fields to a reconstructed host Error.
+ *
+ * @param {Error} error Target error instance.
+ * @param {unknown} payload Deserialized structured fields.
+ * @returns {Error} The enriched target instance.
+ */
 function applyErrorPayload(error, payload) {
   if (!payload || typeof payload !== "object") return error;
   for (const [key, value] of Object.entries(payload)) {
@@ -94,6 +130,12 @@ function applyErrorPayload(error, payload) {
   return error;
 }
 
+/**
+ * Creates an Error marshaller bound to a specific QuickJS context.
+ *
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Owning QuickJS context.
+ * @returns {object} Arena marshalling hooks and their disposer.
+ */
 export function createErrorMarshaller(vm) {
   const isErrorInVM = vm.unwrapResult(
     vm.evalCode("(h) => h instanceof Error"),
@@ -106,10 +148,12 @@ export function createErrorMarshaller(vm) {
   let getPayload = null;
 
   return {
+    /** Prevents Arena from proxy-wrapping host Error instances. */
     isWrappable(value) {
       return !isErrorLike(value);
     },
 
+    /** Routes QuickJS Error handles to the custom unmarshaller. */
     isHandleWrappable(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return true;
       const result = ctx.unwrapResult(
@@ -120,6 +164,7 @@ export function createErrorMarshaller(vm) {
       return !isErr;
     },
 
+    /** Reconstructs a host Error inside QuickJS with supported payload fields. */
     marshal(value, ctx) {
       if (!isErrorLike(value)) return undefined;
 
@@ -158,6 +203,7 @@ export function createErrorMarshaller(vm) {
       return result;
     },
 
+    /** Reconstructs a QuickJS Error as the corresponding host subclass. */
     unmarshal(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return undefined;
 
@@ -175,6 +221,7 @@ export function createErrorMarshaller(vm) {
         getPayload = ctx.unwrapResult(ctx.evalCode(`(err) => {
           const fields = ["errors", "inner", "path", "type", "value", "params", "issues"];
           const seen = new Set();
+          /** Copies a bounded JSON-compatible field within QuickJS. */
           function copy(value, depth = 0) {
             if (value === null || value === undefined) return value;
             const valueType = typeof value;
@@ -196,6 +243,7 @@ export function createErrorMarshaller(vm) {
             }
             return output;
           }
+          /** Extracts supported fields from a QuickJS Error. */
           function copyError(error, depth = 0) {
             const output = { name: error.name, message: error.message, stack: error.stack };
             for (const key of fields) {
@@ -245,6 +293,7 @@ export function createErrorMarshaller(vm) {
       return applyErrorPayload(error, payload);
     },
 
+    /** Releases every QuickJS detector, constructor, and property reader. */
     dispose() {
       if (isErrorInVM.alive) isErrorInVM.dispose();
       if (creator && creator.alive) creator.dispose();

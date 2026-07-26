@@ -1,48 +1,44 @@
-// Arguments custom marshaller: preserves the array-like identity of host-side
-// Arguments objects across the host↔QJS boundary.
-//
-// Without this, an Arguments object is marshalled as a plain QJS object
-// { 0: ..., 1: ..., length: ... } that:
-//   - has Object.prototype.toString → "[object Object]" (not "[object Arguments]")
-//   - fails lodash's isArguments() check → isFlattenable() returns false
-//   - causes flatten/flattenDeep/flattenDepth to treat it as an opaque value
-//
-// Strategy:
-//   marshal  : convert Arguments → QJS array tagged with __qjsArguments__ = true
-//              Lodash sees Array.isArray → true → isFlattenable → true.
-//   unmarshal: detect the tag and reconstruct a host Arguments object so that
-//              round-tripped values survive deepEqual comparisons.
+/**
+ * Preserves Arguments semantics by representing the value as a tagged QuickJS
+ * array and reconstructing Arguments identity when it returns to the host.
+ */
 
 const ARG_TAG = "__qjsArguments__";
 
 const ARGS_TOSTRING = "[object Arguments]";
 
+/**
+ * Tests whether a host value has Arguments identity.
+ *
+ * @param {unknown} value Value to inspect.
+ * @returns {boolean} Whether the value is an Arguments object.
+ */
 function isArguments(value) {
   return Object.prototype.toString.call(value) === ARGS_TOSTRING;
 }
 
 /**
  * Creates an Arguments marshaller bound to a specific QJS VM.
- * Returns { isWrappable, isHandleWrappable, marshal, unmarshal, dispose }.
+ *
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Owning QuickJS context.
+ * @returns {object} Arena marshalling hooks and their disposer.
  */
 export function createArgumentsMarshaller(vm) {
-  // Pre-compile QJS-side tag detector: reused by isHandleWrappable and unmarshal.
+  // The detector is shared by classification and unmarshalling.
   const isArgTagInVM = vm.unwrapResult(
     vm.evalCode(`(h) => Array.isArray(h) && h.${ARG_TAG} === true`),
   );
 
-  // QJS factory: parses a JSON array and stamps the tag on it.
-  // Lazily compiled on first marshal hit (ctx may differ from vm in edge cases).
+  // Compile the constructor lazily because this marshaller may never be used.
   let creator = null;
 
   return {
-    // host-side guard: intercept Arguments objects before Arena wraps them.
+    /** Prevents Arena from proxy-wrapping host Arguments objects. */
     isWrappable(value) {
       return !isArguments(value);
     },
 
-    // QJS-side guard: intercept tagged arrays so they reach unmarshal instead
-    // of Arena's default ctx.dump() path (which would strip the tag).
+    /** Routes tagged QuickJS arrays to the custom unmarshaller. */
     isHandleWrappable(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return true;
       const result = ctx.unwrapResult(
@@ -53,10 +49,7 @@ export function createArgumentsMarshaller(vm) {
       return !isArg;
     },
 
-    // host Arguments → QJS tagged array.
-    // Uses JSON serialization which correctly handles primitives, nested arrays,
-    // and plain objects — the typical contents of Arguments objects.
-    // Non-JSON-serializable elements (functions, symbols) are replaced by null.
+    /** Copies host Arguments into a tagged QuickJS array. */
     marshal(value, ctx) {
       if (!isArguments(value)) return undefined;
 
@@ -69,8 +62,7 @@ export function createArgumentsMarshaller(vm) {
       }
 
       const elems = Array.from(value);
-      // JSON.stringify converts non-serializable elements to null; that is
-      // acceptable because such Arguments are pathological for QJS anyway.
+      // JSON-compatible copying intentionally does not preserve functions or symbols.
       const jsonHandle = ctx.newString(JSON.stringify(elems));
       const result = ctx.unwrapResult(
         ctx.callFunction(creator, ctx.undefined, jsonHandle),
@@ -79,9 +71,7 @@ export function createArgumentsMarshaller(vm) {
       return result;
     },
 
-    // QJS tagged array → host Arguments object.
-    // ctx.dump() returns only indexed values (JSON-like), so the ARG_TAG
-    // property is silently dropped — which is exactly what we want here.
+    /** Reconstructs host Arguments from a tagged QuickJS array. */
     unmarshal(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return undefined;
 
@@ -92,13 +82,14 @@ export function createArgumentsMarshaller(vm) {
       checkResult.dispose();
       if (!isArg) return undefined;
 
-      const dumped = ctx.dump(handle); // plain array of indexed values
+      const dumped = ctx.dump(handle);
       const elems = Array.isArray(dumped) ? dumped : [];
       return (function () {
         return arguments;
       }.apply(undefined, elems));
     },
 
+    /** Releases compiled QuickJS helper functions. */
     dispose() {
       if (isArgTagInVM.alive) isArgTagInVM.dispose();
       if (creator && creator.alive) creator.dispose();

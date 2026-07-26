@@ -1,20 +1,15 @@
-// TypedArray custom marshaller: copies TypedArray views across the host↔QJS
-// boundary as value copies, bypassing Arena's sync-proxy mechanism.
-// Without this, ArrayBuffer.isView(proxy) returns false inside QJS and all
-// typed-array operations break.
+/**
+ * Copies TypedArray bytes across the boundary so each realm receives a real
+ * view instead of a Proxy that fails TypedArray internal-slot checks.
+ */
 
 import { isTypedArrayView } from "../core/sb-utils.js";
 
 /**
  * Creates a TypedArray marshaller bound to a specific QJS VM.
- * Returns { isWrappable, isHandleWrappable, marshal, unmarshal, dispose }.
  *
- * State held per-sandbox:
- *   isTypedArrayInVM  – pre-compiled QJS detector, shared by isHandleWrappable
- *                       and unmarshal (avoids compiling the same code twice)
- *   creators          – one cached QJS constructor fn per TypedArray type name
- *   getTypeName       – lazily compiled, only created on first unmarshal hit
- *   toExactBuffer     – same
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Owning QuickJS context.
+ * @returns {object} Arena marshalling hooks and their disposer.
  */
 export function createTypedArrayMarshaller(vm) {
   const isTypedArrayInVM = vm.unwrapResult(
@@ -25,12 +20,12 @@ export function createTypedArrayMarshaller(vm) {
   let toExactBuffer = null;
 
   return {
-    // host-side guard: skip proxy wrapping for TypedArray views
+    /** Prevents Arena from proxy-wrapping host TypedArray views. */
     isWrappable(value) {
       return !isTypedArrayView(value);
     },
 
-    // QJS-side guard: skip _wrapHandle so the raw handle reaches unmarshal
+    /** Routes QuickJS TypedArray handles to the custom unmarshaller. */
     isHandleWrappable(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return true;
       const result = ctx.unwrapResult(
@@ -41,7 +36,7 @@ export function createTypedArrayMarshaller(vm) {
       return !isTA;
     },
 
-    // host TypedArray → QJS TypedArray (copy-by-value, preserves byteOffset)
+    /** Copies the visible bytes of a host TypedArray into QuickJS. */
     marshal(value, ctx) {
       if (!isTypedArrayView(value)) return undefined;
       const typeName = value.constructor.name;
@@ -63,7 +58,7 @@ export function createTypedArrayMarshaller(vm) {
       return result;
     },
 
-    // QJS TypedArray → host TypedArray (read from WASM memory, safe copy)
+    /** Copies a QuickJS TypedArray out of WASM memory into a host view. */
     unmarshal(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return undefined;
       const checkResult = ctx.unwrapResult(
@@ -73,7 +68,7 @@ export function createTypedArrayMarshaller(vm) {
       checkResult.dispose();
       if (!isTA) return undefined;
 
-      // Init lazily: only needed when we actually encounter a QJS TypedArray
+      // Compile metadata readers only after the first matching handle.
       if (!getTypeName) {
         getTypeName = ctx.unwrapResult(
           ctx.evalCode("(h) => h.constructor.name"),
@@ -94,7 +89,7 @@ export function createTypedArrayMarshaller(vm) {
       const exactBufHandle = ctx.unwrapResult(
         ctx.callFunction(toExactBuffer, ctx.undefined, handle),
       );
-      // .value is a view into WASM memory; slice() makes a safe host copy
+      // The returned view aliases WASM memory, so copy before disposing it.
       const rawBytesLifetime = ctx.getArrayBuffer(exactBufHandle);
       exactBufHandle.dispose();
       const rawBytes = rawBytesLifetime.value.slice();
@@ -105,6 +100,7 @@ export function createTypedArrayMarshaller(vm) {
       return new TypedArrayCtor(rawBytes.buffer);
     },
 
+    /** Releases compiled QuickJS helper functions. */
     dispose() {
       if (isTypedArrayInVM.alive) isTypedArrayInVM.dispose();
       if (getTypeName && getTypeName.alive) getTypeName.dispose();

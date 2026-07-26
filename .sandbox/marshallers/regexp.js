@@ -1,18 +1,13 @@
-// RegExp custom marshaller: copies RegExp values across the host↔QJS boundary.
-// Without this, Arena wraps a host RegExp in a sync-Proxy, and methods like
-// RegExp.prototype.exec throw "incompatible receiver" inside QJS because they
-// require a real RegExp internal slot.
+/**
+ * Copies RegExp source and flags across the boundary so each realm receives a
+ * real RegExp with the internal slots required by native methods.
+ */
 
 /**
  * Creates a RegExp marshaller bound to a specific QJS VM.
- * Returns { isWrappable, isHandleWrappable, marshal, unmarshal, dispose }.
  *
- * State held per-sandbox:
- *   isRegExpInVM  – pre-compiled QJS detector, shared by isHandleWrappable
- *                   and unmarshal (avoids compiling the same code twice)
- *   creator       – lazily compiled QJS constructor helper (marshal path)
- *   getSource     – lazily compiled, only created on first unmarshal hit
- *   getFlags      – same
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Owning QuickJS context.
+ * @returns {object} Arena marshalling hooks and their disposer.
  */
 export function createRegExpMarshaller(vm) {
   const isRegExpInVM = vm.unwrapResult(
@@ -23,12 +18,12 @@ export function createRegExpMarshaller(vm) {
   let getFlags = null;
 
   return {
-    // host-side guard: skip proxy wrapping for RegExp instances
+    /** Prevents Arena from proxy-wrapping host RegExp instances. */
     isWrappable(value) {
       return !(value instanceof RegExp);
     },
 
-    // QJS-side guard: skip _wrapHandle so the raw handle reaches unmarshal
+    /** Routes QuickJS RegExp handles to the custom unmarshaller. */
     isHandleWrappable(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return true;
       const result = ctx.unwrapResult(
@@ -39,7 +34,7 @@ export function createRegExpMarshaller(vm) {
       return !isRE;
     },
 
-    // host RegExp → QJS RegExp (preserves source + flags)
+    /** Copies a host RegExp into QuickJS using its source and flags. */
     marshal(value, ctx) {
       if (!(value instanceof RegExp)) return undefined;
       const sourceHandle = ctx.newString(value.source);
@@ -57,7 +52,7 @@ export function createRegExpMarshaller(vm) {
       return result;
     },
 
-    // QJS RegExp → host RegExp (copy source + flags out of QJS)
+    /** Copies a QuickJS RegExp into a new host RegExp. */
     unmarshal(handle, ctx) {
       if (ctx.typeof(handle) !== "object") return undefined;
       const checkResult = ctx.unwrapResult(
@@ -67,7 +62,7 @@ export function createRegExpMarshaller(vm) {
       checkResult.dispose();
       if (!isRE) return undefined;
 
-      // Init lazily: only needed when we actually encounter a QJS RegExp
+      // Compile property readers only after the first matching handle.
       if (!getSource) {
         getSource = ctx.unwrapResult(ctx.evalCode("(h) => h.source"));
         getFlags = ctx.unwrapResult(ctx.evalCode("(h) => h.flags"));
@@ -86,6 +81,7 @@ export function createRegExpMarshaller(vm) {
       return new RegExp(source, flags);
     },
 
+    /** Releases compiled QuickJS helper functions. */
     dispose() {
       if (isRegExpInVM.alive) isRegExpInVM.dispose();
       if (creator && creator.alive) creator.dispose();
