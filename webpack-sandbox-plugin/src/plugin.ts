@@ -68,37 +68,59 @@ export class WebpackSandboxPlugin {
     let configuredLibraries: string[] = [];
     let configuredWorkloads: ConfiguredWorkload[] = [];
 
-    try {
-      if (fs.existsSync(configPath)) {
-        let configModule = require(configPath);
-        // Webpack configurations may load the policy through either module shape.
-        const sandboxConfig = configModule.default || configModule;
-
-        configuredLibraries = Object.keys(sandboxConfig);
-        configuredWorkloads = configuredLibraries.flatMap((libraryName) => {
-          const workloads = sandboxConfig[libraryName]?.workloads ?? {};
-          return Object.entries(workloads).map(
-            ([workloadName, workloadConfig]) => ({
-              libraryName,
-              workloadName,
-              ...(workloadConfig as WorkloadConfig),
-            }),
-          );
-        });
-        console.log(
-          `[SandboxPlugin] Loaded configuration for ${configuredLibraries.length} libraries: ${configuredLibraries.join(", ")}`,
-        );
-      } else {
-        console.warn(
-          `[SandboxPlugin] Warning: Config file not found at ${configPath}`,
-        );
-      }
-    } catch (e) {
-      console.error(
-        `[SandboxPlugin] Error parsing Sandbox Config at ${configPath}:`,
-        e,
+    if (!fs.existsSync(configPath)) {
+      throw new Error(
+        `[SandboxPlugin] Sandbox policy file was not found at ${configPath}`,
       );
     }
+
+    let sandboxConfig: Record<string, { workloads?: Record<string, WorkloadConfig> }>;
+    try {
+      const configModule = require(configPath);
+      // Webpack configurations may load the policy through either module shape.
+      sandboxConfig = configModule.default || configModule;
+    } catch (error) {
+      throw new Error(
+        `[SandboxPlugin] Failed to load sandbox policy at ${configPath}`,
+        { cause: error },
+      );
+    }
+
+    if (
+      typeof sandboxConfig !== "object" ||
+      sandboxConfig === null ||
+      Array.isArray(sandboxConfig)
+    ) {
+      throw new Error(
+        `[SandboxPlugin] Sandbox policy at ${configPath} must export an object keyed by library name`,
+      );
+    }
+
+    configuredLibraries = Object.keys(sandboxConfig);
+    for (const libraryName of configuredLibraries) {
+      try {
+        require.resolve(libraryName, { paths: [compiler.context] });
+      } catch (error) {
+        throw new Error(
+          `[SandboxPlugin] Configured sandbox library could not be resolved: ${libraryName}`,
+          { cause: error },
+        );
+      }
+    }
+
+    configuredWorkloads = configuredLibraries.flatMap((libraryName) => {
+      const workloads = sandboxConfig[libraryName]?.workloads ?? {};
+      return Object.entries(workloads).map(
+        ([workloadName, workloadConfig]) => ({
+          libraryName,
+          workloadName,
+          ...workloadConfig,
+        }),
+      );
+    });
+    console.log(
+      `[SandboxPlugin] Loaded configuration for ${configuredLibraries.length} libraries: ${configuredLibraries.join(", ")}`,
+    );
 
     // Use `compile` instead of `beforeCompile` because webpack copies
     // `beforeCompile` taps into child compilers created by `runAsChild()`.
@@ -184,10 +206,13 @@ export class WebpackSandboxPlugin {
                 paths: [compiler.context],
               });
             } catch (err) {
-              console.warn(
-                `[SandboxPlugin] Warning: Could not resolve entry for ${libName}. Skipping Child Compilation.`,
+              reject(
+                new Error(
+                  `[SandboxPlugin] Configured sandbox library could not be resolved: ${libName}`,
+                  { cause: err },
+                ),
               );
-              return resolve();
+              return;
             }
 
             const EntryPlugin = compiler.webpack.EntryPlugin;
