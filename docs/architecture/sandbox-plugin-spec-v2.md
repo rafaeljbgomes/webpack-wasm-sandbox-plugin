@@ -35,7 +35,7 @@ new WebpackSandboxPlugin({
 });
 ```
 
-`configPath` is resolved from `compiler.context`. The configuration module may expose its object directly or as a default export.
+`configPath` is resolved from `compiler.context`. The configuration module may expose its object directly or as a default export. The build fails if the policy file is missing or cannot be loaded, if it does not export a library-keyed object, or if a configured package cannot be resolved from the compiler context.
 
 ### 2.2 Library policy
 
@@ -62,7 +62,7 @@ export default {
 | `workloads.<name>.entry` | Yes for a workload | Repository-relative JavaScript entry bundled by a child compiler. |
 | `workloads.<name>.exports` | Yes for a workload | Functions exposed by the generated workload proxy. |
 
-The plugin treats every top-level key as a library to bundle and redirect. It does not validate a separate schema before compilation.
+The plugin treats every top-level key as a library to bundle and redirect. It validates the policy-file presence, module shape, and package resolution before compilation, but does not validate a separate schema for every library option.
 
 ## 3. Build-time architecture
 
@@ -76,6 +76,8 @@ The plugin treats every top-level key as a library to bundle and redirect. It do
 4. Parse declaration roots with the TypeScript compiler API.
 5. Generate `.sandbox/proxys/<library>-proxy.js` and optional workload proxies.
 6. Install `NormalModuleReplacementPlugin` rules for exact library requests and `sandbox-workload/<library>/<workload>` requests.
+
+The library rule is intentionally exact in the current implementation. A configured root request does not redirect package subpaths; the resulting coverage limitation and future direction are documented in [isolation-coverage-and-cache-limitations.md](isolation-coverage-and-cache-limitations.md).
 
 The declaration parser records named exports and detects TypeScript `export = identifier` patterns used by callable singleton packages such as Lodash. It does not map TypeScript types into runtime validation rules. If no declarations are available, the plugin writes a minimal proxy whose default function throws `Sandbox Proxy Generation Failed`.
 
@@ -214,6 +216,7 @@ It does not provide:
 - revocation of capabilities supplied through arguments;
 - complete JavaScript cross-realm observational equivalence;
 - a guarantee that every possible host global is safe when named in `permissions`;
+- independent membrane wrappers when multiple sandboxes receive the same mutable host object identity;
 - production packaging, versioned public APIs, or long-term compatibility guarantees.
 
 ## 10. Compatibility limitations
@@ -240,3 +243,5 @@ To add a host capability, test both allowed behaviour and denied reachability.
 To add a marshaller, implement the complete marshaller lifecycle, register it in `index.js`, and test values in both directions, including disposal and error paths.
 
 To change the boundary or proxy semantics, update this specification and [architectural-decisions.md](architectural-decisions.md) in the same change.
+
+Current import-coverage, cache-scope, and dynamic helper-generation limitations are recorded in [isolation-coverage-and-cache-limitations.md](isolation-coverage-and-cache-limitations.md). Future work must preserve the evaluated compatibility contract while strengthening those boundaries.

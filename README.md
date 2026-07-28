@@ -146,6 +146,8 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 
 - Cross-realm identity, prototype equality, symbols, function source text, and native internal slots cannot always be reproduced transparently.
 - Arguments supplied by the host can convey authority into the sandbox if they reference privileged host objects.
+- Configured bare package imports are redirected; package subpath imports are not currently covered by the isolation boundary. See the [import coverage and cache limitations](docs/architecture/isolation-coverage-and-cache-limitations.md).
+- Shared mutable host objects exposed to multiple sandboxes are not yet guaranteed to receive independent membrane wrappers. See the [import coverage and cache limitations](docs/architecture/isolation-coverage-and-cache-limitations.md).
 - Proxy generation depends on the package's declarations and falls back to `@types/<package>` where available.
 - The runtime uses a 1 ms interval to execute pending QuickJS jobs. The interval is unreferenced after proxy initialization in Node.js and remains part of the sandbox lifecycle until disposal.
 - Generated default-export behaviour depends on the export patterns detected by the declaration parser.

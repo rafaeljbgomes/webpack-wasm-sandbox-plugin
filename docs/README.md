@@ -14,6 +14,7 @@ This index covers the maintained documentation for users and contributors. The [
 | [Compatibility testing](architecture/compat-testing-plan.md) | Operational architecture | Automated campaign design and library onboarding |
 | [Compatibility harness guide](../compatibility-harness/README.md) | Operational | Commands, strategies, and generated result artifacts |
 | [Host-argument capability limitation](architecture/host-argument-capability-limitation.md) | Current limitation | Authority conveyed through host-supplied arguments |
+| [Import coverage and cache limitations](architecture/isolation-coverage-and-cache-limitations.md) | Current limitation | Exact import matching, shared membrane cache scope, and future hardening |
 | [Strict host-argument modes](architecture/host-argument-strict-mode-future-work.md) | Future work | Candidate attenuation designs; none are implemented |
 | [Security validation application](../lib-test/security/app/README.md) | Operational | Reproducible native and sandbox security scenarios |
 
