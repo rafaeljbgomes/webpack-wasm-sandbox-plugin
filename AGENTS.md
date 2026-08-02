@@ -49,6 +49,7 @@ Use a separate checkout or worktree and follow `performance-harness/README.md` o
 ## Coding and architecture rules
 
 - Use ES modules, `const`/`let`, PascalCase for classes and types, camelCase for functions and variables, two-space indentation, and semicolons, matching surrounding files.
+- Add JSDoc to every new or materially changed class and function. Add concise comments where behaviour, lifecycle ownership, cross-runtime semantics, or a non-obvious decision would otherwise be unclear; do not use comments to restate self-evident code.
 - Keep one QuickJS context per configured library.
 - Keep capability exposure deny-by-default and prefer constrained facades.
 - Preserve method receivers, constructor behaviour, object identity where supported, and async job pumping.
@@ -59,6 +60,7 @@ Use a separate checkout or worktree and follow `performance-harness/README.md` o
 ## Testing rules
 
 - Compatibility is the primary functional signal. Add or update focused upstream-derived fixtures and run native and sandbox modes.
+- Every correction must include a short, focused test scenario that reproduces the corrected behaviour and protects it from regression. Use the smallest appropriate unit, compatibility, or browser-security scenario; retain or update it with the correction.
 - Preserve framework-specific mappings for Jest, Vitest, AVA, QUnit, and CommonJS suites.
 - Keep compatibility artifacts separate from performance measurements.
 - For security changes, validate both allowed functionality and denied host effects.
@@ -68,4 +70,4 @@ Use a separate checkout or worktree and follow `performance-harness/README.md` o
 
 Use conventional branch prefixes and lightweight Conventional Commit subjects. Preserve unrelated working-tree changes. Do not commit generated bundles, proxies, raw result directories, or caches.
 
-Maintained developer documentation and PlantUML labels are English. Label future-work documents explicitly and link to the canonical specification instead of copying architecture text. Keep diagrams as versioned `.puml` sources under `docs/diagrams/`; do not add a parallel Markdown diagram narrative.
+Update the relevant documentation after every change, including code, configuration, tests, and developer workflow changes. Keep the README, documentation index, canonical specification, architecture decisions, and operational guides aligned with the change; if no documentation update is needed, state why in the change or PR description. Maintained developer documentation and PlantUML labels are English. Label future-work documents explicitly and link to the canonical specification instead of copying architecture text. Keep diagrams as versioned `.puml` sources under `docs/diagrams/`; do not add a parallel Markdown diagram narrative.

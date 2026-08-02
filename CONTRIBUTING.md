@@ -8,6 +8,7 @@ This repository contains an experimental sandboxing prototype. Contributions mus
 2. Confirm that the target file is source rather than generated or vendored output.
 3. Create a focused branch using the repository's conventional prefixes, for example `fix/...`, `feat/...`, `test/...`, `docs/...`, or `chore/...`.
 4. Record the current `git status`. Preserve unrelated local and untracked files.
+5. Plan the short, focused test scenario that will prove the change and prevent its regression.
 
 Do not edit or commit:
 
@@ -76,12 +77,19 @@ Performance work belongs on `feat/sandbox-benchmarking`, which instruments the m
 
 ## Documentation standards
 
+- Update the relevant documentation after every change, including code, configuration, tests, and developer workflow changes. Keep the README, documentation index, canonical specification, architectural decisions, and operational guides aligned; if no documentation update is needed, explain why in the PR description.
 - Use English for maintained developer documentation.
 - State whether a document is canonical, operational, historical, or future work.
 - Derive behaviour from source and commands from executable configuration.
 - Keep generated compatibility and performance results out of version control.
 - Link to one canonical explanation instead of maintaining duplicate specifications.
 - Use exact terms consistently: host, QuickJS context, Arena, forward membrane, reverse membrane, marshaller, generated proxy, and workload adapter.
+
+## Code documentation and regression prevention
+
+- Add JSDoc to every new or materially changed class and function. It must explain the contract, especially parameters, return values, ownership, lifecycle, side effects, or cross-runtime behaviour when applicable.
+- Add concise implementation comments where code behaviour, lifecycle ownership, membrane crossings, or a non-obvious decision would otherwise be unclear. Do not comment code that is already self-explanatory.
+- Every correction must add or update a short, focused test scenario that reproduces the corrected behaviour and guards against future regressions. Choose the smallest suitable unit, compatibility, or browser-security scenario, and run it alongside any broader validation required by the affected subsystem.
 
 ## Pull requests
 
@@ -92,4 +100,5 @@ Use an imperative Conventional Commit-style subject where practical. The PR desc
 - commands run and their results;
 - generated outputs that were intentionally not committed;
 - documentation and architectural decisions updated;
+- the focused regression scenario added or updated for each correction;
 - validation that could not be completed and why.
