@@ -24,7 +24,7 @@ npm run build:bundles
 node --test compatibility-harness/test/parsers.test.mjs
 ```
 
-The bundle build on `main` generates ten library bundles. It may warn that configured workload entries are absent because those sources belong to `feat/sandbox-benchmarking`.
+The bundle build on `main` generates ten library bundles. Benchmark workload adapters are maintained exclusively on `feat/sandbox-benchmarking` and are not part of this branch's configuration.
 
 ## Change the sandbox runtime
 

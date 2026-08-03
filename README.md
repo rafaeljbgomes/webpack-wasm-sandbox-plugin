@@ -40,7 +40,7 @@ The current sandbox configuration contains ten libraries:
 
 `date-fns`, `image-js`, `lodash`, `luxon`, `marked`, `mime`, `strip-ansi`, `tweetnacl`, `yup`, and `zod`.
 
-On `main`, the build succeeds for all ten libraries. The configuration also declares four performance workload adapters whose source files live on `feat/sandbox-benchmarking`; Webpack therefore warns that those workload entries are unavailable and skips their bundles. This does not prevent the normal library bundles from being generated.
+On `main`, the build generates bundles for all ten configured libraries. Benchmark workload adapters and their source files are maintained exclusively on `feat/sandbox-benchmarking`, so they are not declared in this branch's sandbox configuration.
 
 Build the main browser demonstration with:
 

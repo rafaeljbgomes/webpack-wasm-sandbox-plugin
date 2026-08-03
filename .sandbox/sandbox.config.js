@@ -1,12 +1,33 @@
-/** Sandbox permissions and optional workloads configured per dependency. */
+// example config
 export default {
   "strip-ansi": {
-    permissions: ["console", "localStorage", "location", "document", "alert", "fetch", "CookieStore", "Animation"],
+    permissions: [],
   },
   "marked": {
-    permissions: ["console", "localStorage"],
+    permissions: [],
   },
-  "ua-parser-js": {
-    permissions: ["console", "localStorage", "location", "document"],
+  "image-js": {
+    permissions: ["Intl", "TextEncoder", "TextDecoder"],
+  },
+  "luxon": {
+    permissions: ["Intl"],
+  },
+  "mime": {
+    permissions: [],
+  },
+  "tweetnacl": {
+    permissions: ["crypto"],
+  },
+  "lodash": {
+    permissions: [],
+  },
+  "zod": {
+    permissions: [],
+  },
+  "date-fns": {
+    permissions: ["Intl"],
+  },
+  "yup": {
+    permissions: [],
   },
 };

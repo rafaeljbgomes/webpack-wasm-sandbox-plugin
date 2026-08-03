@@ -2,7 +2,7 @@
 
 **Status:** Living historical record. Decisions describe the implementation state at the time they were made. The current consolidated behaviour is defined by [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); later decisions and source code supersede conflicting earlier examples.
 
-Performance measurements and instrumented membrane code are maintained on `feat/sandbox-benchmarking`. The workload-adapter contract remains implemented on `main`, but its benchmark workloads and measurement tooling are branch-specific.
+Performance measurements and instrumented membrane code are maintained on `feat/sandbox-benchmarking`. The workload-adapter contract remains implemented on `main`, but this branch declares no workloads; the benchmark workloads and measurement tooling are branch-specific.
 
 This document records the key design decisions, constraints, and non-obvious fixes made during development. It provides historical context for contributors; the current implementation contract is defined by [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md).
 
@@ -493,7 +493,7 @@ This keeps transparent library-only imports from paying workload evaluation cost
 - `lodash/collection` exposes `summarizeOrders(orders)`, keeping Lodash filtering, grouping, chaining, and aggregation inside QuickJS.
 - `zod/validation` exposes `validateOrders(orders, invalidOrder)`, keeping schema construction and validation inside QuickJS.
 
-The browser harness includes adapter scenarios for both workloads so native and sandbox adapter-level execution can be measured with the same CSV pipeline as transparent scenarios.
+These proof-of-concept workload declarations and their source modules are maintained on `feat/sandbox-benchmarking`; they are intentionally not declared in `main`'s `.sandbox/sandbox.config.js`. The browser harness there includes adapter scenarios for both workloads so native and sandbox adapter-level execution can be measured with the same CSV pipeline as transparent scenarios.
 
 **Security impact:** The third-party library still runs inside the same isolated QuickJS/WebAssembly boundary with the same permission configuration. The optimized path can improve security for hot workflows because selected developer-written adapter code also runs inside the sandbox. The host sends plain input data and receives a deliberately small result object instead of manipulating many intermediate untrusted library objects.
 
