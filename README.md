@@ -168,7 +168,7 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 | `docs/` | Developer documentation and versioned PlantUML diagrams |
 | `dist/`, `.sandbox/proxys/` | Generated output; never edit or commit |
 
-Start with the [documentation index](docs/README.md) and [contribution guide](CONTRIBUTING.md). Architectural changes must also update [architectural-decisions.md](docs/architecture/architectural-decisions.md).
+Start with the [documentation index](docs/README.md), [contribution guide](CONTRIBUTING.md), [security policy](SECURITY.md), and [code of conduct](CODE_OF_CONDUCT.md). Architectural changes must also update [architectural-decisions.md](docs/architecture/architectural-decisions.md).
 
 ## Acknowledgements
 

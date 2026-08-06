@@ -16,6 +16,18 @@ Do not edit or commit:
 - `compatibility-results*/` or `performance-harness/results*/` data;
 - upstream-derived files under `test-harness/<library>/` unless the fixture change is intentional and documented;
 
+## Opening issues
+
+Use the repository's issue chooser to open a **Bug report** or **Enhancement**.
+The forms collect the reproduction, environment, scope, and security or
+compatibility context needed to evaluate a contribution. Search existing issues
+before submitting, and follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+Do not disclose suspected vulnerabilities in a public issue. Follow the private
+reporting process in the [security policy](SECURITY.md) instead. The pull
+request template complements the requirements below; it does not replace the
+required focused validation, documentation, or architectural-decision updates.
+
 ## Install and verify the baseline
 
 ```powershell

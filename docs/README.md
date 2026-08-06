@@ -8,6 +8,8 @@ This index covers the maintained documentation for users and contributors. The [
 |---|---|---|
 | [Project README](../README.md) | Canonical onboarding | Scope, setup, workflows, limitations, and repository map |
 | [Contributing](../CONTRIBUTING.md) | Operational | Contribution and validation rules |
+| [Security policy](../SECURITY.md) | Operational | Private vulnerability reporting, security scope, and known boundary limitations |
+| [Code of Conduct](../CODE_OF_CONDUCT.md) | Operational | Community participation and enforcement standards |
 | [Repository agent guide](../AGENTS.md) | Operational | Concise repository instructions for coding agents |
 | [Sandbox plugin specification](architecture/sandbox-plugin-spec-v2.md) | Canonical architecture | Build-time and runtime design, interfaces, and limitations |
 | [Architectural decisions](architecture/architectural-decisions.md) | Living historical record | Rationale and consequences of material design decisions |
