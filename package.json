@@ -1,23 +1,22 @@
 {
   "dependencies": {
-    "@types/lodash": "^4.17.24",
-    "image-js": "^1.4.0",
-    "lodash": "^4.18.1",
-    "marked": "^17.0.4",
-    "mnemonist": "^0.40.3",
     "quickjs-emscripten": "^0.32.0",
     "quickjs-emscripten-sync": "^1.8.1",
-    "strip-ansi": "^7.2.0",
-    "tweetnacl": "^1.0.3",
-    "typescript": "^5.9.3",
-    "ua-parser-js": "^2.0.9"
+    "typescript": "^5.9.3"
   },
-  "name": "spike-quickjs",
+  "name": "webpack-wasm-sandbox-plugin",
   "version": "1.0.0",
-  "description": "",
+  "description": "Experimental Webpack plugin for isolating browser-side JavaScript dependencies in per-library WebAssembly sandboxes powered by QuickJS.",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafaeljbgomes/webpack-wasm-sandbox-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rafaeljbgomes/webpack-wasm-sandbox-plugin/issues"
+  },
+  "homepage": "https://github.com/rafaeljbgomes/webpack-wasm-sandbox-plugin#readme",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build:bundles": "webpack --config webpack.bundles.config.cjs",
     "build:lodash-test": "npm run build:bundles && npx webpack --config webpack.lodash-sandbox-test.config.cjs",
     "test:compat": "npm run build:bundles && node --import ./test-sandbox-redirect/register-sandbox.mjs --test",
@@ -26,22 +25,39 @@
     "perf:run:browser": "node ./performance-harness/run-browser-scenario.mjs",
     "perf:analyze": "python ./performance-harness/analyze.py"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "webpack",
+    "webpack-plugin",
+    "quickjs",
+    "webassembly",
+    "wasm",
+    "sandbox",
+    "security",
+    "isolation",
+    "browser",
+    "npm"
+  ],
+  "author": "Rafael Gomes (https://github.com/rafaeljbgomes)",
+  "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@types/lodash": "^4.17.24",
     "@types/luxon": "^3.7.1",
     "ava": "^7.0.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.20",
+    "image-js": "^1.4.0",
     "jest-image-snapshot": "^6.5.2",
     "jest-matcher-deep-close-to": "^3.0.2",
+    "lodash": "^4.18.1",
     "luxon": "^3.7.2",
+    "marked": "^17.0.4",
     "mime": "^4.1.0",
     "patch-package": "^8.0.1",
     "playwright": "^1.51.1",
     "tsx": "^4.21.0",
+    "strip-ansi": "^7.2.0",
+    "tweetnacl": "^1.0.3",
     "validator": "^13.15.26",
     "vitest": "^4.1.0",
     "webpack": "^5.105.4",
