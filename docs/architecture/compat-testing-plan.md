@@ -35,7 +35,7 @@ test-sandbox-redirect/
 QuickJS library context
 ```
 
-`test-harness/<library>/` contains upstream-derived tests and runner configuration. Treat large suites as vendored fixtures: avoid stylistic rewrites or application-specific modifications.
+When populated locally, `test-harness/<library>/` contains upstream-derived tests and runner configuration. The suites are intentionally ignored by Git, so a developer must obtain them before executing a campaign or its internal harness checks. Treat large suites as vendored fixtures: avoid stylistic rewrites or application-specific modifications.
 
 ## 3. Import redirection
 
@@ -148,11 +148,13 @@ Compatibility artifacts must not be placed under `performance-harness/results*`.
 
 ## 10. Verification
 
-Run the harness unit suite:
+Optionally run the internal harness checks after the upstream suites are available locally:
 
 ```powershell
 node --test compatibility-harness/test/parsers.test.mjs
 ```
+
+These checks validate parser and execution-planning infrastructure; they do not provide sandbox-runtime regression coverage. Native-versus-sandbox campaigns are the functional compatibility evidence for the plugin.
 
 Refresh proxies and execute one target library:
 

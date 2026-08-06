@@ -14,7 +14,7 @@ Install the root dependencies:
 npm install
 ```
 
-The repository already contains the evaluated harnesses and their immutable runner configurations. Generated proxies and bundles must exist before sandbox execution; pass `--build` when they may be stale or absent.
+The repository tracks the runner, manifest, and immutable runner configurations, but intentionally does not version the upstream-derived suites. Before a campaign, obtain each suite and place it under the `test-harness/<library>/` path declared in `manifest.mjs`. Generated proxies and bundles must exist before sandbox execution; pass `--build` when they may be stale or absent.
 
 ## CLI
 
@@ -139,10 +139,10 @@ compatibility ratio = sandbox passed / native passed
 
 Do not calculate a replacement ratio manually from incomplete totals.
 
-## Harness unit tests
+## Internal harness checks
 
 ```powershell
 node --test compatibility-harness/test/parsers.test.mjs
 ```
 
-These tests cover parsers, manifest membership and paths, discovery, execution plans, fallback inclusion, CLI overrides, and comparison guards.
+These checks cover parsers, manifest membership and paths, discovery, execution plans, fallback inclusion, CLI overrides, and comparison guards. They require the upstream suites to be present locally and do not test sandbox runtime semantics or provide sandbox-regression coverage.

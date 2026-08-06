@@ -1,6 +1,6 @@
-# Webpack Wasm Sandbox Plugin
+# Webpack WASM Sandbox Plugin
 
-`spike-quickjs` is an experimental Webpack plugin for isolating untrusted browser-side npm dependencies in per-library QuickJS contexts compiled to WebAssembly. The plugin replaces configured package imports with generated proxy modules. The proxies initialize the isolated library and expose its API through policy-controlled membrane and marshalling layers.
+`webpack-wasm-sandbox-plugin` is an experimental Webpack plugin for isolating browser-side JavaScript dependencies in per-library WebAssembly sandboxes powered by QuickJS. The plugin replaces configured package imports with generated proxy modules. The proxies initialize the isolated library and expose its API through policy-controlled membrane and marshalling layers.
 
 The project explores a specific security question: can a browser application continue to use a third-party JavaScript library without granting that library all authority available to the host page? The implementation is an experimental prototype, not a production-ready package.
 
@@ -96,7 +96,7 @@ export default {
 
 ## Compatibility testing
 
-The automated compatibility runner executes upstream-derived suites in native and sandbox modes and stores auditable results outside the performance data:
+The automated compatibility runner is the project's primary functional evidence. It executes upstream-derived suites in native and sandbox modes and stores auditable results outside the performance data. The upstream suites are intentionally not versioned in this repository; obtain the required suites and place them in the paths declared by `compatibility-harness/manifest.mjs` before running a campaign.
 
 ```powershell
 node compatibility-harness/run-compat.mjs --library zod
@@ -106,7 +106,7 @@ node compatibility-harness/run-compat.mjs --library lodash --build
 
 Use `--build` when bundles and proxies must be refreshed. Results are written to `compatibility-results/<library>/<timestamp>/` and are ignored by Git. See the [compatibility harness guide](compatibility-harness/README.md) and [testing architecture](docs/architecture/compat-testing-plan.md).
 
-Run the harness unit tests with:
+The repository has no standalone sandbox-runtime regression suite at present. The following internal check validates parser behaviour and harness planning only; it does not establish correctness of the sandbox or plugin. It also requires the upstream suites to have been populated locally:
 
 ```powershell
 node --test compatibility-harness/test/parsers.test.mjs

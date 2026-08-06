@@ -21,10 +21,11 @@ Do not edit or commit:
 ```powershell
 npm install
 npm run build:bundles
-node --test compatibility-harness/test/parsers.test.mjs
 ```
 
-The bundle build on `main` generates ten library bundles. Benchmark workload adapters are maintained exclusively on `feat/sandbox-benchmarking` and are not part of this branch's configuration.
+The bundle build on `main` generates ten library bundles. It validates dependency resolution and proxy generation, not runtime compatibility. Benchmark workload adapters are maintained exclusively on `feat/sandbox-benchmarking` and are not part of this branch's configuration.
+
+The repository intentionally does not version upstream-derived compatibility suites. After obtaining the required suites under `test-harness/<library>/`, an internal parser/planner check is available through `node --test compatibility-harness/test/parsers.test.mjs`. It does not provide sandbox-runtime regression coverage; validate runtime changes with a targeted native/sandbox compatibility campaign.
 
 ## Change the sandbox runtime
 
