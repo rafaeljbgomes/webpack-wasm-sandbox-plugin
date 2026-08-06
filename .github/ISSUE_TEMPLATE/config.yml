@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/rafaeljbgomes/webpack-wasm-sandbox-plugin/security/advisories/new
+    about: Do not disclose suspected vulnerabilities in public issues.
+  - name: Code of Conduct and reporting guidance
+    url: https://github.com/rafaeljbgomes/webpack-wasm-sandbox-plugin/blob/main/CODE_OF_CONDUCT.md
+    about: Review the community standards and private reporting route for conduct concerns.

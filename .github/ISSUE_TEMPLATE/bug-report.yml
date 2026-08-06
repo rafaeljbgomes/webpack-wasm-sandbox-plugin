@@ -1,0 +1,67 @@
+name: Bug report
+description: Report a reproducible defect in the Webpack plugin or browser sandbox.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve this experimental prototype. Do not report
+        security vulnerabilities here; use the private reporting route instead.
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and did not find a duplicate.
+          required: true
+        - label: This is not a security vulnerability or sensitive disclosure.
+          required: true
+        - label: I agree to follow this project's Code of Conduct.
+          required: true
+  - type: textarea
+    id: current-behaviour
+    attributes:
+      label: Current behavior
+      description: Describe what happened and the observable impact.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: Expected behavior
+      description: Describe what you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Provide the smallest configuration, code, and commands needed to reproduce the issue.
+      placeholder: |
+        1. Configure ...
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include operating system, browser and version, Node.js, npm, affected package, and relevant sandbox permissions/configuration.
+      placeholder: |
+        - OS:
+        - Browser:
+        - Node.js:
+        - npm:
+        - Plugin revision or commit:
+        - Affected package and permissions:
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Paste relevant sanitized logs, stack traces, or screenshots. Do not include secrets or sensitive vulnerability details.
+      render: shell
+    validations:
+      required: false

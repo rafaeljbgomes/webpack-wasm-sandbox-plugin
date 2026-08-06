@@ -1,0 +1,70 @@
+name: Enhancement
+description: Propose a focused improvement to the plugin, sandbox, or contributor workflow.
+title: "[Enhancement]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing an improvement. This project is an experimental
+        browser-side sandboxing prototype; please distinguish implemented
+        behavior from future work.
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and did not find a duplicate.
+          required: true
+        - label: I agree to follow this project's Code of Conduct.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What limitation, user need, or contributor workflow problem would this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the smallest useful change and its intended outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe workarounds or alternative approaches, including why they are insufficient.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Security and compatibility impact
+      description: Explain any expected effect on capability exposure, isolation boundaries, supported libraries, or compatibility.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Primary scope
+      options:
+        - Webpack plugin or proxy generation
+        - QuickJS runtime, membrane, or marshalling
+        - Capability policy or security validation
+        - Compatibility harness or library support
+        - Documentation or contributor workflow
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Would you like to contribute an implementation?
+      options:
+        - I can contribute a pull request.
+        - I can help with testing or documentation.
+        - I am requesting the enhancement only.
+    validations:
+      required: true
