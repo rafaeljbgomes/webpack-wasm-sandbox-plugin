@@ -11,6 +11,18 @@ The thesis performance evaluation uses the Chromium browser harness:
 The older Node command harness remains available for exploratory work, but
 `analyze.py` now expects the browser scenario schema only.
 
+## Sandbox Policy Scope
+
+The branch policy in `.sandbox/sandbox.config.js` enables the ten libraries
+evaluated by the project and retains the minimum capability permissions used on
+`main`. Unlike `main`, this branch also declares the four workload adapters
+used by the benchmark: Image.js `transform`, Lodash `collection`, Luxon
+`scheduling`, and Zod `validation`. Those workload declarations and their
+instrumented runtime support are exclusive to `feat/sandbox-benchmarking`.
+
+Do not copy this policy to `main`: the workload source modules and performance
+instrumentation are intentionally absent there.
+
 ## Scenario Contract
 
 Every browser scenario exports one default function. One call represents one
