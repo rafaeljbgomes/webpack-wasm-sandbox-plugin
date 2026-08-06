@@ -26,14 +26,14 @@ Architecture diagrams are maintained directly as PlantUML source files under `do
 
 | PlantUML source | View |
 |---|---|
-| [arquitetura-build-time.puml](diagrams/arquitetura-build-time.puml) | Webpack build and import-replacement sequence |
-| [arquitetura-componentes.puml](diagrams/arquitetura-componentes.puml) | Logical components and boundary directions |
-| [arquitetura-deployment.puml](diagrams/arquitetura-deployment.puml) | Build, host JavaScript, and QuickJS/WebAssembly deployment view |
-| [arquitetura-implementacao.puml](diagrams/arquitetura-implementacao.puml) | Source-package relationships |
-| [arquitetura-runtime.puml](diagrams/arquitetura-runtime.puml) | Library initialization and mediated host calls |
+| [build-time-architecture.puml](diagrams/build-time-architecture.puml) | Webpack build and import-replacement sequence |
+| [component-architecture.puml](diagrams/component-architecture.puml) | Logical components and boundary directions |
+| [deployment-architecture.puml](diagrams/deployment-architecture.puml) | Build, host JavaScript, and QuickJS/WebAssembly deployment view |
+| [implementation-architecture.puml](diagrams/implementation-architecture.puml) | Source-package relationships |
+| [runtime-architecture.puml](diagrams/runtime-architecture.puml) | Library initialization and mediated host calls |
 | [coarse-grained-runtime.puml](diagrams/coarse-grained-runtime.puml) | Optional workload-adapter execution |
-| [membrana-vm-host.puml](diagrams/membrana-vm-host.puml) | Reverse membrane calls from the host to isolated exports |
-| [webapi-autorizada.puml](diagrams/webapi-autorizada.puml) | Permission-selected host capability exposure |
+| [vm-host-membrane.puml](diagrams/vm-host-membrane.puml) | Reverse membrane calls from the host to isolated exports |
+| [authorized-webapi.puml](diagrams/authorized-webapi.puml) | Permission-selected host capability exposure |
 
 Render the diagrams with any compatible PlantUML tool. When architecture changes, update the relevant `.puml` source together with the canonical specification and architectural decision record.
 
