@@ -169,3 +169,8 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 | `dist/`, `.sandbox/proxys/` | Generated output; never edit or commit |
 
 Start with the [documentation index](docs/README.md) and [contribution guide](CONTRIBUTING.md). Architectural changes must also update [architectural-decisions.md](docs/architecture/architectural-decisions.md).
+
+## Acknowledgements
+
+Developed by Rafael Gomes under the academic supervision of Professor Nuno Pereira ([Nuno Pereira](https://github.com/nampereira)), ISEP.
+The supervisor provided guidance on the research direction and selected design decisions.
