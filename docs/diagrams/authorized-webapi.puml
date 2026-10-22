@@ -8,7 +8,7 @@ skinparam defaultFontSize 15
 
 box "Host Environment" #f1f1f1
     participant "Sandbox\nManager" as Manager
-    participant "Sandbox\nConfiguration" as Config
+    participant "Generated Proxy\n(explicit permissions)" as Config
     participant "Forward\nMembrane" as HostVmMembrane
     participant "Allowed Host\nCapabilities" as HostCapabilities
 end box
@@ -19,10 +19,10 @@ end box
 
 == Capability exposure ==
 
-Manager -> Config: Reads library\npermissions
+Config -> Manager: Initializes library with\ncompiler-selected permissions
 activate Manager
 activate Config
-Config --> Manager: Allowed capability
+note over Config, Manager: Direct callers may omit permissions\nto use the legacy default-policy fallback
 deactivate Config
 
 Manager -> HostVmMembrane: Requests capability mediation

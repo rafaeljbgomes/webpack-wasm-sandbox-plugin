@@ -90,7 +90,7 @@ export default {
 };
 ```
 
-- `permissions` lists host globals to expose. An empty list is the default security posture.
+- `permissions` lists host globals to expose. Omission normalizes to `[]`; malformed values fail the build. Generated proxies carry the compiler-selected permissions into the runtime, including explicit empty lists.
 - `workloads` is optional. Each entry defines code that executes inside the owning library sandbox and the functions exported through `sandbox-workload/<library>/<workload>`.
 - The runtime currently supports explicitly configured globals and a constrained `crypto` capability. Adding a name to the configuration does not automatically make an unsupported global safe or usable.
 

@@ -57,12 +57,12 @@ export default {
 
 | Field | Required | Meaning |
 |---|---|---|
-| `<library>.permissions` | Yes in maintained configuration | Host global names made available to this library. Use `[]` for no host capabilities. |
+| `<library>.permissions` | Optional | Host global names made available to this library. Omission normalizes to `[]`; malformed values fail validation. |
 | `<library>.workloads` | No | Coarse-grained adapters that execute inside the same sandbox as the library. |
 | `workloads.<name>.entry` | Yes for a workload | Repository-relative JavaScript entry bundled by a child compiler. |
 | `workloads.<name>.exports` | Yes for a workload | Functions exposed by the generated workload proxy. |
 
-The plugin treats every top-level key as a library to bundle and redirect. It validates the policy-file presence, module shape, and package resolution before compilation, but does not validate a separate schema for every library option.
+The plugin treats every top-level key as a library to bundle and redirect. The shared policy loader validates file presence, module and per-library object shapes, permission lists, and package resolution before compilation. Other library options retain their existing contract.
 
 ## 3. Build-time architecture
 
@@ -151,7 +151,7 @@ Disposal clears the interval, disposes all registered marshallers and precompile
 
 ## 6. Capability exposure and forward membrane
 
-`exposeWebAPIs()` reads the selected library's `permissions` list. Ordinary globals are obtained from `globalThis`, wrapped, synchronized through Arena, and exposed under the same name.
+Generated proxies serialize the compiler-selected permissions into `SandboxManager.createSandbox(libraryName, libraryCode, { permissions })`. Both synchronous and asynchronous runtime paths forward an explicit list to `exposeWebAPIs()`. An explicit empty list never falls back to another policy. Direct runtime callers omitting `options.permissions` retain the default policy-module fallback. Ordinary globals are obtained from `globalThis`, wrapped, synchronized through Arena, and exposed under the same name; absent host globals are skipped.
 
 The forward membrane in `forward-membrane.js` protects host receiver semantics:
 
