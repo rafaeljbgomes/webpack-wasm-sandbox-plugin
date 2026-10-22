@@ -1,5 +1,7 @@
 node_modules
 dist/
+.cache/
+capability-advisor-results/
 .agent/
 .sandbox/proxys/*-proxy.js
 .sandbox/sandbox.config.*

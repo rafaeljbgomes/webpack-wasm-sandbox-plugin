@@ -530,3 +530,23 @@ These proof-of-concept workload declarations and their source modules are mainta
 **Decision:** Extend `REQUIRES_NEW_RE` with the Chromium wording while retaining the existing Node and library-specific forms.
 
 **Consequence:** Browser constructors such as `TextEncoder` remain usable through configured permissions, which is required by the Image.js security scenario. Unrelated `TypeError` exceptions continue to propagate instead of being reinterpreted as constructor calls.
+
+
+## 02/10/2026 - 25. Reviewable Jev capability preparation and explicit runtime policy
+
+**Decision:** Keep Jev in an optional preparation CLI. Share normalized policy loading and isolated child compilation with the runtime build. Collect transformed installed/transitive package evidence, classify bounded capability questions using pinned Jev 1.13.0, and render editable local artifacts. Supported high-probability feature needs may enter the draft; sensitive, unvalidated and incomplete outcomes remain review items. Preserve developer permissions and workload declarations. Never automatically apply a draft.
+
+**Rationale:** Capability selection depends on installed code and optional features. Package names and generated model prose cannot establish a least-authority policy. A separate command allows explicit source transmission, cache/offline operation and human review while keeping normal builds deterministic and free of model credentials or network requests.
+
+**Runtime policy:** Generated proxies pass the compiler-selected permission list through SandboxManager to exposure. Explicit empty policies remain empty; direct callers omitting permissions retain the existing default-module fallback. This corrects the previous mismatch between custom compiler configPath and the hard-coded runtime policy. Missing permission lists normalize to []; malformed lists fail validation.
+
+**Consequences:** The initial catalogue proposes only currently supported exposure semantics. The crypto facade retains its randomness/UUID scope. Model probabilities use an initial 0.90 review threshold, not a demonstrated security guarantee. Incomplete source extraction and unsupported APIs can require manual work; static absence is not proof. Workloads are preserved but excluded from capability analysis. See the [advisor guide](../../capability-advisor/README.md) for maintained operational contracts.
+
+
+## 22/10/2026 - 26. SubQ Snap replaces Jev as the capability-advisor model
+
+**Decision:** The capability advisor classifies capability questions with SubQ Snap (`subq-snap-1.1`) through SubQ's System One endpoint, `POST https://api.subq.ai/v1/systemone`, authenticated with `SUBQ_API_KEY`. The existing System One SDK remains the transport: it already sends Bearer-authenticated `state`/`questions`/`model` requests to `/v1/systemone`. The base URL is passed explicitly, so SDK environment variables cannot redirect evidence. Prompts, catalogue, 0.90 threshold, draft rules, budgets, retries and cache semantics are unchanged.
+
+**Rationale:** SubQ serves the same typed Choice contract and returns per-option probabilities, which the deterministic draft rules depend on. Retaining the transport keeps the change limited to provider identity and response tolerance.
+
+**Consequences:** The pinned model identifier is part of every request and cache key, so earlier Jev classifications are not reused. SubQ reports `confidence` as optional and `output_tokens` as zero. Missing or null confidence is recorded as `null`, but a reported confidence outside [0, 1] is still rejected. Confidence never influences draft eligibility. Each request's 48 KiB budget keeps batches well below SubQ's 128-question limit. SubQ Snap is a public-preview model. Live accuracy has not been measured; this supersedes only the model choice in decision 25.

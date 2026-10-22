@@ -64,6 +64,10 @@ export default {
 
 The plugin treats every top-level key as a library to bundle and redirect. The shared policy loader validates file presence, module and per-library object shapes, permission lists, and package resolution before compilation. Other library options retain their existing contract.
 
+### Optional capability preparation
+
+`npm run sandbox:suggest` is a separate Node command. Its analysis plugin shares policy loading and isolated library child compilation with the runtime plugin, retains selected Webpack resolution/loader settings, and excludes the host entry and runtime proxy generation. It gathers transformed installed/transitive module evidence without evaluating emitted dependency code, asks pinned SubQ Snap (`subq-snap-1.1`) typed System One questions, and writes an editable draft and reports under an ignored result directory. Local host modules and workloads are excluded from remote evidence; incomplete, sensitive and unvalidated capability results require review. The developer edits and transfers reviewed permissions to the active policy before a normal build. See the [advisor operational guide](../../capability-advisor/README.md) for the maintained catalogue, budgets, API/cache contracts and validation limits. Preparation adds no runtime model dependency.
+
 ## 3. Build-time architecture
 
 ### 3.1 Configuration and proxy generation

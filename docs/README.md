@@ -15,6 +15,8 @@ This index covers the maintained documentation for users and contributors. The [
 | [Architectural decisions](architecture/architectural-decisions.md) | Living historical record | Rationale and consequences of material design decisions |
 | [Compatibility testing](architecture/compat-testing-plan.md) | Operational architecture | Automated campaign design and library onboarding |
 | [Compatibility harness guide](../compatibility-harness/README.md) | Operational | Commands, strategies, and generated result artifacts |
+| [Capability advisor guide](../capability-advisor/README.md) | Operational, experimental | SubQ System One preparation, evidence handling, reviewed drafts and cache behavior |
+| [Capability advisor validation](../capability-advisor/VALIDATION.md) | Scoped validation snapshot | Implementation checks, browser scenarios and unmeasured model accuracy |
 | [Host-argument capability limitation](architecture/host-argument-capability-limitation.md) | Current limitation | Authority conveyed through host-supplied arguments |
 | [Import coverage and cache limitations](architecture/isolation-coverage-and-cache-limitations.md) | Current limitation | Exact import matching, shared membrane cache scope, and future hardening |
 | [Strict host-argument modes](architecture/host-argument-strict-mode-future-work.md) | Future work | Candidate attenuation designs; none are implemented |
