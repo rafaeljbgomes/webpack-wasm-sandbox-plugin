@@ -1,6 +1,6 @@
 # Future Work: Fast Unit Regression Suite
 
-**Status:** Partially implemented. Rollout step 1 (#5: infrastructure, lifecycle and capability-exposure tests) is implemented. Steps 2–4 (#6, #7, #8) are future work, tracked under #4. The architecture this suite protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
+**Status:** Partially implemented. Rollout step 1 (#5: infrastructure, lifecycle and capability-exposure tests) is implemented. Steps 2–5 (#6, #7, #8, #10) are future work, tracked under #4. The architecture this suite protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
 
 ## 1. Problem (state before step 1)
 
@@ -39,7 +39,7 @@ Targets:
 - real QuickJS and real Arena; the boundary is never mocked;
 - zero new dependencies (`node:test`, `node:assert/strict`, existing `tsx`).
 
-Non-goals: replacing compatibility campaigns or browser security validation, enforcing coverage thresholds, or covering performance.
+Non-goals: replacing compatibility campaigns or browser security validation, or covering performance. Coverage thresholds are deliberately deferred until the suite is complete; step 5 introduces them as a CI gate.
 
 ## 3. Feasibility evidence
 
@@ -155,7 +155,7 @@ The test then imports the proxy and runs its named, class, default-singleton and
 "test": "npm run test:unit && npm run test:advisor"
 ```
 
-`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. Node's test coverage can be reported as information, with no threshold until the suite stabilises.
+`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. With Node's built-in coverage, the step 1 suite executes 79% of lines and 76% of branches in `.sandbox/core`, `.sandbox/membrane`, `.sandbox/marshallers` and `webpack-sandbox-plugin/src`. Step 4 reports coverage and step 5 enforces it.
 
 A `.github/workflows/unit.yml` runs `npm ci` and `npm test` on push and pull request, using Node 24 on `ubuntu-latest` and `windows-latest`, since contributors and the proxy path logic both run on Windows. Compatibility campaigns and browser scenarios stay manual.
 
@@ -259,12 +259,13 @@ Behaviour that the specification lists as a limitation, or that the probe showed
 
 ## 7. Rollout
 
-Each step is one reviewable PR. Steps 2 and 3 can run in parallel after step 1.
+Each step is one reviewable PR. Steps 2 and 3 can run in parallel after step 1. Step 5 follows steps 2–4.
 
 1. **Infrastructure (#5, implemented):** alias module and hook, fixture helper, `test:unit`/`test` scripts, `--import tsx` fix and `proxyDirectory` seam for the existing plugin test, CI workflow, plus lifecycle and exposure tests.
 2. **Runtime boundary (#6):** forward/reverse membrane, marshaller, crypto, isolation and workload tests.
 3. **Build-time (#7):** parser, proxy-generator, generated-proxy and import-redirection tests.
 4. **Gaps, coverage and documentation (#8):** `known-gaps.test.mjs`; a report-only `npm run test:coverage` with the coverage table in the CI job summary and an lcov artifact, but no thresholds, because line coverage overstates what is asserted and section 5.1 remains the primary measure. Then updates to `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, the documentation index, `compat-testing-plan.md` (tier table), and an architectural decision entry for the validation tiers.
+5. **Coverage gate (#10):** CI fails when project coverage falls below a floor, a file regresses past a committed per-file baseline, or lines changed by the PR fall below a minimum. Floors and the baseline come from coverage measured after steps 2–4, and every exclusion carries a stated reason. The gate runs on Ubuntu so platform-specific branches do not change the result. It complements section 5.1, because executed lines are not asserted behaviour.
 
 ## 8. Risks
 
