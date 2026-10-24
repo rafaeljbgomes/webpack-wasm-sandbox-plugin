@@ -1,6 +1,6 @@
 # Future Work: Fast Unit Regression Suite
 
-**Status:** Partially implemented. Rollout step 1 (#5: infrastructure, lifecycle and capability-exposure tests) is implemented. Steps 2–5 (#6, #7, #8, #10) are future work, tracked under #4. The architecture this suite protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
+**Status:** Partially implemented. Rollout steps 1 (#5: infrastructure, lifecycle and capability exposure) and 2 (#6: runtime boundary) are implemented. Steps 3–5 (#7, #8, #10) are future work, tracked under #4. The architecture this suite protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
 
 ## 1. Problem (state before step 1)
 
@@ -155,7 +155,7 @@ The test then imports the proxy and runs its named, class, default-singleton and
 "test": "npm run test:unit && npm run test:advisor"
 ```
 
-`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. With Node's built-in coverage, the step 1 suite executes 79% of lines and 76% of branches in `.sandbox/core`, `.sandbox/membrane`, `.sandbox/marshallers` and `webpack-sandbox-plugin/src`. Step 4 reports coverage and step 5 enforces it.
+`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. With Node's built-in coverage, the step 1 suite executes 79% of lines and 76% of branches in `.sandbox/core`, `.sandbox/membrane`, `.sandbox/marshallers` and `webpack-sandbox-plugin/src`. After step 2, `npm test` runs 132 tests (123 pass, 9 `todo`) in about 30 s. Coverage rises to 85% of lines and 85% of branches, with every runtime file at 90–100% of lines; the remaining gap is the plugin, which step 3 addresses. Step 4 reports coverage and step 5 enforces it.
 
 A `.github/workflows/unit.yml` runs `npm ci` and `npm test` on push and pull request, using Node 24 on `ubuntu-latest` and `windows-latest`, since contributors and the proxy path logic both run on Windows. Compatibility campaigns and browser scenarios stay manual.
 
@@ -211,51 +211,55 @@ Most cases come from failures that compatibility campaigns already found and tha
 
 ### 5.1 Previously corrected defects
 
-Most decisions in [architectural-decisions.md](architectural-decisions.md) record a defect found through compatibility campaigns and the correction applied. The table below shows which of those corrections the unit suite guards today and which step will add the guard. "Partial" means the corrected path runs during a step 1 test but no assertion targets the original failure.
+Most decisions in [architectural-decisions.md](architectural-decisions.md) record a defect found through compatibility campaigns and the correction applied. The table below shows which of those corrections the unit suite guards today and which step will add the guard. "Partial" means the corrected path runs during a test but no assertion targets the original failure.
 
-| ADR | Corrected behaviour | Step 1 coverage | Remaining guard |
+| ADR | Corrected behaviour | Current coverage | Remaining guard |
 |---|---|---|---|
-| 1 | One QuickJS context per library | Covered: separate contexts, no shared globals | #6 adds prototype-pollution isolation |
-| 2 | Typed arrays copied, not proxied | Partial: clean disposal after typed-array crossings | #6 round-trip fidelity per kind and view |
-| 3 | `bindWebApi` keeps native receivers | Partial: `Intl.NumberFormat` and `TextEncoder` work end to end | #6 cycles, repeated references, nested accessors |
-| 4 | Constructor detection in `makeCallable` | Partial: the `TextEncoder` test takes the `Reflect.construct` fallback on Node's message | #6 each recognised message and propagation of unrelated `TypeError`s |
-| 5 | Job pump drives QuickJS Promises | Covered: resolution, chained awaits, rejection delivery, pump cleared on disposal | — |
+| 1 | One QuickJS context per library | Covered: separate contexts, globals, prototypes and workload state (steps 1–2) | — |
+| 2 | Typed arrays copied, not proxied | Covered: every kind in both directions, offset views, copy semantics (step 2) | — |
+| 3 | `bindWebApi` keeps native receivers | Covered: private-field host objects, `Intl`, cycles, write-through (step 2) | Nested-reference identity inside QuickJS is a `todo` |
+| 4 | Constructor detection in `makeCallable` | Covered: constructor fallback, unrelated `TypeError` propagation (step 2) | — |
+| 5 | Job pump drives QuickJS Promises | Covered: resolution, chained awaits, rejection delivery, pump cleared on disposal (step 1) | — |
 | 6 | Child-compiler library bundles | Partial: plugin test asserts the child bundle is emitted | #7 evaluates the emitted bundle contract |
 | 7 | Declaration-driven proxy generation | Partial: plugin test asserts a proxy is generated | #7 parser and generator output |
 | 8 | Loader interception for compatibility suites | Shared alias only | Remains covered by compatibility campaigns |
-| 9 | `bindSandboxExport` reverse membrane | Partial: export calls and property reads | #6 wrapper caching, depth limit, assignment |
+| 9 | `bindSandboxExport` reverse membrane | Covered: receivers, wrapper caching, nested objects, static properties (step 2) | — |
 | 10 | Pump referenced until initialization completes | Partial: pump referenced during creation; `unrefPump()` behaviour characterised | #7 generated proxy unrefs only after initialization |
 | 11 | Node entry points for child bundles | Not covered | #7 fixture package with a `browser` field |
 | 12 | Default export that is a singleton | Not covered | #7 generated default proxy |
-| 13 | `createInstance` keeps WeakMap private state | Not covered | #6 |
-| 14 | Live primitive reads from returned objects | Not covered | #6 |
-| 16 | Patched `ue()` preserves `new.target` | Not covered | #6 |
-| 17 | `apply` trap on exported functions | Not covered | #6 reverse membrane, #7 generated proxy |
-| 19 | Precompiled temporary-object helpers | Implicit only | #6; unbounded `__SANDBOX_TEMP__` growth tracked in #8 |
-| 20 | `Date` results are not wrapped | Not covered | #6 |
-| 21 | Workload adapters share the library context | Not covered | #6 |
-| 22 | Structured error marshalling | Partial: clean disposal after error crossings | #6 subclasses and bounded fields; missing `cause` tracked in #8 |
-| 23 | Constrained crypto facade | Partial: only `crypto` and `self` added; helper globals removed | #6 integer-only arrays, quota, null prototype |
-| 24 | Browser constructor-only messages | Not covered | #6 |
-| 25 | Explicit runtime policy, no silent fallback | Covered: explicit list vs fallback, sync and async validation, fail-closed plugin policy loading | — |
+| 13 | `createInstance` keeps WeakMap private state | Covered: WeakMap privates and native `#private` fields (step 2) | — |
+| 14 | Live primitive reads from returned objects | Covered: prototype getters re-read after mutation (step 2) | — |
+| 16 | Patched `ue()` preserves `new.target` | Covered: host `new` on an exported subclass (step 2) | — |
+| 17 | `apply` trap on exported functions | Covered for the reverse membrane (step 2) | #7 generated proxy |
+| 19 | Precompiled temporary-object helpers | Covered indirectly by returned-instance tests (step 2) | Unbounded `__SANDBOX_TEMP__` growth is a `todo` |
+| 20 | `Date` results are not wrapped | Covered (step 2) | — |
+| 21 | Workload adapters share the library context | Covered: shared context, single evaluation, preloading, per-sandbox state (step 2) | — |
+| 22 | Structured error marshalling | Covered: built-in subclasses, `AggregateError`, listed fields, bounds, thrown-error fields (step 2) | Thrown-error subclass identity and `cause` are `todo`s |
+| 23 | Constrained crypto facade | Covered: null prototype, accepted and rejected views, byte range, quota, UUID (steps 1–2) | — |
+| 24 | Browser constructor-only messages | Covered at matcher level (step 2) | Browser execution remains with the security scenarios |
+| 25 | Explicit runtime policy, no silent fallback | Covered: explicit list vs fallback, sync and async validation, fail-closed plugin policy loading (step 1) | — |
 
 ADRs 15 (bridge assessment), 18 (crossing cost) and 26 (advisor model) do not record boundary defects. The advisor has its own suite.
 
 ## 6. Known gaps as tests
 
-Behaviour that the specification lists as a limitation, or that the probe showed differs from what was intended, is recorded with `test(name, { todo: "<issue or reason>" }, fn)`. The case runs and is reported, but it does not fail the suite. A fix removes the `todo` and the case becomes a guard.
+Behaviour that the specification lists as a limitation, or that the probe showed differs from what was intended, is recorded with `test(name, { todo: "<issue or reason>" }, fn)`. The case runs and is reported, but it does not fail the suite. A fix removes the `todo` and the case becomes a guard. Gaps that belong to one area live in that area's test file. Cross-cutting gaps go into `known-gaps.test.mjs` in step 4.
 
-| Gap | Reference |
+| Gap | Recorded in |
 |---|---|
-| Two sandboxes receiving one mutable host object share a forward wrapper | Issue #3 |
-| Configured-package subpath imports are not redirected | Issue #2 |
-| Authority-bearing host arguments produce no diagnostics | Issue #1 |
-| Thrown sandbox errors are not instances of the host subclass | Section 3 |
-| `Error.cause` is not in the copied field list, although spec §8 says cause is copied | `error.js` `EXTRA_ERROR_FIELDS` |
-| `__SANDBOX_TEMP__` is never pruned | Section 3 |
-| No CPU, memory or interrupt limits | Spec §9 |
-| Awaited sandbox rejections also emit a host `unhandledRejection` (`todo` in `sandbox-lifecycle.test.mjs`) | Section 3 |
-| Repeated `dispose()` throws `QuickJSUseAfterFree` (`todo` in `sandbox-lifecycle.test.mjs`) | Section 3 |
+| Awaited sandbox rejections also emit a host `unhandledRejection` | `sandbox-lifecycle.test.mjs` |
+| Repeated `dispose()` throws `QuickJSUseAfterFree` | `sandbox-lifecycle.test.mjs` |
+| Nested references back to an exposed host object lose identity inside QuickJS | `forward-membrane.test.mjs` |
+| `__SANDBOX_TEMP__` is never pruned | `reverse-membrane.test.mjs` |
+| Thrown sandbox errors are not instances of the host subclass | `marshallers.test.mjs` |
+| `Error.cause` is not copied | `marshallers.test.mjs` |
+| Native QuickJS `arguments` objects return as plain objects | `marshallers.test.mjs` |
+| Returned `Map` and `Set` objects fail on method calls (spec §8) | `marshallers.test.mjs` |
+| `DataView` loses its identity in both directions (spec §8) | `marshallers.test.mjs` |
+| Two sandboxes receiving one mutable host object share a forward wrapper (#3) | `known-gaps.test.mjs` (step 4) |
+| Configured-package subpath imports are not redirected (#2) | `known-gaps.test.mjs` (step 4) |
+| Authority-bearing host arguments produce no diagnostics (#1) | `known-gaps.test.mjs` (step 4) |
+| No CPU, memory or interrupt limits (spec §9) | `known-gaps.test.mjs` (step 4) |
 
 ## 7. Rollout
 

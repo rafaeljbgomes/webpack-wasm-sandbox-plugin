@@ -200,7 +200,7 @@ Values that already have supported value semantics—arrays, typed arrays, `Arra
 | `typed-array.js` | Copies typed-array view bytes and preserves the concrete typed-array constructor. Raw `ArrayBuffer` is not claimed by this custom marshaller. |
 | `regexp.js` | Preserves pattern source and flags. |
 | `arguments.js` | Tags and recreates arguments-like values. |
-| `error.js` | Recreates supported host/QuickJS error constructors and copies message, stack, cause, and bounded JSON-safe custom fields. |
+| `error.js` | Recreates supported host/QuickJS error constructors for returned and argument errors. It copies `name`, `message`, `stack` and bounded JSON-safe values of `errors`, `inner`, `path`, `type`, `value`, `params` and `issues`. `cause` and other custom fields are not copied. Thrown QuickJS errors reach the host as Arena unwrap errors that carry these fields but are not instances of the host subclass. |
 
 Each marshaller implements `isWrappable`, `isHandleWrappable`, `marshal`, `unmarshal`, and `dispose`. Arena uses the first applicable custom conversion; a marshaller file that is not imported and registered in `index.js` is inactive.
 
