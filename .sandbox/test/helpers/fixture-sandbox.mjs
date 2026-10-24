@@ -20,6 +20,28 @@ export function fixtureBundle(body) {
 }
 
 /**
+ * Installs a host global for one test so it can be granted as a permission.
+ *
+ * `exposeWebAPIs()` reads permitted names from `globalThis`, so tests that
+ * need a custom host capability define it here and it is removed afterwards.
+ *
+ * @param {import("node:test").TestContext} t Owning test context.
+ * @param {string} name Global name, also used as the permission name.
+ * @param {unknown} value Host value to expose.
+ * @returns {string} The global name, for use in `permissions`.
+ */
+export function defineHostGlobal(t, name, value) {
+  if (Object.hasOwn(globalThis, name)) {
+    throw new Error(`Host global ${name} already exists`);
+  }
+  globalThis[name] = value;
+  t.after(() => {
+    delete globalThis[name];
+  });
+  return name;
+}
+
+/**
  * Makes disposal idempotent and registers it as test cleanup.
  *
  * Tests that pin raw `dispose()` semantics must use `SandboxManager` directly.
