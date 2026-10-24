@@ -23,6 +23,7 @@ Treat source code and executable configuration as authoritative. `README.md` is 
 
 ```powershell
 npm install
+npm test
 npm run build:bundles
 npx webpack --config webpack.config.cjs
 node --test compatibility-harness/test/parsers.test.mjs
@@ -59,6 +60,7 @@ Use a separate checkout or worktree and follow `performance-harness/README.md` o
 
 ## Testing rules
 
+- Run `npm test` (offline unit and advisor suites) for every change. Unit fixtures use `.sandbox/test/helpers/fixture-sandbox.mjs`; plugin tests pass a temporary `proxyDirectory`. Known limitations are `todo` cases, never passing expectations.
 - Compatibility is the primary functional signal. Add or update focused upstream-derived fixtures and run native and sandbox modes.
 - Every correction must include a short, focused test scenario that reproduces the corrected behaviour and protects it from regression. Use the smallest appropriate unit, compatibility, or browser-security scenario; retain or update it with the correction.
 - Preserve framework-specific mappings for Jest, Vitest, AVA, QUnit, and CommonJS suites.

@@ -32,19 +32,40 @@ function compile(config) {
   });
 }
 
+/**
+ * Writes a minimal resolvable package so compilation does not depend on a
+ * real dependency's layout or build time.
+ */
+function createFixturePackage(directory, name) {
+  const packageDirectory = path.join(directory, "node_modules", name);
+  fs.mkdirSync(packageDirectory, { recursive: true });
+  fs.writeFileSync(
+    path.join(packageDirectory, "package.json"),
+    JSON.stringify({ name, version: "1.0.0", main: "index.js", types: "index.d.ts" }),
+  );
+  fs.writeFileSync(path.join(packageDirectory, "index.js"), "exports.add = (a, b) => a + b;\n");
+  fs.writeFileSync(path.join(packageDirectory, "index.d.ts"), "export declare function add(a: number, b: number): number;\n");
+}
+
+/** Builds a compiler configuration whose context and outputs stay in `directory`. */
 function createConfig(directory, configPath) {
   const entryPath = path.join(directory, "entry.js");
   fs.writeFileSync(entryPath, "export const value = 1;\n");
 
   return {
-    context: process.cwd(),
+    context: directory,
     entry: entryPath,
     mode: "development",
     output: {
       path: path.join(directory, "dist"),
       filename: "bundle.js",
     },
-    plugins: [new WebpackSandboxPlugin({ configPath })],
+    plugins: [
+      new WebpackSandboxPlugin({
+        configPath,
+        proxyDirectory: path.join(directory, "proxys"),
+      }),
+    ],
   };
 }
 
@@ -101,11 +122,30 @@ test("continues with a resolvable configured library", async (t) => {
   const directory = createTempDirectory();
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
   const configPath = path.join(directory, "sandbox.config.cjs");
+  createFixturePackage(directory, "fixture-lib");
   fs.writeFileSync(
     configPath,
-    'module.exports = { "date-fns": { permissions: [] } };\n',
+    'module.exports = { "fixture-lib": { permissions: [] } };\n',
   );
 
   await compile(createConfig(directory, configPath));
   assert.ok(fs.existsSync(path.join(directory, "dist", "bundle.js")));
+  assert.ok(fs.existsSync(path.join(directory, "dist", "fixture-lib.bundle.js")));
+  assert.ok(fs.existsSync(path.join(directory, "proxys", "fixture-lib-proxy.js")));
+});
+
+test("writes generated proxies only to the configured proxy directory", async (t) => {
+  const directory = createTempDirectory();
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const configPath = path.join(directory, "sandbox.config.cjs");
+  const name = `fixture-lib-${path.basename(directory).replace(/[^a-zA-Z0-9]/g, "")}`;
+  createFixturePackage(directory, name);
+  fs.writeFileSync(configPath, `module.exports = { "${name}": { permissions: [] } };\n`);
+
+  await compile(createConfig(directory, configPath));
+  assert.ok(fs.existsSync(path.join(directory, "proxys", `${name}-proxy.js`)));
+  assert.equal(
+    fs.existsSync(path.resolve(process.cwd(), ".sandbox/proxys", `${name}-proxy.js`)),
+    false,
+  );
 });

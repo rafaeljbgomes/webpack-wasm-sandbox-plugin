@@ -22,7 +22,9 @@
     "test:compat": "npm run build:bundles && node --import ./test-sandbox-redirect/register-sandbox.mjs --test",
     "postinstall": "patch-package",
     "sandbox:suggest": "node capability-advisor/suggest.mjs",
-    "test:advisor": "node --test capability-advisor/test/*.test.mjs"
+    "test:advisor": "node --test capability-advisor/test/*.test.mjs",
+    "test:unit": "node --import ./.sandbox/test/helpers/register-runtime-aliases.mjs --import tsx --test --test-timeout=30000 \".sandbox/test/*.test.mjs\" \"webpack-sandbox-plugin/test/*.test.mjs\"",
+    "test": "npm run test:unit && npm run test:advisor"
   },
   "keywords": [
     "webpack",

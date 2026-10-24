@@ -108,6 +108,16 @@ Configure `SUBQ_API_KEY` in your terminal environment to request SubQ Snap class
 
 See the [advisor guide](capability-advisor/README.md) for evidence handling, catalogue coverage, cache/offline options, limitations and validation. Run focused advisor regressions with `npm run test:advisor`.
 
+## Unit tests
+
+Run the fast, offline regression suite before every change:
+
+```powershell
+npm test
+```
+
+`npm test` runs `npm run test:unit` and `npm run test:advisor`. The unit suite drives the real QuickJS runtime with inline fixture libraries and compiles plugin fixtures into temporary directories. It needs no bundles, upstream suites, network, or browser, and does not write into the working tree. It currently covers sandbox lifecycle and capability exposure. Known limitations are reported as `todo` cases that do not fail the run. CI runs the same command on Ubuntu and Windows. The unit suite does not replace compatibility campaigns or browser security validation; see the [unit-suite design](docs/architecture/unit-test-suite-design.md) for scope and rollout.
+
 ## Compatibility testing
 
 The automated compatibility runner is the project's primary functional evidence. It executes upstream-derived suites in native and sandbox modes and stores auditable results outside the performance data. The upstream suites are intentionally not versioned in this repository; obtain the required suites and place them in the paths declared by `compatibility-harness/manifest.mjs` before running a campaign.
@@ -176,7 +186,8 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 | `.sandbox/membrane/` | Forward and reverse boundary wrappers |
 | `.sandbox/marshallers/` | Registered cross-runtime type conversions |
 | `.sandbox/sandbox.config.js` | Per-library permissions and optional workloads |
-| `test-sandbox-redirect/` | ESM and CommonJS redirection for compatibility suites |
+| `.sandbox/test/` | Runtime unit tests and fixture helpers |
+| `test-sandbox-redirect/` | ESM and CommonJS redirection for compatibility suites, plus shared runtime aliases |
 | `compatibility-harness/` | Campaign manifest, runners, parsers, and unit tests |
 | `lib-test/security/app/` | Isolated browser security validation application |
 | `docs/` | Developer documentation and versioned PlantUML diagrams |
