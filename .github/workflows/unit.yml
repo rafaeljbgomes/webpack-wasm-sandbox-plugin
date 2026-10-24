@@ -1,0 +1,32 @@
+name: Unit tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Unit (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      # postinstall applies the checked-in patch-package patches.
+      - run: npm ci
+      - run: npm test
+      # The suite must not write generated proxies or bundles into the checkout.
+      - name: Check the working tree is unchanged
+        shell: bash
+        run: |
+          git status --porcelain --ignored -- .sandbox dist
+          test -z "$(git status --porcelain --ignored -- .sandbox dist)"
