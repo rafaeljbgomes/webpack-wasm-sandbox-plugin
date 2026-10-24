@@ -1,8 +1,8 @@
 # Future Work: Fast Unit Regression Suite
 
-**Status:** Proposed design. Nothing in this document is implemented yet. The architecture it protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
+**Status:** Partially implemented. Rollout step 1 (#5: infrastructure, lifecycle and capability-exposure tests) is implemented. Steps 2–4 (#6, #7, #8) are future work, tracked under #4. The architecture this suite protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
 
-## 1. Problem
+## 1. Problem (state before step 1)
 
 The repository validates the sandbox through three expensive channels:
 
@@ -67,6 +67,11 @@ A throwaway probe built a sandbox directly from an inline fixture bundle, which 
 
 Each item in the second half of the table is either a behaviour to pin with a test or a gap to record (section 6).
 
+Implementing step 1 surfaced two more behaviours, both observed by running them:
+
+- An awaited and caught sandbox Promise rejection also emits a host `unhandledRejection`. Without a handler, Node.js then exits with code 1 even though the caller caught the error.
+- A second `dispose()` throws `QuickJSUseAfterFree`.
+
 ## 4. Design
 
 ### 4.1 Layout
@@ -74,11 +79,13 @@ Each item in the second half of the table is either a behaviour to pin with a te
 Tests follow the existing per-component `test/` convention:
 
 ```text
+test-sandbox-redirect/
+  runtime-aliases.mjs              # alias map shared by sandbox-loader.mjs and the unit-test hook
 .sandbox/test/
   helpers/
-    register-runtime-aliases.mjs   # registers only the quickjs-emscripten-sync alias
-    runtime-aliases.mjs            # alias map shared with test-sandbox-redirect/sandbox-loader.mjs
-    fixture-sandbox.mjs            # fixture bundle builder and auto-disposing sandbox factory
+    register-runtime-aliases.mjs   # registers runtime-alias-hooks.mjs
+    runtime-alias-hooks.mjs        # applies only the runtime aliases; no library redirection
+    fixture-sandbox.mjs            # fixture bundle builder and auto-disposing sandbox factories
   sandbox-lifecycle.test.mjs
   webapi-exposure.test.mjs
   crypto-capability.test.mjs
@@ -89,7 +96,7 @@ Tests follow the existing per-component `test/` convention:
   workloads.test.mjs
   known-gaps.test.mjs
 webpack-sandbox-plugin/test/
-  plugin.fail-closed.test.mjs      # existing; switch to a fixture package
+  plugin.fail-closed.test.mjs      # existing; now uses a temporary fixture package
   policy-loading.test.mjs
   parser.test.mjs
   proxy-generator.test.mjs
@@ -98,7 +105,9 @@ webpack-sandbox-plugin/test/
   fixtures/fixture-lib/            # tiny package: index.js, index.d.ts, package.json
 ```
 
-The alias hook is deliberately separate from `sandbox-loader.mjs`. Unit tests must not redirect configured libraries or depend on the example `.sandbox/sandbox.config.js`. Moving `PACKAGE_ALIASES` into `runtime-aliases.mjs` and importing it from both hooks keeps a single source.
+The alias hook is deliberately separate from `sandbox-loader.mjs`. Unit tests must not redirect configured libraries or depend on the example `.sandbox/sandbox.config.js`. Both hooks import `RUNTIME_PACKAGE_ALIASES` from `test-sandbox-redirect/runtime-aliases.mjs`, so the mapping has one source.
+
+Lifecycle cases that depend on process-wide state run in a fresh child Node.js process: the shared QuickJS module being unloaded, event-loop handles, and `unhandledRejection`. They account for most of the lifecycle file's run time.
 
 ### 4.2 Fixture helper
 
@@ -146,7 +155,7 @@ The test then imports the proxy and runs its named, class, default-singleton and
 "test": "npm run test:unit && npm run test:advisor"
 ```
 
-`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. Node's test coverage can be reported as information, with no threshold until the suite stabilises.
+`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. Node's test coverage can be reported as information, with no threshold until the suite stabilises.
 
 A `.github/workflows/unit.yml` runs `npm ci` and `npm test` on push and pull request, using Node 24 on `ubuntu-latest` and `windows-latest`, since contributors and the proxy path logic both run on Windows. Compatibility campaigns and browser scenarios stay manual.
 
@@ -213,15 +222,17 @@ Behaviour that the specification lists as a limitation, or that the probe showed
 | `Error.cause` is not in the copied field list, although spec §8 says cause is copied | `error.js` `EXTRA_ERROR_FIELDS` |
 | `__SANDBOX_TEMP__` is never pruned | Section 3 |
 | No CPU, memory or interrupt limits | Spec §9 |
+| Awaited sandbox rejections also emit a host `unhandledRejection` (`todo` in `sandbox-lifecycle.test.mjs`) | Section 3 |
+| Repeated `dispose()` throws `QuickJSUseAfterFree` (`todo` in `sandbox-lifecycle.test.mjs`) | Section 3 |
 
 ## 7. Rollout
 
 Each step is one reviewable PR. Steps 2 and 3 can run in parallel after step 1.
 
-1. **Infrastructure:** alias module and hook, fixture helper, `test:unit`/`test` scripts, `--import tsx` fix and `proxyDirectory` seam for the existing plugin test, CI workflow, plus lifecycle and exposure tests.
-2. **Runtime boundary:** forward/reverse membrane, marshaller, crypto, isolation and workload tests.
-3. **Build-time:** parser, proxy-generator, generated-proxy and import-redirection tests.
-4. **Gaps and documentation:** `known-gaps.test.mjs`, then updates to `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, the documentation index, `compat-testing-plan.md` (tier table), and an architectural decision entry for the validation tiers.
+1. **Infrastructure (#5, implemented):** alias module and hook, fixture helper, `test:unit`/`test` scripts, `--import tsx` fix and `proxyDirectory` seam for the existing plugin test, CI workflow, plus lifecycle and exposure tests.
+2. **Runtime boundary (#6):** forward/reverse membrane, marshaller, crypto, isolation and workload tests.
+3. **Build-time (#7):** parser, proxy-generator, generated-proxy and import-redirection tests.
+4. **Gaps and documentation (#8):** `known-gaps.test.mjs`, then updates to `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, the documentation index, `compat-testing-plan.md` (tier table), and an architectural decision entry for the validation tiers.
 
 ## 8. Risks
 

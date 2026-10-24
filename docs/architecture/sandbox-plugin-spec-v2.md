@@ -24,6 +24,7 @@ The Webpack-facing API is:
 ```ts
 export interface SandboxPluginOptions {
   configPath: string;
+  proxyDirectory?: string;
 }
 ```
 
@@ -36,6 +37,8 @@ new WebpackSandboxPlugin({
 ```
 
 `configPath` is resolved from `compiler.context`. The configuration module may expose its object directly or as a default export. The build fails if the policy file is missing or cannot be loaded, if it does not export a library-keyed object, or if a configured package cannot be resolved from the compiler context.
+
+`proxyDirectory` is optional and selects where generated proxy modules are written. It is resolved from the process working directory and defaults to `.sandbox/proxys`. Generated proxies import `../core/sandbox-manager.js` and read `../../dist/<library>.bundle.js` relative to themselves, so only the default location works with the repository runtime. Tests use a temporary directory so compilation leaves the working tree unchanged.
 
 ### 2.2 Library policy
 
