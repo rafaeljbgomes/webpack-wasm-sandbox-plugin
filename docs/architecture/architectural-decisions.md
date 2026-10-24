@@ -148,6 +148,8 @@ In browser contexts, `setInterval` does not keep the page alive (there is no equ
 
 **Note:** Child compilers inherit the parent's compiled resolver, so setting `resolve.aliasFields` or `resolve.mainFields` after `createChildCompiler()` is too late — the resolver is already initialized. The `NormalModuleReplacementPlugin` approach works because it operates at the module-request level, after resolution.
 
+**Note (24/10/2026):** The current `compileLibrary()` resolves the package entry with Node.js resolution, which covers a package-level `browser` entry. It does not apply the `.browser.` replacement described above, so a `browser` map of internal modules still selects the browser file for a web target. The unit suite guards the entry case in `webpack-sandbox-plugin/test/import-redirection.test.mjs` and records the internal-map case there as a `todo`.
+
 ---
 
 ## 12. Proxy default export when the library default is a singleton, not a class
