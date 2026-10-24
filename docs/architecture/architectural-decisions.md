@@ -511,6 +511,8 @@ These proof-of-concept workload declarations and their source modules are mainta
 
 **Consequence:** Error behaviour is closer to the originating realm and diagnostics remain finite. Exact prototypes and arbitrary non-serialisable custom fields are still not guaranteed across the boundary.
 
+**Note (24/10/2026):** The unit suite shows that the implementation does not copy `cause`, and that thrown errors are not reconstructed as host subclasses. The canonical specification (§8) describes the implemented behaviour. Both gaps are recorded as `todo` cases in `.sandbox/test/marshallers.test.mjs`.
+
 ---
 
 ## 17/07/2026 - 23. Expose a constrained crypto facade
