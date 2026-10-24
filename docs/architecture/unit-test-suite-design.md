@@ -265,7 +265,14 @@ Each step is one reviewable PR. Steps 2 and 3 can run in parallel after step 1. 
 2. **Runtime boundary (#6):** forward/reverse membrane, marshaller, crypto, isolation and workload tests.
 3. **Build-time (#7):** parser, proxy-generator, generated-proxy and import-redirection tests.
 4. **Gaps, coverage and documentation (#8):** `known-gaps.test.mjs`; a report-only `npm run test:coverage` with the coverage table in the CI job summary and an lcov artifact, but no thresholds, because line coverage overstates what is asserted and section 5.1 remains the primary measure. Then updates to `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, the documentation index, `compat-testing-plan.md` (tier table), and an architectural decision entry for the validation tiers.
-5. **Coverage gate (#10):** CI fails when project coverage falls below a floor, a file regresses past a committed per-file baseline, or lines changed by the PR fall below a minimum. Floors and the baseline come from coverage measured after steps 2–4, and every exclusion carries a stated reason. The gate runs on Ubuntu so platform-specific branches do not change the result. It complements section 5.1, because executed lines are not asserted behaviour.
+5. **Coverage gate (#10):** `npm run test:coverage` applies Node's built-in `--test-coverage-lines`, `--test-coverage-branches` and `--test-coverage-functions` floors to the runtime and plugin sources, and CI fails below them. The details:
+   - Each floor sits a point or two below the coverage measured after steps 2–4. It is raised as coverage improves, and lowering it needs a stated reason in the PR.
+   - The script pins every flag that affects the result. The step 1 suite measures 79.3% of lines with `--enable-source-maps` and 82.0% without.
+   - CI writes the per-file table to the job summary. Reviewers use it, together with the template's regression-scenario item, to confirm that changed code has tests, because a project-wide floor can hide a drop in one file.
+   - The gate runs on Ubuntu, and exclusions use `node:coverage ignore` comments with a stated reason.
+   - There is no per-file or changed-line script; at this code size, review covers that at lower cost.
+   - The suite stays on `node:test`. If per-file floors are needed later, `c8` can add them without changing framework.
+   - The gate complements section 5.1, because executed lines are not asserted behaviour.
 
 ## 8. Risks
 
