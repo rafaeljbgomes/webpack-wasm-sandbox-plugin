@@ -25,6 +25,7 @@
 import { createRequire } from "module";
 import { resolve as pathResolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { RUNTIME_PACKAGE_ALIASES } from "./runtime-aliases.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -59,18 +60,8 @@ for (const lib of sandboxedLibs) {
   libData.set(lib, { proxyUrl, libRootUrl, testHarnessLibUrl });
 }
 
-/**
- * Package aliases — mirrors the resolve.alias in webpack.config.cjs.
- * Maps bare specifiers that have broken/missing exports to their actual paths.
- */
-const PACKAGE_ALIASES = {
-  "quickjs-emscripten-sync": pathToFileURL(
-    pathResolve(
-      projectRoot,
-      "node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js"
-    )
-  ).href,
-};
+/** Package aliases shared with the unit-test hook. */
+const PACKAGE_ALIASES = RUNTIME_PACKAGE_ALIASES;
 
 /**
  * Node ESM resolve hook — fires for every import specifier.
