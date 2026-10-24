@@ -98,6 +98,8 @@ During the compiler's asynchronous `make` hook, the plugin creates a Webpack chi
 - writes `dist/<library>.bundle.js`;
 - assigns the package export to the QuickJS-side global `__SANDBOXED_LIB__`.
 
+The entry is resolved with Node.js resolution, so a package-level `browser` entry is not bundled. Modules inside the package are resolved by the inherited Webpack resolver, so for a web target a `browser` map of internal files still selects the browser file. This known limitation is recorded as a `todo` case in the unit suite.
+
 Webpack documents a child compiler as a second compiler with its own settings created within the parent compilation. In this prototype, child compilation separates the library asset from the host application bundle; runtime execution in QuickJS creates the actual isolation boundary.
 
 ### 3.3 Workload bundles
@@ -128,7 +130,9 @@ Generated proxies use top-level await and run in both Node.js and browsers.
 4. In Node.js, call `unrefPump()` after initialization so the job-pump timer alone does not keep the process alive.
 5. Export wrappers derived from the declarations.
 
-Named functions route calls through a precompiled QuickJS call expression. Classes use `librarySandbox.createInstance()` so construction and instance identity remain inside QuickJS before the returned proxy is created. Callable singleton exports receive `apply`, `get`, and `construct` traps. Other named values are read from `librarySandbox.exports`.
+Named functions route calls through a precompiled QuickJS call expression. Classes use `librarySandbox.createInstance()` so construction and instance identity remain inside QuickJS before the returned proxy is created. Callable singleton exports receive `apply`, `get`, and `construct` traps. The `construct` trap calls the value without `new`, so an `export =` class cannot currently be constructed through its proxy. Other named values are read from `librarySandbox.exports`.
+
+The parser also reports interfaces and type aliases as export names. Their generated bindings are `undefined`, and a type name can be chosen as the default-export constructor fallback. Both limitations are recorded as `todo` cases in the unit suite.
 
 Every generated library proxy exposes `disposeLibrary()`. Applications that create and discard sandboxes dynamically must call it; otherwise the QuickJS context, Arena, helper functions, and job-pump interval remain allocated.
 

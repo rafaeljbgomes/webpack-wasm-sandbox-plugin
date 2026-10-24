@@ -116,7 +116,7 @@ Run the fast, offline regression suite before every change:
 npm test
 ```
 
-`npm test` runs `npm run test:unit` and `npm run test:advisor`. The unit suite drives the real QuickJS runtime with inline fixture libraries and compiles plugin fixtures into temporary directories. It needs no bundles, upstream suites, network, or browser, and does not write into the working tree. It currently covers sandbox lifecycle, capability exposure, the constrained crypto facade, the forward and reverse membranes, the registered marshallers, context isolation and workloads. Known limitations are reported as `todo` cases that do not fail the run. CI runs the same command on Ubuntu and Windows. The unit suite does not replace compatibility campaigns or browser security validation; see the [unit-suite design](docs/architecture/unit-test-suite-design.md) for scope and rollout.
+`npm test` runs `npm run test:unit` and `npm run test:advisor`. The unit suite drives the real QuickJS runtime with inline fixture libraries and compiles plugin fixtures into temporary directories. It needs no bundles, upstream suites, network, or browser, and does not write into the working tree. It currently covers sandbox lifecycle, capability exposure, the constrained crypto facade, the forward and reverse membranes, the registered marshallers, context isolation and workloads, plus the build-time path: declaration parsing, proxy generation, generated proxies run against the real runtime, policy loading, and import redirection with child bundles. Known limitations are reported as `todo` cases that do not fail the run. CI runs the same command on Ubuntu and Windows. The unit suite does not replace compatibility campaigns or browser security validation; see the [unit-suite design](docs/architecture/unit-test-suite-design.md) for scope and rollout.
 
 ## Compatibility testing
 
@@ -182,6 +182,7 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 | Path | Purpose |
 |---|---|
 | `webpack-sandbox-plugin/src/` | Webpack plugin, declaration parser, and proxy generator |
+| `webpack-sandbox-plugin/test/` | Build-time unit tests: policy loading, parsing, proxy generation, and import redirection |
 | `.sandbox/core/` | QuickJS/Arena lifecycle and capability exposure |
 | `.sandbox/membrane/` | Forward and reverse boundary wrappers |
 | `.sandbox/marshallers/` | Registered cross-runtime type conversions |

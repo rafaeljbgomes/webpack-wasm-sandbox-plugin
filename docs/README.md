@@ -21,7 +21,7 @@ This index covers the maintained documentation for users and contributors. The [
 | [Import coverage and cache limitations](architecture/isolation-coverage-and-cache-limitations.md) | Current limitation | Exact import matching, shared membrane cache scope, and future hardening |
 | [Strict host-argument modes](architecture/host-argument-strict-mode-future-work.md) | Future work | Candidate attenuation designs; none are implemented |
 | [Security validation application](../lib-test/security/app/README.md) | Operational | Reproducible native and sandbox security scenarios |
-| [Unit regression suite design](architecture/unit-test-suite-design.md) | Partially implemented; remainder future work | Fast, hermetic runtime and plugin tests; steps 1–2 implemented, steps 3–5 planned |
+| [Unit regression suite design](architecture/unit-test-suite-design.md) | Partially implemented; remainder future work | Fast, hermetic runtime and plugin tests; steps 1–3 implemented, steps 4–5 planned |
 
 ## Architecture diagrams
 

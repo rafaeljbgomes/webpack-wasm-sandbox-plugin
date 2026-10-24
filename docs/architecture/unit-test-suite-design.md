@@ -1,6 +1,6 @@
 # Future Work: Fast Unit Regression Suite
 
-**Status:** Partially implemented. Rollout steps 1 (#5: infrastructure, lifecycle and capability exposure) and 2 (#6: runtime boundary) are implemented. Steps 3–5 (#7, #8, #10) are future work, tracked under #4. The architecture this suite protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
+**Status:** Partially implemented. Rollout steps 1 (#5: infrastructure, lifecycle and capability exposure), 2 (#6: runtime boundary) and 3 (#7: build-time) are implemented. Steps 4 and 5 (#8, #10) are future work, tracked under #4. The architecture this suite protects is described in [sandbox-plugin-spec-v2.md](sandbox-plugin-spec-v2.md); this document only defines how to test it.
 
 ## 1. Problem (state before step 1)
 
@@ -102,8 +102,9 @@ webpack-sandbox-plugin/test/
   proxy-generator.test.mjs
   generated-proxy.test.mjs
   import-redirection.test.mjs
-  fixtures/fixture-lib/            # tiny package: index.js, index.d.ts, package.json
 ```
+
+Plugin tests write their fixture packages and declaration files into `mkdtemp` directories, so there is no checked-in fixture tree.
 
 The alias hook is deliberately separate from `sandbox-loader.mjs`. Unit tests must not redirect configured libraries or depend on the example `.sandbox/sandbox.config.js`. Both hooks import `RUNTIME_PACKAGE_ALIASES` from `test-sandbox-redirect/runtime-aliases.mjs`, so the mapping has one source.
 
@@ -137,16 +138,21 @@ Rules:
 The generated proxy imports `../core/sandbox-manager.js` and reads `<proxyDir>/../../dist/<lib>.bundle.js`. `generated-proxy.test.mjs` builds that layout in a `mkdtemp` directory:
 
 ```text
+<tmp>/package.json                       # {"type":"module"}, as at the repository root
 <tmp>/.sandbox/core/sandbox-manager.js   # export * from "<repo>/.sandbox/core/sandbox-manager.js"
 <tmp>/.sandbox/proxys/fixture-proxy.js   # ProxyGenerator.generate(...) output
 <tmp>/dist/fixture.bundle.js             # fixtureBundle(...)
 ```
 
-The test then imports the proxy and runs its named, class, default-singleton and `export =` paths plus `disposeLibrary()` against the real runtime. This needs no change to `ProxyGenerator`.
+The test then imports the proxy and runs its named, class, default-singleton and `export =` paths, a workload, and `disposeLibrary()` against the real runtime. For the ADR 10 case, the shim wraps the real `SandboxManager` and records when creation resolves and when `unrefPump()` is called. This needs no change to `ProxyGenerator`.
+
+`import-redirection.test.mjs` compiles a temporary project once and shares the result between its cases. The compiled project has the same layout, so the plugin's own proxies and child bundles also run end to end.
+
+Both the parser tests and that compilation run with the fixture directory as the working directory. TypeScript otherwise loads every `@types` package visible from the repository root, which costs over a second for each parsed library.
 
 ### 4.4 Plugin seam
 
-`WebpackSandboxPlugin` writes proxies to `path.resolve(process.cwd(), ".sandbox/proxys")`. Add an optional `proxyDirectory` option that defaults to that path, so `import-redirection.test.mjs` and `plugin.fail-closed.test.mjs` write only into their temporary directory. Swapping `date-fns` for `fixtures/fixture-lib` removes the 12 s case and the dependency on a devDependency's layout. This is the only production-code change the suite needs. It is backward compatible.
+`WebpackSandboxPlugin` writes proxies to `path.resolve(process.cwd(), ".sandbox/proxys")`. Add an optional `proxyDirectory` option that defaults to that path, so `import-redirection.test.mjs` and `plugin.fail-closed.test.mjs` write only into their temporary directory. Swapping `date-fns` for a temporary fixture package removes the 12 s case and the dependency on a devDependency's layout. This is the only production-code change the suite needs. It is backward compatible.
 
 ### 4.5 Scripts and CI
 
@@ -155,7 +161,7 @@ The test then imports the proxy and runs its named, class, default-singleton and
 "test": "npm run test:unit && npm run test:advisor"
 ```
 
-`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. With Node's built-in coverage, the step 1 suite executes 79% of lines and 76% of branches in `.sandbox/core`, `.sandbox/membrane`, `.sandbox/marshallers` and `webpack-sandbox-plugin/src`. After step 2, `npm test` runs 132 tests (123 pass, 9 `todo`) in about 30 s. Coverage rises to 85% of lines and 85% of branches, with every runtime file at 90–100% of lines; the remaining gap is the plugin, which step 3 addresses. Step 4 reports coverage and step 5 enforces it.
+`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. With Node's built-in coverage, the step 1 suite executes 79% of lines and 76% of branches in `.sandbox/core`, `.sandbox/membrane`, `.sandbox/marshallers` and `webpack-sandbox-plugin/src`. After step 2, `npm test` runs 132 tests (123 pass, 9 `todo`) in about 30 s. Coverage rises to 85% of lines and 85% of branches, with every runtime file at 90–100% of lines; the remaining gap is the plugin, which step 3 addresses. After step 3, `npm test` runs 182 tests (170 pass, 12 `todo`) in about 40 s; the unit suite accounts for 159 of them (147 pass, 12 `todo`). Coverage rises to 97% of lines and 89% of branches. `plugin.ts` goes from 56% to 94% of lines, `proxy-generator.ts` from 54% to 99.6%, and `parser.ts` from 88% to 99%. The slowest new file is `import-redirection.test.mjs` at about 6 s, almost all of it one Webpack compilation; `parser.test.mjs` takes about 5 s. Step 4 reports coverage and step 5 enforces it.
 
 A `.github/workflows/unit.yml` runs `npm ci` and `npm test` on push and pull request, using Node 24 on `ubuntu-latest` and `windows-latest`, since contributors and the proxy path logic both run on Windows. Compatibility campaigns and browser scenarios stay manual.
 
@@ -205,9 +211,9 @@ Most cases come from failures that compatibility campaigns already found and tha
 | workloads | workload loaded once, shares library context and `__SANDBOXED_LIB__` | ADR 21 |
 | parser | named, default, duplicate, reserved-word, `export =` declaration fixtures | ADR 7, 12 |
 | proxy-generator | permissions serialised exactly, including `[]` | ADR 25 |
-| generated-proxy | named, class, default-singleton, `export =` and `disposeLibrary()` paths execute | Spec §4 |
+| generated-proxy | named, class, default-singleton, `export =`, workload and `disposeLibrary()` paths execute; `apply` traps; `unrefPump()` after initialization | Spec §4, ADR 10, 12, 17 |
 | policy-loading | omission → `[]`; `null`, non-array and empty-string entries rejected | `build-helpers.ts` |
-| import-redirection | configured root request redirected; unconfigured untouched; child bundle emitted | Spec §3 |
+| import-redirection | configured root and workload requests redirected; unconfigured untouched; child bundles emitted and evaluated; Node entry chosen over a `browser` entry; `@types` fallback and stub proxy | Spec §3, ADR 6, 11 |
 
 ### 5.1 Previously corrected defects
 
@@ -220,17 +226,17 @@ Most decisions in [architectural-decisions.md](architectural-decisions.md) recor
 | 3 | `bindWebApi` keeps native receivers | Covered: private-field host objects, `Intl`, cycles, write-through (step 2) | Nested-reference identity inside QuickJS is a `todo` |
 | 4 | Constructor detection in `makeCallable` | Covered: constructor fallback, unrelated `TypeError` propagation (step 2) | — |
 | 5 | Job pump drives QuickJS Promises | Covered: resolution, chained awaits, rejection delivery, pump cleared on disposal (step 1) | — |
-| 6 | Child-compiler library bundles | Partial: plugin test asserts the child bundle is emitted | #7 evaluates the emitted bundle contract |
-| 7 | Declaration-driven proxy generation | Partial: plugin test asserts a proxy is generated | #7 parser and generator output |
+| 6 | Child-compiler library bundles | Covered: emitted library and workload bundles evaluate through `__SANDBOXED_LIB__` and the generated proxies (step 3) | — |
+| 7 | Declaration-driven proxy generation | Covered: parser fixtures, generator output, `@types` fallback and stub proxy (step 3) | Type-only exports are reported as runtime names (`todo`) |
 | 8 | Loader interception for compatibility suites | Shared alias only | Remains covered by compatibility campaigns |
 | 9 | `bindSandboxExport` reverse membrane | Covered: receivers, wrapper caching, nested objects, static properties (step 2) | — |
-| 10 | Pump referenced until initialization completes | Partial: pump referenced during creation; `unrefPump()` behaviour characterised | #7 generated proxy unrefs only after initialization |
-| 11 | Node entry points for child bundles | Not covered | #7 fixture package with a `browser` field |
-| 12 | Default export that is a singleton | Not covered | #7 generated default proxy |
+| 10 | Pump referenced until initialization completes | Covered: pump referenced during creation (step 1); generated proxy calls `unrefPump()` once, after creation resolves (step 3) | — |
+| 11 | Node entry points for child bundles | Covered: a package-level `browser` entry is not bundled (step 3) | `browser` maps for internal modules still select the browser file (`todo`) |
+| 12 | Default export that is a singleton | Covered: singleton methods and `new` on the generated default (step 3) | — |
 | 13 | `createInstance` keeps WeakMap private state | Covered: WeakMap privates and native `#private` fields (step 2) | — |
 | 14 | Live primitive reads from returned objects | Covered: prototype getters re-read after mutation (step 2) | — |
 | 16 | Patched `ue()` preserves `new.target` | Covered: host `new` on an exported subclass (step 2) | — |
-| 17 | `apply` trap on exported functions | Covered for the reverse membrane (step 2) | #7 generated proxy |
+| 17 | `apply` trap on exported functions | Covered: reverse membrane (step 2); generated named, default and `export =` proxies, including `call` and `Reflect.apply` (step 3) | Constructing an `export =` class throws (`todo`) |
 | 19 | Precompiled temporary-object helpers | Covered indirectly by returned-instance tests (step 2) | Unbounded `__SANDBOX_TEMP__` growth is a `todo` |
 | 20 | `Date` results are not wrapped | Covered (step 2) | — |
 | 21 | Workload adapters share the library context | Covered: shared context, single evaluation, preloading, per-sandbox state (step 2) | — |
@@ -256,6 +262,9 @@ Behaviour that the specification lists as a limitation, or that the probe showed
 | Native QuickJS `arguments` objects return as plain objects | `marshallers.test.mjs` |
 | Returned `Map` and `Set` objects fail on method calls (spec §8) | `marshallers.test.mjs` |
 | `DataView` loses its identity in both directions (spec §8) | `marshallers.test.mjs` |
+| Interfaces and type aliases are reported as runtime exports | `parser.test.mjs` |
+| The `export =` construct trap calls the value without `new`, so a class cannot be constructed | `generated-proxy.test.mjs` |
+| `browser` maps for internal modules select the browser file in child bundles (ADR 11) | `import-redirection.test.mjs` |
 | Two sandboxes receiving one mutable host object share a forward wrapper (#3) | `known-gaps.test.mjs` (step 4) |
 | Configured-package subpath imports are not redirected (#2) | `known-gaps.test.mjs` (step 4) |
 | Authority-bearing host arguments produce no diagnostics (#1) | `known-gaps.test.mjs` (step 4) |
@@ -266,8 +275,8 @@ Behaviour that the specification lists as a limitation, or that the probe showed
 Each step is one reviewable PR. Steps 2 and 3 can run in parallel after step 1. Step 5 follows steps 2–4.
 
 1. **Infrastructure (#5, implemented):** alias module and hook, fixture helper, `test:unit`/`test` scripts, `--import tsx` fix and `proxyDirectory` seam for the existing plugin test, CI workflow, plus lifecycle and exposure tests.
-2. **Runtime boundary (#6):** forward/reverse membrane, marshaller, crypto, isolation and workload tests.
-3. **Build-time (#7):** parser, proxy-generator, generated-proxy and import-redirection tests.
+2. **Runtime boundary (#6, implemented):** forward/reverse membrane, marshaller, crypto, isolation and workload tests.
+3. **Build-time (#7, implemented):** parser, proxy-generator, generated-proxy, policy-loading and import-redirection tests.
 4. **Gaps, coverage and documentation (#8):** `known-gaps.test.mjs`; a report-only `npm run test:coverage` with the coverage table in the CI job summary and an lcov artifact, but no thresholds, because line coverage overstates what is asserted and section 5.1 remains the primary measure. Then updates to `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, the documentation index, `compat-testing-plan.md` (tier table), and an architectural decision entry for the validation tiers.
 5. **Coverage gate (#10):** `npm run test:coverage` applies Node's built-in `--test-coverage-lines`, `--test-coverage-branches` and `--test-coverage-functions` floors to the runtime and plugin sources, and CI fails below them. The details:
    - Each floor sits a point or two below the coverage measured after steps 2–4. It is raised as coverage improves, and lowering it needs a stated reason in the PR.
