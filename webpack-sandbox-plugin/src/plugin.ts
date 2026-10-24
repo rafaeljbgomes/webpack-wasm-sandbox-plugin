@@ -10,6 +10,11 @@ import { compileLibrary, loadSandboxPolicy, WorkloadConfig } from "./build-helpe
 export interface SandboxPluginOptions {
   /** Path to the sandbox policy, resolved from the Webpack compiler context. */
   configPath: string;
+  /**
+   * Directory for generated proxy modules. Defaults to `.sandbox/proxys`
+   * under the process working directory; tests pass a temporary directory.
+   */
+  proxyDirectory?: string;
 }
 
 /** Workload definition enriched with its owning library and policy key. */
@@ -39,11 +44,14 @@ export class WebpackSandboxPlugin {
   /**
    * Creates a plugin instance and selects the generated-proxy directory.
    *
-   * @param options Sandbox policy location.
+   * @param options Sandbox policy location and optional proxy directory.
    */
   constructor(options: SandboxPluginOptions) {
     this.options = options;
-    this.sandboxCacheDir = path.resolve(process.cwd(), ".sandbox/proxys");
+    this.sandboxCacheDir = path.resolve(
+      process.cwd(),
+      options.proxyDirectory ?? ".sandbox/proxys",
+    );
   }
 
   /**
