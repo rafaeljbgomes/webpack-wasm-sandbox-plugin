@@ -264,7 +264,7 @@ Each step is one reviewable PR. Steps 2 and 3 can run in parallel after step 1.
 1. **Infrastructure (#5, implemented):** alias module and hook, fixture helper, `test:unit`/`test` scripts, `--import tsx` fix and `proxyDirectory` seam for the existing plugin test, CI workflow, plus lifecycle and exposure tests.
 2. **Runtime boundary (#6):** forward/reverse membrane, marshaller, crypto, isolation and workload tests.
 3. **Build-time (#7):** parser, proxy-generator, generated-proxy and import-redirection tests.
-4. **Gaps and documentation (#8):** `known-gaps.test.mjs`, then updates to `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, the documentation index, `compat-testing-plan.md` (tier table), and an architectural decision entry for the validation tiers.
+4. **Gaps, coverage and documentation (#8):** `known-gaps.test.mjs`; a report-only `npm run test:coverage` with the coverage table in the CI job summary and an lcov artifact, but no thresholds, because line coverage overstates what is asserted and section 5.1 remains the primary measure. Then updates to `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, the documentation index, `compat-testing-plan.md` (tier table), and an architectural decision entry for the validation tiers.
 
 ## 8. Risks
 
