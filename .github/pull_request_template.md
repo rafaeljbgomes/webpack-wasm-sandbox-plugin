@@ -28,9 +28,9 @@
 
 ## Checklist
 
-- [ ] I used an imperative Conventional Commit-style title where practical.
-- [ ] I preserved unrelated local and untracked changes.
-- [ ] I did not edit or commit generated bundles, proxies, or result artifacts.
-- [ ] I added or updated a focused regression scenario for every feature/correction, where applicable.
-- [ ] I ran the appropriate native/sandbox, compatibility, or security validation, where applicable.
+<!-- Add items specific to this feature or fix, such as a library campaign or security scenario that must be re-run. -->
+
+- [ ] `npm test` passes.
+- [ ] I ran the native/sandbox compatibility or security validation this change requires, where applicable.
+- [ ] I added or updated a focused regression scenario for every feature or correction, where applicable.
 - [ ] I updated the relevant documentation and architectural decisions, or explained why no update is needed.
