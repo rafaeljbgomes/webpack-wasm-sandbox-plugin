@@ -1,4 +1,4 @@
-import { getQuickJSSync, newQuickJSAsyncWASMModule } from "quickjs-emscripten";
+import { getQuickJSSync, newQuickJSWASMModule } from "quickjs-emscripten";
 import { Arena } from "quickjs-emscripten-sync";
 import { createArenaConfig } from "../marshallers/index.js";
 import { exposeWebAPIs, validatePermissions } from "./webapi-exposure.js";
@@ -11,6 +11,131 @@ import {
 
 export { bindWebApi } from "../membrane/forward-membrane.js";
 
+/** Fallback job-pump period for VM entry points that are not instrumented. */
+export const FALLBACK_PUMP_INTERVAL_MS = 10;
+
+/** Context methods that can run guest code and therefore enqueue QuickJS jobs. */
+const VM_ENTRY_POINTS = ["callFunction", "evalCode", "getProp", "setProp"];
+
+// Native promise jobs cannot be replaced by test-runner fake timers.
+const resolvedPromise = Promise.resolve();
+
+/**
+ * Drains QuickJS Promise jobs from a host microtask after every VM entry.
+ *
+ * QuickJS queues Promise reactions internally and never runs them on its own.
+ * Draining them in the host microtask that follows the boundary call keeps
+ * sandboxed async code close to native ordering instead of waiting for a timer.
+ * A slow interval remains as a fallback for uninstrumented entry points.
+ *
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Context whose entry points are observed.
+ * @param {() => import("quickjs-emscripten-sync").Arena | undefined} getArena Arena that converts job errors.
+ * @returns {{start: () => void, unref: () => void, dispose: () => void}} Pump lifecycle controls.
+ */
+function createJobPump(vm, getArena) {
+  let scheduled = false;
+  let disposed = false;
+  let fallbackInterval;
+
+  /** Runs every pending QuickJS job, including jobs queued while draining. */
+  const drain = () => {
+    scheduled = false;
+    if (disposed || !vm.alive) return;
+    const arena = getArena();
+    if (!arena) return;
+    try {
+      if (vm.runtime.hasPendingJob()) {
+        arena.executePendingJobs();
+      }
+    } catch (err) {
+      console.error("Sandbox async execution error:", err);
+    }
+  };
+
+  /** Schedules at most one drain per burst of boundary activity. */
+  const requestDrain = () => {
+    if (!scheduled && !disposed) {
+      scheduled = true;
+      resolvedPromise.then(drain);
+    }
+  };
+
+  // Instance-level wrappers observe calls from Arena, quickjs-emscripten, and
+  // the membranes because they all dispatch through this context object.
+  for (const name of VM_ENTRY_POINTS) {
+    const original = vm[name];
+    if (typeof original !== "function") continue;
+    vm[name] = function observedVmEntry(...args) {
+      try {
+        return original.apply(this, args);
+      } finally {
+        requestDrain();
+      }
+    };
+  }
+
+  return {
+    /** Starts the fallback timer once initialization can no longer fail. */
+    start: () => {
+      fallbackInterval ??= setInterval(drain, FALLBACK_PUMP_INTERVAL_MS);
+    },
+    unref: () => fallbackInterval?.unref?.(),
+    dispose: () => {
+      disposed = true;
+      clearInterval(fallbackInterval);
+    },
+  };
+}
+
+/**
+ * Memoizes `typeof` per handle on a context instance.
+ *
+ * A handle always refers to the same QuickJS value, so its type cannot change,
+ * while Arena and the marshallers ask for it several times per crossing and
+ * each query allocates and decodes a C string in WASM memory.
+ *
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Context to optimize.
+ * @returns {void}
+ */
+function memoizeHandleTypes(vm) {
+  const original = vm.typeof;
+  const types = new WeakMap();
+  vm.typeof = function memoizedTypeof(handle) {
+    let type = types.get(handle);
+    if (type === undefined) {
+      type = original.call(this, handle);
+      types.set(handle, type);
+    }
+    return type;
+  };
+}
+
+/**
+ * Drops the QuickJS context reference from errors raised by `vm.unwrapResult()`.
+ *
+ * quickjs-emscripten attaches the owning context to `QuickJSUnwrapError`, and
+ * that context reaches the whole WebAssembly heap view. Test-runner error
+ * serializers walk every reachable own property, so one failing assertion on a
+ * sandbox error copied the full heap (about 2.3 GB for a 16 MiB heap). Name,
+ * message, stack, and `cause` are kept; nothing in the runtime reads `context`.
+ *
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Context to adjust.
+ * @returns {void}
+ */
+function detachUnwrapErrorContext(vm) {
+  const original = vm.unwrapResult;
+  vm.unwrapResult = function unwrapWithoutContext(result) {
+    try {
+      return original.call(this, result);
+    } catch (error) {
+      if (error !== null && typeof error === "object" && Object.hasOwn(error, "context")) {
+        delete error.context;
+      }
+      throw error;
+    }
+  };
+}
+
 /**
  * Builds the runtime shared by synchronous and asynchronous sandbox creation.
  *
@@ -21,8 +146,13 @@ export { bindWebApi } from "../membrane/forward-membrane.js";
  * @returns {object} Sandbox exports, workload access, boundary helpers, and lifecycle controls.
  */
 function buildSandbox(vm, libraryName, libraryCode, options = {}) {
+  let arena;
+  memoizeHandleTypes(vm);
+  detachUnwrapErrorContext(vm);
+  // Observe VM entries first so jobs queued during library initialization drain.
+  const jobPump = createJobPump(vm, () => arena);
   const { arenaOptions, dispose: disposeMarshallers } = createArenaConfig(vm);
-  const arena = new Arena(vm, arenaOptions);
+  arena = new Arena(vm, arenaOptions);
 
   exposeWebAPIs(arena, libraryName, options.permissions);
 
@@ -91,17 +221,9 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     0,
   );
 
-  // Keep the job pump referenced through top-level-await initialization; the
-  // generated proxy releases that reference once the sandbox is ready.
-  const pumpInterval = setInterval(() => {
-    try {
-      if (vm.runtime.hasPendingJob()) {
-        arena.executePendingJobs();
-      }
-    } catch (err) {
-      console.error("Sandbox async execution error:", err);
-    }
-  }, 1);
+  // The fallback interval stays referenced through top-level-await
+  // initialization; the generated proxy releases that reference once ready.
+  jobPump.start();
 
   return {
     vm,
@@ -135,10 +257,10 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
       return wrapReturned(arena, result, id, sbHelpers);
     },
     /** Allows Node.js to exit when the job pump is the only active handle. */
-    unrefPump: () => pumpInterval.unref(),
+    unrefPump: () => jobPump.unref(),
     /** Releases the job pump, marshallers, Arena, and QuickJS context. */
     dispose: () => {
-      clearInterval(pumpInterval);
+      jobPump.dispose();
       disposeMarshallers();
       for (const fn of Object.values(sbHelpers)) {
         if (fn.alive) fn.dispose();
@@ -172,7 +294,12 @@ export class SandboxManager {
   }
 
   /**
-   * Loads the asynchronous QuickJS WASM module and creates a sandbox.
+   * Loads a dedicated QuickJS WASM module instance and creates a sandbox.
+   *
+   * Each call instantiates a separate WebAssembly module with its own linear
+   * memory. The synchronous (non-asyncify) build is used because the runtime
+   * never suspends QuickJS on host promises, and asyncify instrumentation adds
+   * a generator round trip to every boundary call.
    *
    * @param {string} libraryName Policy key for the isolated dependency.
    * @param {string} libraryCode Bundled dependency source.
@@ -181,7 +308,7 @@ export class SandboxManager {
    */
   static async createSandbox(libraryName, libraryCode, options = {}) {
     validatePermissions(options.permissions);
-    const qjs = await newQuickJSAsyncWASMModule();
+    const qjs = await newQuickJSWASMModule();
     const sandbox = buildSandbox(
       qjs.newContext(),
       libraryName,
