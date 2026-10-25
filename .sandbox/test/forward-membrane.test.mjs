@@ -142,9 +142,7 @@ test("a self-referencing exposed object keeps its identity inside QuickJS", asyn
   assert.deepEqual(sandbox.exports.check(), [true, "root"]);
 });
 
-test("nested references back to an exposed object keep identity inside QuickJS", {
-  todo: "child.parent arrives as a different QuickJS object than the exposed root (spec §6)",
-}, async (t) => {
+test("nested references back to an exposed object keep identity inside QuickJS", async (t) => {
   const root = { name: "root" };
   root.child = { parent: root };
   const sandbox = await createFixtureSandbox(t, "return { check: () => TestTree.child.parent === TestTree };", {

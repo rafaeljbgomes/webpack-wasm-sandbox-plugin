@@ -177,21 +177,21 @@ test("after unrefPump(), sandbox Promises resolve while another handle keeps Nod
   assert.match(result.stdout, /value:8/);
 });
 
-test("after unrefPump(), a pending sandbox Promise alone does not keep Node.js alive", () => {
-  // Characterises ADR 10: generated Node.js proxies unref the pump after
-  // initialization, so awaiting sandbox work needs another live handle.
+test("after unrefPump(), an awaited sandbox Promise settles without another live handle", () => {
+  // ADR 27: pending QuickJS jobs drain in a host microtask after the call, so
+  // only the fallback interval is unreferenced and Node.js can still finish.
   const result = runIsolated(`
     const sandbox = await SandboxManager.createSandbox(
       "fixture",
-      fixtureBundle("return { later: (x) => Promise.resolve(x * 2) };"),
+      fixtureBundle("return { later: async (x) => (await Promise.resolve(x)) * 2 };"),
       { permissions: [] },
     );
     sandbox.unrefPump();
     console.log("value:" + await sandbox.exports.later(4));
+    sandbox.dispose();
   `);
-  assert.equal(result.status, 13, result.stderr);
-  assert.doesNotMatch(result.stdout, /value:/);
-  assert.match(result.stderr, /unsettled top-level await/i);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /value:8/);
 });
 
 test("repeated dispose() is a no-op", { todo: "second dispose() currently throws QuickJSUseAfterFree" }, async () => {

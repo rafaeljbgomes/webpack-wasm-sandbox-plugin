@@ -61,7 +61,7 @@ A throwaway probe built a sandbox directly from an inline fixture bundle, which 
 | `permissions: "crypto"` | Rejected before a context is allocated |
 | `Object.prototype` pollution and a global write inside sandbox A | Not visible on the host or in sandbox B; visible in A |
 | Returned stateful objects | `__SANDBOX_TEMP__` grows by one per wrapped result and is never pruned (101 entries after 101 calls) |
-| `unrefPump()` and then awaiting a sandbox promise with no other handle | Node exits with "unsettled top-level await" |
+| `unrefPump()` and then awaiting a sandbox promise with no other handle | Node exits with "unsettled top-level await" (before ADR 27; the promise now settles) |
 | `createSandboxSync()` without a prior `await getQuickJS()` | Throws `QuickJS not initialized` |
 | Importing `sandbox-manager.js` under plain Node | Fails: `quickjs-emscripten-sync` resolves to a missing `.mjs`; the alias in `test-sandbox-redirect/sandbox-loader.mjs` is required |
 
@@ -161,7 +161,7 @@ Both the parser tests and that compilation run with the fixture directory as the
 "test": "npm run test:unit && npm run test:advisor"
 ```
 
-`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. With Node's built-in coverage, the step 1 suite executes 79% of lines and 76% of branches in `.sandbox/core`, `.sandbox/membrane`, `.sandbox/marshallers` and `webpack-sandbox-plugin/src`. After step 2, `npm test` runs 132 tests (123 pass, 9 `todo`) in about 30 s. Coverage rises to 85% of lines and 85% of branches, with every runtime file at 90–100% of lines; the remaining gap is the plugin, which step 3 addresses. After step 3, `npm test` runs 182 tests (170 pass, 12 `todo`) in about 40 s; the unit suite accounts for 159 of them (147 pass, 12 `todo`). Coverage rises to 97% of lines and 89% of branches. `plugin.ts` goes from 56% to 94% of lines, `proxy-generator.ts` from 54% to 99.6%, and `parser.ts` from 88% to 99%. The slowest new file is `import-redirection.test.mjs` at about 6 s, almost all of it one Webpack compilation; `parser.test.mjs` takes about 5 s. Step 4 reports coverage and step 5 enforces it.
+`compatibility-harness/test/parsers.test.mjs` stays outside `npm test` because it needs upstream suites. After step 1, `npm test` ran 62 tests locally (Windows, Node 24.13): 60 passed and 2 were reported as `todo`, in about 40 s wall-clock including the advisor suite. The runtime files take about 15 s, dominated by child-process cases. The plugin file takes about 13 s, dominated by Webpack start-up and one child compilation. With Node's built-in coverage, the step 1 suite executes 79% of lines and 76% of branches in `.sandbox/core`, `.sandbox/membrane`, `.sandbox/marshallers` and `webpack-sandbox-plugin/src`. After step 2, `npm test` runs 132 tests (123 pass, 9 `todo`) in about 30 s. Coverage rises to 85% of lines and 85% of branches, with every runtime file at 90–100% of lines; the remaining gap is the plugin, which step 3 addresses. After step 3, `npm test` runs 182 tests (170 pass, 12 `todo`) in about 40 s; the unit suite accounts for 159 of them (147 pass, 12 `todo`). Coverage rises to 97% of lines and 89% of branches. `plugin.ts` goes from 56% to 94% of lines, `proxy-generator.ts` from 54% to 99.6%, and `parser.ts` from 88% to 99%. The slowest new file is `import-redirection.test.mjs` at about 6 s, almost all of it one Webpack compilation; `parser.test.mjs` takes about 5 s. With ADR 27, `npm test` runs 197 tests (186 pass, 11 `todo`); the unit suite accounts for 174 of them (163 pass, 11 `todo`). Step 4 reports coverage and step 5 enforces it.
 
 A `.github/workflows/unit.yml` runs `npm ci` and `npm test` on push and pull request, using Node 24 on `ubuntu-latest` and `windows-latest`, since contributors and the proxy path logic both run on Windows. Compatibility campaigns and browser scenarios stay manual.
 
@@ -183,7 +183,13 @@ Most cases come from failures that compatibility campaigns already found and tha
 | sandbox-lifecycle | async and sync creation (sync after `getQuickJS()`) produce working exports | Spec §5 |
 | sandbox-lifecycle | `dispose()` clears the pump, disposes helpers/Arena/context; repeated `dispose()` behaviour is pinned once decided | Spec §5 |
 | sandbox-lifecycle | Promise result resolves through the referenced pump | ADR 5, 10 |
-| sandbox-lifecycle | after `unrefPump()`, a pending sandbox Promise does not keep Node alive (characterised in a child process) | ADR 10 |
+| sandbox-lifecycle | after `unrefPump()`, an awaited sandbox Promise settles without another live handle (child process) | ADR 10, 27 |
+| boundary-runtime | steady-state crossings compile no QuickJS source; guest-replaced intrinsics do not reach bridge helpers | ADR 27 |
+| boundary-runtime | bulk unmarshalling keeps special numbers, long strings, descriptors, symbols, cycles and identity | ADR 27 |
+| boundary-runtime | plain Web API results arrive as real QuickJS data; only lossless JSON graphs qualify | ADR 27 |
+| boundary-runtime | promise reactions drain before host timers; accessor reads keep identity and live host state | ADR 27 |
+| boundary-runtime | disposal succeeds after async, accessor, custom-marshalled and memory-limit crossings | ADR 27 |
+| boundary-runtime | sandbox errors do not reach the QuickJS context; forged typed-array names never select host globals | ADR 27 |
 | webapi-exposure | `[]` exposes no ambient globals (`fetch`, `process`, `require`, `crypto`, `Intl`, `document`) | Spec §6, §9 |
 | webapi-exposure | explicit list never falls back to the policy module; omission does | Spec §6 |
 | webapi-exposure | invalid lists (`"x"`, `[""]`, `[1]`, `null`) rejected before context allocation | Spec §6 |
@@ -223,14 +229,14 @@ Most decisions in [architectural-decisions.md](architectural-decisions.md) recor
 |---|---|---|---|
 | 1 | One QuickJS context per library | Covered: separate contexts, globals, prototypes and workload state (steps 1–2) | — |
 | 2 | Typed arrays copied, not proxied | Covered: every kind in both directions, offset views, copy semantics (step 2) | — |
-| 3 | `bindWebApi` keeps native receivers | Covered: private-field host objects, `Intl`, cycles, write-through (step 2) | Nested-reference identity inside QuickJS is a `todo` |
+| 3 | `bindWebApi` keeps native receivers | Covered: private-field host objects, `Intl`, cycles, write-through (step 2); nested-reference identity (ADR 27) | — |
 | 4 | Constructor detection in `makeCallable` | Covered: constructor fallback, unrelated `TypeError` propagation (step 2) | — |
 | 5 | Job pump drives QuickJS Promises | Covered: resolution, chained awaits, rejection delivery, pump cleared on disposal (step 1) | — |
 | 6 | Child-compiler library bundles | Covered: emitted library and workload bundles evaluate through `__SANDBOXED_LIB__` and the generated proxies (step 3) | — |
 | 7 | Declaration-driven proxy generation | Covered: parser fixtures, generator output, `@types` fallback and stub proxy (step 3) | Type-only exports are reported as runtime names (`todo`) |
 | 8 | Loader interception for compatibility suites | Shared alias only | Remains covered by compatibility campaigns |
 | 9 | `bindSandboxExport` reverse membrane | Covered: receivers, wrapper caching, nested objects, static properties (step 2) | — |
-| 10 | Pump referenced until initialization completes | Covered: pump referenced during creation (step 1); generated proxy calls `unrefPump()` once, after creation resolves (step 3) | — |
+| 10 | Pump referenced until initialization completes | Covered: pump referenced during creation (step 1); generated proxy calls `unrefPump()` once, after creation resolves (step 3); awaited Promises settle after `unrefPump()` (ADR 27) | — |
 | 11 | Node entry points for child bundles | Covered: a package-level `browser` entry is not bundled (step 3) | `browser` maps for internal modules still select the browser file (`todo`) |
 | 12 | Default export that is a singleton | Covered: singleton methods and `new` on the generated default (step 3) | — |
 | 13 | `createInstance` keeps WeakMap private state | Covered: WeakMap privates and native `#private` fields (step 2) | — |
@@ -244,6 +250,7 @@ Most decisions in [architectural-decisions.md](architectural-decisions.md) recor
 | 23 | Constrained crypto facade | Covered: null prototype, accepted and rejected views, byte range, quota, UUID (steps 1–2) | — |
 | 24 | Browser constructor-only messages | Covered at matcher level (step 2) | Browser execution remains with the security scenarios |
 | 25 | Explicit runtime policy, no silent fallback | Covered: explicit list vs fallback, sync and async validation, fail-closed plugin policy loading (step 1) | — |
+| 27 | Boundary fast path and handle ownership | Covered: `boundary-runtime.test.mjs`, one case per change and correction | — |
 
 ADRs 15 (bridge assessment), 18 (crossing cost) and 26 (advisor model) do not record boundary defects. The advisor has its own suite.
 
@@ -255,7 +262,6 @@ Behaviour that the specification lists as a limitation, or that the probe showed
 |---|---|
 | Awaited sandbox rejections also emit a host `unhandledRejection` | `sandbox-lifecycle.test.mjs` |
 | Repeated `dispose()` throws `QuickJSUseAfterFree` | `sandbox-lifecycle.test.mjs` |
-| Nested references back to an exposed host object lose identity inside QuickJS | `forward-membrane.test.mjs` |
 | `__SANDBOX_TEMP__` is never pruned | `reverse-membrane.test.mjs` |
 | Thrown sandbox errors are not instances of the host subclass | `marshallers.test.mjs` |
 | `Error.cause` is not copied | `marshallers.test.mjs` |

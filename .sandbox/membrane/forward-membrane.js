@@ -1,12 +1,14 @@
 import { isTypedArrayView, REQUIRES_NEW_RE } from "../core/sb-utils.js";
+import { isPlainJsonGraph, offerJsonTransfer } from "../core/json-transfer.js";
 
 const wrapperCache = new WeakMap();
 
 /**
  * Wraps a host function so the Arena bridge (which always calls without `new`)
  * can still invoke constructors correctly.
- * Constructor return values that are non-TypedArray objects are recursively
- * wrapped with bindWebApi to preserve internal-slot safety.
+ * Fresh results that are plain JSON data are copied by value; other
+ * non-TypedArray objects are wrapped with bindWebApi to preserve internal-slot
+ * safety.
  *
  * @param {Function} fn Host function or constructor to expose.
  * @param {unknown} thisArg Native receiver used for ordinary calls.
@@ -27,6 +29,13 @@ export function makeCallable(fn, thisArg) {
     // Native instances must keep their real receivers; TypedArrays instead use
     // copy-based custom marshalling.
     if (result !== null && typeof result === "object" && !isTypedArrayView(result)) {
+      // A fresh array or plain-object result (for example formatToParts()) has
+      // no internal slots, so QuickJS receives a real copy instead of a wrapper
+      // with one host accessor or method per property.
+      if (isPlainJsonGraph(result)) {
+        offerJsonTransfer(result);
+        return result;
+      }
       return bindWebApi(result);
     }
     return result;

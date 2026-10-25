@@ -16,6 +16,8 @@ This document records the key design decisions, constraints, and non-obvious fix
 
 **Trade-off:** Higher memory footprint and initialisation time. Acceptable for a spike; a production implementation could explore context-level isolation within a shared module if WASM memory limits become a concern.
 
+**Update (AD#27):** `createSandbox()` now instantiates the synchronous build through `newQuickJSWASMModule()`. Each call still creates a separate WebAssembly module and linear memory, so the per-library memory boundary is unchanged.
+
 ---
 
 ## 2. Custom TypedArray marshallers
@@ -65,6 +67,8 @@ Constructor return values that are non-TypedArray objects are recursively wrappe
 **Solution:** A 1 ms `setInterval` checks `vm.runtime.hasPendingJob()` and calls `arena.executePendingJobs()` to flush the queue. The interval is cleared in `sandbox.dispose()`.
 
 **Note:** 1 ms is the minimum timer resolution; actual scheduling depends on the host event loop. This is sufficient for the spike but a more production-ready approach could tie the pump to microtask scheduling or explicit `await` boundaries in the proxy.
+
+**Superseded by AD#27:** pending jobs now drain in a host microtask after each observed context entry; a 10 ms interval remains only as a fallback.
 
 ---
 
@@ -137,6 +141,8 @@ if (typeof process !== 'undefined' && process.versions?.node) {
 ```
 
 In browser contexts, `setInterval` does not keep the page alive (there is no equivalent of `.unref()`), so the call is skipped.
+
+**Update (AD#27):** `unrefPump()` now unreferences only the fallback interval. Because pending jobs drain in a microtask after each boundary call, awaiting a sandbox Promise no longer needs another live handle.
 
 ---
 
@@ -330,7 +336,7 @@ return Object.defineProperties(this, Object.getOwnPropertyDescriptors(h)), this;
 return h;
 ```
 
-**Maintenance:** The library is patched via `patch-package`. The patch file is committed at `patches/quickjs-emscripten-sync+1.8.1.patch` and is re-applied automatically via the `postinstall` script (`"postinstall": "patch-package"` in `package.json`). The diff is a single-line change to `node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js`.
+**Maintenance:** The library is patched via `patch-package`. The patch file is committed at `patches/quickjs-emscripten-sync+1.8.1.patch` and is re-applied automatically via the `postinstall` script (`"postinstall": "patch-package"` in `package.json`). The diff originally was a single-line change to `node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js`; AD#27 extends the same patch file with the boundary fast path and handle-ownership fixes.
 
 **Scope:** The patch affects all `new arenaProxy(args)` call sites — i.e. any host code that obtains an Arena sync proxy of a QJS constructor and invokes it with `new`. The existing `createInstance` helper (AD#13) was already immune to this bug because it constructs and stores the instance entirely inside QJS without crossing the `new.target` branch. The patch makes raw Arena proxies used as constructors consistent with `createInstance`'s behaviour.
 
@@ -515,6 +521,8 @@ These proof-of-concept workload declarations and their source modules are mainta
 
 **Note (24/10/2026):** The unit suite shows that the implementation does not copy `cause`, and that thrown errors are not reconstructed as host subclasses. The canonical specification (§8) describes the implemented behaviour. Both gaps are recorded as `todo` cases in `.sandbox/test/marshallers.test.mjs`.
 
+**Note (25/10/2026):** Thrown errors still surface as `QuickJSUnwrapError`, but the runtime now removes its QuickJS `context` reference so error serializers cannot reach the WebAssembly heap (AD#27).
+
 ---
 
 ## 17/07/2026 - 23. Expose a constrained crypto facade
@@ -554,3 +562,52 @@ These proof-of-concept workload declarations and their source modules are mainta
 **Rationale:** SubQ serves the same typed Choice contract and returns per-option probabilities, which the deterministic draft rules depend on. Retaining the transport keeps the change limited to provider identity and response tolerance.
 
 **Consequences:** The pinned model identifier is part of every request and cache key, so earlier Jev classifications are not reused. SubQ reports `confidence` as optional and `output_tokens` as zero. Missing or null confidence is recorded as `null`, but a reported confidence outside [0, 1] is still rejected. Confidence never influences draft eligibility. Each request's 48 KiB budget keeps batches well below SubQ's 128-question limit. SubQ Snap is a public-preview model. Live accuracy has not been measured; this supersedes only the model choice in decision 25.
+
+---
+
+## 25/10/2026 - 27. Boundary fast path and QuickJS handle ownership
+
+**Problem:** Profiling the ten evaluated libraries showed that sandbox time was dominated by boundary mechanics rather than guest execution. Arena compiled helper source with `evalCode` on routine crossings and read each property descriptor through a new host callback plus six property reads. It asked each of the four marshallers separately whether it claimed a handle, once while wrapping and again while unmarshalling. Every permitted Web API result became an identity-tracked wrapper with one host accessor per property. The asyncify build added a generator round trip to every call, and the 1 ms job pump delayed every sandboxed `await` by at least one timer tick. A Lodash scenario iteration issued about 375,000 context operations and a Luxon iteration about 522,000, 45,840 of them `evalCode` compilations.
+
+**Decision:**
+
+1. Extend `patches/quickjs-emscripten-sync+1.8.1.patch` so Arena compiles its QuickJS helpers once per Arena, before guest code runs, over captured intrinsics. It describes a QuickJS object's prototype and all own descriptors in one JSON crossing, and checks both identity maps in one crossing.
+2. Make Arena dispose every unmarshalled handle its identity maps do not own, and return a duplicate when a host function's result is a map-owned handle.
+3. Compile the registered marshallers' `handleTest` expressions into one QuickJS classifier, memoized per handle, and route claimed handles to `unmarshalClaimed()`.
+4. Copy fresh plain-data Web API call results into QuickJS by value (`.sandbox/core/json-transfer.js`).
+5. Use the synchronous QuickJS build for `createSandbox()`, memoize `typeof` per handle, drain pending jobs in a host microtask after each observed context entry with a 10 ms fallback interval, and remove the QuickJS context reference from errors raised by `vm.unwrapResult()`.
+
+**Corrections found while validating:**
+
+- Upstream Arena disposed an unmarshalled handle only when its value was already known. Custom-marshalled values, `Date` values and other unregistered results leaked QuickJS objects until teardown. The asyncify build does not assert on leaked objects, so this was invisible until the synchronous build aborted disposal after any `async` export call.
+- quickjs-emscripten disposes the handle a host function returns. Arena returned map-owned handles from host accessors, which released the map's reference; the next read re-marshalled the value into a QuickJS object nothing owned. This leaked on disposal and gave repeated reads through an accessor a different object, the `child.parent` identity gap recorded in the unit suite.
+- Arena converted evaluation results through `Lifetime.consume()`, which disposes a handle only when its callback returns. When converting a thrown error failed, for example under a memory limit, the error handle leaked. Upstream's memory-limit test aborted in `JS_FreeRuntime` and now passes.
+- quickjs-emscripten attaches the owning context to `QuickJSUnwrapError`, and the context reaches the WebAssembly heap view. A test-runner serializer copying one failing sandbox error walked about 16.8 million keys (2.3 GB); Date-fns sandbox files with several such failures exhausted the Vitest worker heap and the Yup reporter stopped mid-run.
+- The typed-array marshaller resolved the guest-reported `constructor.name` through `globalThis[typeName]`, so guest code could make the host construct an arbitrary host global with a copied buffer. Names now select only from a fixed list of typed-array constructors.
+- `isArguments()` recursed without bound on a host copy of a QuickJS prototype with a `Symbol.toStringTag` accessor, such as `Object.getPrototypeOf(new Uint8Array(1))`. A re-entry guard treats such values as non-Arguments.
+
+**Measured effect (Node.js 24, Windows, one machine, same day, one sandbox per process; median of the steady-state scenario iterations).** The scenario harness and counters were local diagnostics and are not part of the repository; the uninstrumented runtime was measured.
+
+| Library | Before (ms) | After (ms) | Speed-up | Context operations per iteration |
+|---|---:|---:|---:|---|
+| luxon | 2,907 | 16.6 | ~175x | 522,210 to 3,731 |
+| zod | 1,279 | 130 | ~9.8x | 396,665 to 44,058 |
+| lodash | 494 | 68.5 | ~7.2x | 375,100 to 8,635 |
+| date-fns | 23.4 | 3.4 | ~6.8x | |
+| yup | 420 | 69.0 | ~6.1x | |
+| image-js | 58.7 | 21.8 | ~2.7x | |
+| marked | 200 | 76.3 | ~2.6x | |
+| strip-ansi | 1.20 | 0.51 | ~2.3x | |
+| mime | 0.24 | 0.11 | ~2.2x | |
+| tweetnacl | 820 | 382 | ~2.1x | |
+
+Sandbox initialisation also fell for every library (date-fns from 1,490 ms to 370 ms). Steady-state `evalCode` compilations dropped to zero. Keeping the asyncify build roughly halves the gain for compute-bound libraries (tweetnacl 833 ms, marked 190 ms). These numbers come from one machine and are indicative, not a substitute for the methodology on `feat/sandbox-benchmarking`.
+
+**Consequences:**
+
+- Receivers, `new.target` handling (AD#16) and deny-by-default exposure are unchanged; identity is now consistent across repeated accessor reads. Upstream Arena's `edge.test.ts` "getter" case expected a host object returned repeatedly by a raw-Arena getter to arrive with fresh values each time, which relied on the released handle. Exposed host objects reach QuickJS through `bindWebApi`, whose accessors read live host state, so sandbox code still sees host mutations.
+- A plain-data Web API result inside QuickJS is a copy: mutations are not reflected on the host value, and repeated calls return distinct objects, as they already did natively.
+- An awaited sandbox Promise now settles without a live timer handle after `unrefPump()` (AD#10).
+- The patch is now a substantial diff over a bundled upstream file. Upgrading `quickjs-emscripten-sync` requires regenerating and re-validating it.
+- A leaked QuickJS object now fails disposal deterministically. `.sandbox/test/boundary-runtime.test.mjs` holds a focused regression for each change and correction above.
+

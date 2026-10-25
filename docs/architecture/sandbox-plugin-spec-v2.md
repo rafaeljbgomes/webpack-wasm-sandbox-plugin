@@ -141,24 +141,40 @@ Every generated library proxy exposes `disposeLibrary()`. Applications that crea
 `SandboxManager` supports synchronous and asynchronous context acquisition:
 
 - `createSandboxSync()` uses `getQuickJSSync()`;
-- `createSandbox()` uses `newQuickJSAsyncWASMModule()`.
+- `createSandbox()` uses `newQuickJSWASMModule()`, which instantiates a dedicated WebAssembly module with its own linear memory for each call.
+
+`createSandbox()` uses the synchronous (non-asyncify) QuickJS build. The runtime never suspends QuickJS on a host promise, and asyncify instrumentation adds a generator round trip to every boundary call. The synchronous build also aborts in `JS_FreeRuntime` when a QuickJS object leaks, which turns handle-ownership mistakes into deterministic disposal failures instead of silent leaks.
 
 Both paths delegate to `buildSandbox()` and create a new QuickJS context for the library. QuickJS contexts have isolated global objects. The module API used here creates a corresponding runtime whose lifecycle is tied to the context.
 
 `buildSandbox()`:
 
-1. creates the registered Arena marshaller configuration;
-2. creates an Arena for the QuickJS context;
-3. exposes configured host capabilities;
-4. evaluates the library bundle and reads `__SANDBOXED_LIB__`;
-5. precompiles helpers for temporary-object storage, method calls, property reads, and construction;
-6. evaluates and binds a workload bundle when its generated workload proxy first requests it;
-7. wraps the library exports through the reverse membrane;
-8. starts a 1 ms interval that checks `vm.runtime.hasPendingJob()` and calls `arena.executePendingJobs()`.
+1. memoizes `vm.typeof()` per handle, because a handle's QuickJS type cannot change;
+2. removes the QuickJS context reference from errors raised by `vm.unwrapResult()`, so error serializers cannot reach the WebAssembly heap;
+3. installs the job pump's observers on the context entry points `callFunction`, `evalCode`, `getProp`, and `setProp`;
+4. creates the registered Arena marshaller configuration;
+5. creates an Arena for the QuickJS context;
+6. exposes configured host capabilities;
+7. evaluates the library bundle and reads `__SANDBOXED_LIB__`;
+8. precompiles helpers for temporary-object storage, method calls, property reads, and construction;
+9. evaluates and binds a workload bundle when its generated workload proxy first requests it;
+10. wraps the library exports through the reverse membrane;
+11. starts the job pump's 10 ms fallback interval.
 
-The job pump exists because Promise reactions queued inside QuickJS do not run automatically from the host event loop. It remains referenced during top-level-await initialization and is unreferenced afterwards only in Node-generated proxies.
+The job pump exists because Promise reactions queued inside QuickJS do not run automatically from the host event loop. After any observed context entry, the pump schedules one host microtask that calls `arena.executePendingJobs()` when `vm.runtime.hasPendingJob()` is true, so sandboxed `async` code settles before host timers run and an awaited sandbox Promise needs no live timer handle. The fallback interval covers uninstrumented entry points. It remains referenced during top-level-await initialization and is unreferenced afterwards only in Node-generated proxies.
 
-Disposal clears the interval, disposes all registered marshallers and precompiled helpers, then disposes the Arena and QuickJS context. Any new handle or helper introduced by a runtime change must participate in this lifecycle.
+Disposal stops the job pump, disposes all registered marshallers and precompiled helpers, then disposes the Arena and QuickJS context. Any new handle or helper introduced by a runtime change must participate in this lifecycle.
+
+### 5.1 Patched Arena boundary
+
+`quickjs-emscripten-sync@1.8.1` is patched through `patches/quickjs-emscripten-sync+1.8.1.patch`. Besides the `new.target` correction ([AD#16](architectural-decisions.md)), the patch changes how Arena crosses the boundary without changing its identity model:
+
+- QuickJS helper source is compiled once per Arena, before guest code runs, instead of per call. Helpers capture the original intrinsics, so guest replacement of `JSON`, `Object`, or `Reflect` members does not reach them.
+- QuickJS-to-host conversion reads an object's prototype and every own property descriptor in one crossing. Primitives travel inline as JSON, values already in the Arena maps travel as map ids, and only unseen values return as handles.
+- One crossing checks both Arena maps for an existing identity.
+- Unmarshalled handles are disposed unless an Arena map owns them, and a host function that returns a map-owned handle returns a duplicate. Upstream code disposed only already-known values, and quickjs-emscripten disposes the handle a host function returns; together these leaked QuickJS objects and broke identity on repeated reads through host accessors.
+
+A handle leak in this layer aborts disposal under the synchronous build, so `.sandbox/test/boundary-runtime.test.mjs` disposes sandboxes and bare Arenas after async, accessor, custom-marshalled, and memory-limit crossings ([AD#27](architectural-decisions.md)).
 
 ## 6. Capability exposure and forward membrane
 
@@ -170,9 +186,10 @@ The forward membrane in `forward-membrane.js` protects host receiver semantics:
 - functions are rebound to their real owner through `makeCallable()`;
 - nested values are wrapped lazily through accessors;
 - a `WeakMap` preserves repeated references and handles cycles;
-- constructor-only host functions first receive `Reflect.apply`; recognized constructor errors trigger `Reflect.construct`.
+- constructor-only host functions first receive `Reflect.apply`; recognized constructor errors trigger `Reflect.construct`;
+- a fresh call result that is plain JSON data (arrays, plain or null-prototype objects, strings, booleans, finite numbers other than `-0`, and `null`, without accessors, holes, shared references, or more than 10,000 nodes) is copied into QuickJS by value instead of being wrapped. `formatToParts()` and `resolvedOptions()` results are typical examples.
 
-This handling is required for APIs with native internal slots, including `Intl` objects and browser constructors such as `TextEncoder`.
+This handling is required for APIs with native internal slots, including `Intl` objects and browser constructors such as `TextEncoder`. The by-value copy applies only to values `makeCallable()` itself offered for transfer (`.sandbox/core/json-transfer.js`) and is re-checked when Arena consumes the offer, so host objects reached any other way keep the wrapped, identity-tracked path.
 
 ### 6.1 Constrained crypto capability
 
@@ -201,12 +218,12 @@ Values that already have supported value semantics—arrays, typed arrays, `Arra
 
 | Marshaller | Purpose |
 |---|---|
-| `typed-array.js` | Copies typed-array view bytes and preserves the concrete typed-array constructor. Raw `ArrayBuffer` is not claimed by this custom marshaller. |
+| `typed-array.js` | Copies typed-array view bytes and preserves the concrete typed-array constructor. The QuickJS-reported constructor name selects only from a fixed list of host typed-array constructors. Raw `ArrayBuffer` is not claimed by this custom marshaller. |
 | `regexp.js` | Preserves pattern source and flags. |
 | `arguments.js` | Tags and recreates arguments-like values. |
-| `error.js` | Recreates supported host/QuickJS error constructors for returned and argument errors. It copies `name`, `message`, `stack` and bounded JSON-safe values of `errors`, `inner`, `path`, `type`, `value`, `params` and `issues`. `cause` and other custom fields are not copied. Thrown QuickJS errors reach the host as Arena unwrap errors that carry these fields but are not instances of the host subclass. |
+| `error.js` | Recreates supported host/QuickJS error constructors for returned and argument errors. It copies `name`, `message`, `stack` and bounded JSON-safe values of `errors`, `inner`, `path`, `type`, `value`, `params` and `issues`. `cause` and other custom fields are not copied. Thrown QuickJS errors reach the host as Arena unwrap errors that carry these fields but are not instances of the host subclass; the runtime removes their QuickJS `context` reference (§5). |
 
-Each marshaller implements `isWrappable`, `isHandleWrappable`, `marshal`, `unmarshal`, and `dispose`. Arena uses the first applicable custom conversion; a marshaller file that is not imported and registered in `index.js` is inactive.
+Each marshaller implements `handleTest`, `isWrappable`, `isHandleWrappable`, `marshal`, `unmarshal`, `unmarshalClaimed`, and `dispose`. `handleTest` is a QuickJS expression over `h`. `index.js` compiles the registered tests, in registration order, into one QuickJS classifier and memoizes its answer per handle. Arena's `isHandleWrappable` and custom unmarshallers then consult that single answer, and only the claiming marshaller's `unmarshalClaimed()` runs. `isHandleWrappable` and `unmarshal` remain self-contained for direct use. A marshaller file that is not imported and registered in `index.js` is inactive.
 
 The repository contains no active generic collection marshaller. `Map`, `Set`, `DataView`, boxed primitives, and other internal-slot types therefore remain known compatibility boundaries rather than documented supported conversions.
 

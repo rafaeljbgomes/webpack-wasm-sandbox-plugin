@@ -173,7 +173,8 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 - Configured bare package imports are redirected; package subpath imports are not currently covered by the isolation boundary. See the [import coverage and cache limitations](docs/architecture/isolation-coverage-and-cache-limitations.md).
 - Shared mutable host objects exposed to multiple sandboxes are not yet guaranteed to receive independent membrane wrappers. See the [import coverage and cache limitations](docs/architecture/isolation-coverage-and-cache-limitations.md).
 - Proxy generation depends on the package's declarations and falls back to `@types/<package>` where available.
-- The runtime uses a 1 ms interval to execute pending QuickJS jobs. The interval is unreferenced after proxy initialization in Node.js and remains part of the sandbox lifecycle until disposal.
+- Pending QuickJS jobs run in a host microtask after each observed boundary entry, backed by a 10 ms fallback interval. The interval is unreferenced after proxy initialization in Node.js and remains part of the sandbox lifecycle until disposal.
+- Fresh plain-data results of permitted Web API calls are copied into QuickJS by value, so mutating such a result inside the sandbox does not change the host value. Other host objects keep identity-tracked wrappers.
 - Generated default-export behaviour depends on the export patterns detected by the declaration parser.
 - The prototype demonstrates isolation and compatibility for the evaluated libraries; it does not establish compatibility with arbitrary npm packages or production hardening.
 

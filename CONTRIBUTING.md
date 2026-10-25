@@ -51,7 +51,9 @@ Runtime compatibility depends on object identity, method receivers, constructor 
 - test calls, constructors, getters, returned stateful objects, and errors in both directions;
 - update the canonical specification and architectural decision record when behaviour or a security boundary changes.
 
-Custom marshallers implement `{ isWrappable, isHandleWrappable, marshal, unmarshal, dispose }`. A new marshaller is inactive until it is registered in `.sandbox/marshallers/index.js`.
+Custom marshallers implement `{ handleTest, isWrappable, isHandleWrappable, marshal, unmarshal, unmarshalClaimed, dispose }`. `handleTest` is the QuickJS expression over `h` that the registry compiles into its combined classifier; `unmarshalClaimed` converts a handle the classifier already assigned to that marshaller. A new marshaller is inactive until it is registered in `.sandbox/marshallers/index.js`.
+
+The synchronous QuickJS build aborts disposal when a QuickJS object leaks. Add a disposal scenario to `.sandbox/test/boundary-runtime.test.mjs` for any new crossing path.
 
 ## Add or update a sandboxed library
 

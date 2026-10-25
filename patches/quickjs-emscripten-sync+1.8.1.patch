@@ -1,13 +1,739 @@
 diff --git a/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js b/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js
-index 90f76ea..50c18bf 100644
+index 90f76ea..595fb21 100644
 --- a/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js
 +++ b/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js
-@@ -358,7 +358,7 @@ function ue(n, e, t, r, s) {
-           const [h] = r(
-             y(n, "(Cls, ...args) => new Cls(...args)", p, e, ...l)
-           );
+@@ -90,7 +90,152 @@ function T(n, e) {
+     get: () => t.alive
+   }), r;
+ }
++const qesStates = /* @__PURE__ */ new WeakMap();
++const QES_IS_OBJECT = 'a => typeof a === "object" && a !== null || typeof a === "function"';
++const QES_IS_WRAPPED = '(a, s) => (a instanceof Promise) || (a instanceof Date) || (typeof a === "object" && a !== null || typeof a === "function") && !!a[s]';
++const QES_HANDLE_KIND = "((P, D) => (a, s) => (typeof a === \"object\" && a !== null || typeof a === \"function\") ? ((a instanceof P) || (a instanceof D) || !!a[s] ? 2 : 1) : 0)(Promise, Date)";
++const QES_IS_PROMISE = "(P => a => a instanceof P)(Promise)";
++const QES_PROTOTYPE = `o => {
++      const p = Object.getPrototypeOf(o);
++      return !p || p === Object.prototype || p === Array.prototype ? undefined : p;
++    }`;
++const QES_FN_WRAPPER = `Cls => {
++          const fn = function(...args) { return Cls.apply(this, args); };
++          fn.name = Cls.name;
++          fn.length = Cls.length;
++          return fn;
++        }`;
++const QES_PROXY_FACTORY = `((NewProxy, get, set, deleteProperty) => (sym, proxyFuncs) => (target) => {
++  const rec = new NewProxy(target, {
++    get(obj, key, receiver) {
++      return key === sym ? obj : get(obj, key, receiver);
++    },
++    set(obj, key, value, receiver) {
++      const v = typeof value === "object" && value !== null || typeof value === "function"
++        ? value[sym] ?? value
++        : value;
++      const sync = proxyFuncs(1, receiver) ?? "vm";
++      if (sync === "host" || set(obj, key, v, receiver)) {
++        if (sync !== "vm") {
++          proxyFuncs(2, receiver, key, v);
++        }
++      }
++      return true;
++    },
++    deleteProperty(obj, key) {
++      const sync = proxyFuncs(1, rec) ?? "vm";
++      if (sync === "host" || deleteProperty(obj, key)) {
++        if (sync !== "vm") {
++          proxyFuncs(3, rec, key);
++        }
++      }
++      return true;
++    },
++  });
++  return rec;
++})(Proxy, Reflect.get, Reflect.set, Reflect.deleteProperty)`;
++// Describes an object in one crossing: a JSON document with the optional
++// non-standard prototype and every own property descriptor. Primitives are
++// inlined, values already known to the Arena maps are referenced by their map
++// ids, and only previously unseen values are returned as handles ("refs").
++const QES_BULK_DESCRIBE = `((getDescriptors, ownKeys, hasOwn, stringify, getPrototypeOf, OP, AP, isFiniteNumber, sameValue) => (regGet, mapGet) => (o, withHeader) => {
++  const refs = [];
++  const enc = (v) => {
++    const t = typeof v;
++    // Long strings stay in QuickJS memory and cross as handles.
++    if (t === "boolean" || t === "string" && v.length <= 128) return v;
++    if (t === "number") return isFiniteNumber(v) && !sameValue(v, -0) ? v : { __proto__: null, n: sameValue(v, -0) ? "-0" : "" + v };
++    if (v === null) return null;
++    if (t === "object" || t === "function" || t === "symbol") {
++      let id = regGet(v);
++      if (id !== -1) return { __proto__: null, g: id };
++      id = mapGet(v);
++      if (id !== -1) return { __proto__: null, m: id };
++    }
++    refs[refs.length] = v;
++    return { __proto__: null, r: refs.length - 1 };
++  };
++  const out = { __proto__: null, e: [] };
++  if (withHeader) {
++    const p = getPrototypeOf(o);
++    if (p && p !== OP && p !== AP) out.p = enc(p);
++  }
++  const descs = getDescriptors(o);
++  const keys = ownKeys(descs);
++  for (let i = 0; i < keys.length; i++) {
++    const k = keys[i];
++    const d = descs[k];
++    let f = 0, a = 0, b = 0;
++    if (d.configurable) f |= 1;
++    if (d.enumerable) f |= 2;
++    if (hasOwn(d, "writable")) { f |= 8; if (d.writable) f |= 4; }
++    if (hasOwn(d, "value") && d.value !== undefined) { f |= 16; a = enc(d.value); }
++    if (hasOwn(d, "get") && d.get !== undefined) { f |= 32; a = enc(d.get); }
++    if (hasOwn(d, "set") && d.set !== undefined) { f |= 64; b = enc(d.set); }
++    out.e[i] = [typeof k === "string" ? k : enc(k), f, a, b];
++  }
++  const json = stringify(out);
++  if (refs.length === 0) return json;
++  const result = [json];
++  for (let i = 0; i < refs.length; i++) result[i + 1] = refs[i];
++  return result;
++})(Object.getOwnPropertyDescriptors, Reflect.ownKeys, Function.prototype.call.bind(Object.prototype.hasOwnProperty), JSON.stringify, Object.getPrototypeOf, Object.prototype, Array.prototype, Number.isFinite, Object.is)`;
++// Looks a handle up in both Arena maps with one crossing. Map counters are
++// negative, so registered ids are returned as-is, main-map ids negated, and 0
++// means "not found".
++const QES_FIND_BOTH = `(regGet, mapGet) => (v) => {
++  const g = regGet(v);
++  if (g !== -1) return g;
++  const m = mapGet(v);
++  return m === -1 ? 0 : -m;
++}`;
++const QES_DEFINE_BATCH = `((defineProperty, charCodeAt) => (o, flags, ...kv) => {
++  for (let i = 0; i < flags.length; i++) {
++    const f = charCodeAt(flags, i);
++    const d = { __proto__: null };
++    if (f & 16) d.value = kv[i * 3 + 1];
++    if (f & 32) d.get = kv[i * 3 + 1];
++    if (f & 64) d.set = kv[i * 3 + 2];
++    d.configurable = !!(f & 1);
++    d.enumerable = !!(f & 2);
++    if (f & 8) d.writable = !!(f & 4);
++    defineProperty(o, kv[i * 3], d);
++  }
++})(Object.defineProperty, Function.prototype.call.bind(String.prototype.charCodeAt))`;
++// Helper sources compiled once per Arena. Values replace the original snippets
++// with variants that capture intrinsics before guest code can replace them.
++const qesHelperSources = /* @__PURE__ */ new Map([
++  ["(a, b) => a instanceof b", "(a, b) => a instanceof b"],
++  [QES_IS_OBJECT, QES_IS_OBJECT],
++  [QES_IS_WRAPPED, "((P, D) => (a, s) => (a instanceof P) || (a instanceof D) || (typeof a === \"object\" && a !== null || typeof a === \"function\") && !!a[s])(Promise, Date)"],
++  [QES_HANDLE_KIND, QES_HANDLE_KIND],
++  [QES_IS_PROMISE, QES_IS_PROMISE],
++  ["JSON.parse", "JSON.parse"],
++  ["d => Symbol(d)", "(S => d => S(d))(Symbol)"],
++  ["d => new Date(d)", "(D => d => new D(d))(Date)"],
++  ["Object.defineProperties", "Object.defineProperties"],
++  [QES_FN_WRAPPER, QES_FN_WRAPPER],
++  ["Object.setPrototypeOf", "Object.setPrototypeOf"],
++  ["a => a instanceof Date", "(D => a => a instanceof D)(Date)"],
++  ["a => a.getTime()", "((apply, getTime) => a => apply(getTime, a, []))(Reflect.apply, Date.prototype.getTime)"],
++  ["(Cls, ...args) => new Cls(...args)", "(Cls, ...args) => new Cls(...args)"],
++  ["Array.isArray", "Array.isArray"],
++  [QES_PROTOTYPE, "((getPrototypeOf, OP, AP) => o => { const p = getPrototypeOf(o); return !p || p === OP || p === AP ? undefined : p; })(Object.getPrototypeOf, Object.prototype, Array.prototype)"],
++  ["(p, res, rej) => { p.then(res, rej); }", "(p, res, rej) => { p.then(res, rej); }"],
++  ["(a, b) => delete a[b]", "(a, b) => delete a[b]"]
++]);
++function qesHelper(n, st, e) {
++  let h = st.helpers.get(e);
++  if (!h || !h.alive) {
++    h = n.unwrapResult(n.evalCode(qesHelperSources.get(e)));
++    st.helpers.set(e, h);
++  }
++  return h;
++}
+ function y(n, e, t, ...r) {
++  const st = qesStates.get(n);
++  if (st && qesHelperSources.has(e))
++    return n.unwrapResult(n.callFunction(qesHelper(n, st, e), t != null ? t : n.undefined, ...r));
+   const s = T(n, e);
+   try {
+     return s(t, ...r);
+@@ -98,17 +243,64 @@ function y(n, e, t, ...r) {
+     s.dispose();
+   }
+ }
++function qesNumber(n, e, ...r) {
++  const h = y(n, e, void 0, ...r);
++  try {
++    return n.getNumber(h);
++  } finally {
++    h.dispose();
++  }
++}
++function qesConsume(h, fn) {
++  try {
++    return fn(h);
++  } finally {
++    h.alive && h.dispose();
++  }
++}
++function qesCallNumber(n, fn, ...r) {
++  const h = n.unwrapResult(n.callFunction(fn, n.undefined, ...r));
++  try {
++    return n.getNumber(h);
++  } finally {
++    h.dispose();
++  }
++}
++// Upstream callers dispose an unmarshalled handle only when its value was
++// already known, assuming new values were stored. Values that are neither
++// registered nor stored (custom-marshalled, Date, symbol, unregistrable) then
++// leaked a handle and pinned their QuickJS object until runtime teardown.
++// Arena-owned contexts instead track exactly which handles the maps own.
++function qesShouldDispose(n, h, existed) {
++  const st = qesStates.get(n);
++  return st ? !st.owner._qesStored.has(h) : existed;
++}
++// quickjs-emscripten disposes the handle a host function returns. Returning a
++// handle the identity maps own released the map's reference, so a later
++// lookup re-marshalled the value into a QuickJS object nothing owned.
++function qesReturnable(n, h) {
++  const st = qesStates.get(n);
++  return h && st && h.alive && st.owner._qesStored.has(h) ? h.dup() : h;
++}
++function qesPrimitive(n, e, t) {
++  return t === "number" ? n.getNumber(e) : t === "string" ? n.getString(e) : t === "boolean" ? n.getNumber(e) !== 0 : void 0;
++}
++
+ function G(n, e, t) {
+-  return n.dump(y(n, "(a, b) => a instanceof b", void 0, e, t));
++  return !!qesNumber(n, "(a, b) => a instanceof b", e, t);
+ }
+ function J(n, e) {
+-  return n.dump(
+-    y(n, 'a => typeof a === "object" && a !== null || typeof a === "function"', void 0, e)
+-  );
++  return !!qesNumber(n, QES_IS_OBJECT, e);
+ }
+ function W(n, e) {
+   const t = JSON.stringify(e);
+-  return t ? y(n, "JSON.parse", void 0, n.newString(t)) : n.undefined;
++  if (!t) return n.undefined;
++  const s = n.newString(t);
++  try {
++    return y(n, "JSON.parse", void 0, s);
++  } finally {
++    s.dispose();
++  }
+ }
+ function _e(n, e) {
+   try {
+@@ -155,7 +347,13 @@ function Q(n, e) {
+   );
+ }
+ function q(n, e) {
+-  return n instanceof Date ? y(e, "d => new Date(d)", void 0, e.newNumber(n.getTime())) : void 0;
++  if (!(n instanceof Date)) return;
++  const t = e.newNumber(n.getTime());
++  try {
++    return y(e, "d => new Date(d)", void 0, t);
++  } finally {
++    t.dispose();
++  }
+ }
+ const X = [Q, q];
+ function Y(n) {
+@@ -198,6 +396,8 @@ function Z() {
+   };
+ }
+ function M(n, e, t, r) {
++  const st = qesStates.get(n);
++  if (st && st.defineBatch) return qesDefineProperties(n, st, e, t, r);
+   const s = n.newObject(), o = (a, u) => {
+     const p = r(a), l = typeof u.value == "undefined" ? void 0 : r(u.value), f = typeof u.get == "undefined" ? void 0 : r(u.get), d = typeof u.set == "undefined" ? void 0 : r(u.set);
+     n.newObject().consume((m) => {
+@@ -209,6 +409,37 @@ function M(n, e, t, r) {
+   }, i = Object.getOwnPropertyDescriptors(e);
+   Object.entries(i).forEach(([a, u]) => o(a, u)), Object.getOwnPropertySymbols(i).forEach((a) => o(a, i[a])), y(n, "Object.defineProperties", void 0, t, s).dispose(), s.dispose();
+ }
++function qesDefineProperties(n, st, e, t, r) {
++  const i = Object.getOwnPropertyDescriptors(e), keys = Reflect.ownKeys(i);
++  for (let start = 0; start < keys.length; start += 64) {
++    const end = Math.min(start + 64, keys.length), args = [];
++    let flags = "";
++    for (let idx = start; idx < end; idx++) {
++      const a = keys[idx], u = i[a];
++      const p = r(a);
++      let f = (u.configurable ? 1 : 0) | (u.enumerable ? 2 : 0), first = n.undefined, second = n.undefined;
++      if ("writable" in u) f |= 8 | (u.writable ? 4 : 0);
++      if ("value" in u) {
++        if (typeof u.value != "undefined") {
++          first = r(u.value), f |= 16;
++        }
++      } else {
++        typeof u.get != "undefined" && (first = r(u.get), f |= 32);
++        typeof u.set != "undefined" && (second = r(u.set), f |= 64);
++      }
++      flags += String.fromCharCode(f);
++      args.push(p, first, second);
++    }
++    const flagsHandle = n.newString(flags);
++    try {
++      n.unwrapResult(n.callFunction(st.defineBatch, n.undefined, t, flagsHandle, ...args)).dispose();
++    } finally {
++      flagsHandle.dispose();
++      // Keys and values the identity maps do not own were created for this call.
++      for (const h of args) h.alive && !st.owner._qesStored.has(h) && h.dispose();
++    }
++  }
++}
+ function K(n, e, t, r, s, o) {
+   var u;
+   if (typeof e != "function") return;
+@@ -220,21 +451,11 @@ function K(n, e, t, r, s, o) {
+         n.setProp(this, m, t(h));
+       }), this;
+     }
+-    return t(o ? o(e, l, f) : e.apply(l, f));
++    return qesReturnable(n, t(o ? o(e, l, f) : e.apply(l, f)));
+   }).consume(
+     (p) => (
+       // fucntions created by vm.newFunction are not callable as a class constrcutor
+-      y(
+-        n,
+-        `Cls => {
+-          const fn = function(...args) { return Cls.apply(this, args); };
+-          fn.name = Cls.name;
+-          fn.length = Cls.length;
+-          return fn;
+-        }`,
+-        void 0,
+-        p
+-      )
++      y(n, QES_FN_WRAPPER, void 0, p)
+     )
+   ), a = (u = s(e, i)) != null ? u : i;
+   return M(n, e, i, t), a;
+@@ -248,7 +469,7 @@ function ee(n, e, t, r) {
+   var u;
+   if (typeof e != "object" || e === null) return;
+   const s = Array.isArray(e) ? n.newArray() : n.newObject(), o = (u = r(e, s)) != null ? u : s, i = Object.getPrototypeOf(e), a = i && i !== Object.prototype && i !== Array.prototype ? t(i) : void 0;
+-  return a && y(n, "Object.setPrototypeOf", void 0, o, a).dispose(), M(n, e, s, t), o;
++  return a && (y(n, "Object.setPrototypeOf", void 0, o, a).dispose(), qesShouldDispose(n, a, !1) && a.dispose()), M(n, e, s, t), o;
+ }
+ function te(n, e) {
+   switch (typeof e) {
+@@ -268,10 +489,16 @@ function ne(n, e, t, r) {
+   var o;
+   if (!(e instanceof Promise)) return;
+   const s = n.newPromise();
+-  return e.then(
+-    (i) => s.resolve(t(i)),
+-    (i) => s.reject(t(i))
+-  ), (o = r(e, s)) != null ? o : s.handle;
++  const settle = (fn) => (i) => {
++    if (!n.alive) return;
++    const h = t(i);
++    try {
++      fn(h);
++    } finally {
++      qesShouldDispose(n, h, !1) && h.alive && h.dispose();
++    }
++  };
++  return e.then(settle(s.resolve), settle(s.reject)), (o = r(e, s)) != null ? o : s.handle;
+ }
+ function R(n, e) {
+   var l, f, d, m, h;
+@@ -307,12 +534,78 @@ function se(n, e) {
+   return Symbol(t);
+ }
+ function oe(n, e) {
+-  if (!e.dump(y(e, "a => a instanceof Date", void 0, n))) return;
+-  const t = e.getNumber(y(e, "a => a.getTime()", void 0, n));
+-  return new Date(t);
++  if (e.typeof(n) !== "object" || !qesNumber(e, "a => a instanceof Date", n)) return;
++  return new Date(qesNumber(e, "a => a.getTime()", n));
+ }
+ const ie = [se, oe];
++function qesDescribe(n, st, e, withHeader) {
++  const res = n.unwrapResult(n.callFunction(st.bulkDescribe, n.undefined, e, withHeader ? n.true : n.false));
++  try {
++    if (n.typeof(res) === "string") {
++      const json = n.getString(res);
++      return res.dispose(), [JSON.parse(json), void 0];
++    }
++    const json = n.getProp(res, 0).consume((h) => n.getString(h));
++    return [JSON.parse(json), res];
++  } catch (err) {
++    throw res.alive && res.dispose(), err;
++  }
++}
++function qesResolver(n, st, res, r) {
++  return (enc) => {
++    if (enc === null || typeof enc != "object") return enc;
++    if (enc.n !== void 0) return Number(enc.n);
++    if (enc.g !== void 0) return st.owner._registeredMap._counterMap.get(enc.g);
++    if (enc.m !== void 0) return st.owner._map._counterMap.get(enc.m);
++    const h = n.getProp(res, enc.r + 1);
++    let m, existed;
++    try {
++      [m, existed] = r(h);
++    } catch (err) {
++      throw h.alive && h.dispose(), err;
++    }
++    return qesShouldDispose(n, h, existed) && h.dispose(), m;
++  };
++}
++function qesDefineDescribed(entries, resolve, t) {
++  for (const [keyEnc, fl, a, b] of entries) {
++    const i = typeof keyEnc == "string" ? keyEnc : resolve(keyEnc);
++    if (typeof i != "string" && typeof i != "number" && typeof i != "symbol")
++      continue;
++    const desc = {};
++    fl & 16 && (desc.value = resolve(a)), fl & 32 && (desc.get = resolve(a)), fl & 64 && (desc.set = resolve(b));
++    desc.configurable = !!(fl & 1), desc.enumerable = !!(fl & 2), fl & 8 && (desc.writable = !!(fl & 4));
++    Object.defineProperty(t, i, desc);
++  }
++}
++function qesUnmarshalObject(n, st, e, t, r) {
++  var a;
++  // Register before describing, in upstream order, so a failure while
++  // describing cannot strand the wrapper handle created by _unmarshal.
++  const s = qesNumber(n, "Array.isArray", e) ? [] : {}, o = (a = r(s, e)) != null ? a : s;
++  const [data, res] = qesDescribe(n, st, e, !0);
++  try {
++    const resolve = qesResolver(n, st, res, t);
++    if (data.p !== void 0) {
++      const i = resolve(data.p);
++      typeof i == "object" && Object.setPrototypeOf(o, i);
++    }
++    return qesDefineDescribed(data.e, resolve, s), o;
++  } finally {
++    res && res.dispose();
++  }
++}
+ function k(n, e, t, r) {
++  const st = qesStates.get(n);
++  if (st && st.bulkDescribe) {
++    const [data, res] = qesDescribe(n, st, e, !1);
++    try {
++      qesDefineDescribed(data.e, qesResolver(n, st, res, r), t);
++    } finally {
++      res && res.dispose();
++    }
++    return;
++  }
+   n.newFunction("", (s, o) => {
+     const [i] = r(s);
+     if (typeof i != "string" && typeof i != "number" && typeof i != "symbol")
+@@ -355,13 +648,11 @@ function ue(n, e, t, r, s) {
+       [t(this), ...u.map((p) => t(p))],
+       (p, ...l) => {
+         if (new.target) {
+-          const [h] = r(
+-            y(n, "(Cls, ...args) => new Cls(...args)", p, e, ...l)
+-          );
 -          return Object.defineProperties(this, Object.getOwnPropertyDescriptors(h)), this;
-+          return h;
++          const instanceHandle = y(n, "(Cls, ...args) => new Cls(...args)", p, e, ...l), [h] = r(instanceHandle);
++          return qesShouldDispose(n, instanceHandle, !1) && instanceHandle.dispose(), h;
          }
          const f = n.unwrapResult(n.callFunction(e, p, ...l)), [d, m] = r(f);
-         return m && f.dispose(), d;
+-        return m && f.dispose(), d;
++        return qesShouldDispose(n, f, m) && f.dispose(), d;
+       }
+     );
+   }, i = (a = s(o, e)) != null ? a : o;
+@@ -370,14 +661,13 @@ function ue(n, e, t, r, s) {
+ function ae(n, e, t, r) {
+   var a;
+   if (n.typeof(e) !== "object" || // null check
+-  n.unwrapResult(n.evalCode("o => o === null")).consume((u) => n.dump(n.unwrapResult(n.callFunction(u, n.undefined, e)))))
++  n.sameValue(e, n.null))
+     return;
+-  const s = y(n, "Array.isArray", void 0, e).consume((u) => n.dump(u)) ? [] : {}, o = (a = r(s, e)) != null ? a : s, i = y(
++  const st = qesStates.get(n);
++  if (st && st.bulkDescribe) return qesUnmarshalObject(n, st, e, t, r);
++  const s = qesNumber(n, "Array.isArray", e) ? [] : {}, o = (a = r(s, e)) != null ? a : s, i = y(
+     n,
+-    `o => {
+-      const p = Object.getPrototypeOf(o);
+-      return !p || p === Object.prototype || p === Array.prototype ? undefined : p;
+-    }`,
++    QES_PROTOTYPE,
+     void 0,
+     e
+   ).consume((u) => {
+@@ -389,16 +679,18 @@ function ae(n, e, t, r) {
+ }
+ function pe(n, e) {
+   const t = n.typeof(e);
+-  return t === "undefined" || t === "number" || t === "string" || t === "boolean" ? [n.dump(e), !0] : t === "object" && n.unwrapResult(n.evalCode("a => a === null")).consume((s) => n.dump(n.unwrapResult(n.callFunction(s, n.undefined, e)))) ? [null, !0] : [void 0, !1];
++  return t === "undefined" || t === "number" || t === "string" || t === "boolean" ? [qesPrimitive(n, e, t), !0] : t === "object" && n.sameValue(e, n.null) ? [null, !0] : [void 0, !1];
+ }
+ function fe(n, e, t, r) {
+   var p;
+   if (!ce(n, e)) return;
+   const s = Z(), [o, i] = t(s.resolve), [a, u] = t(s.reject);
+-  return y(n, "(p, res, rej) => { p.then(res, rej); }", void 0, e, o, a), i && o.dispose(), u && a.dispose(), (p = r(s.promise, e)) != null ? p : s.promise;
++  return y(n, "(p, res, rej) => { p.then(res, rej); }", void 0, e, o, a).dispose(), i && o.dispose(), u && a.dispose(), (p = r(s.promise, e)) != null ? p : s.promise;
+ }
+ function ce(n, e) {
+-  return e.owner ? n.unwrapResult(n.evalCode("Promise")).consume((t) => e.owner ? G(n, e, t) : !1) : !1;
++  if (!e.owner) return !1;
++  if (qesStates.has(n)) return n.typeof(e) === "object" && !!qesNumber(n, QES_IS_PROMISE, e);
++  return n.unwrapResult(n.evalCode("Promise")).consume((t) => e.owner ? G(n, e, t) : !1);
+ }
+ function le(n, e) {
+   const [t] = C(n, e);
+@@ -470,7 +762,7 @@ class O {
+       return o === t || o === s;
+     const i = this._counter++;
+     return this._map1.set(e, i), this._map3.set(i, t), this._counterMap.set(i, e), r && (this._map2.set(r, i), s && this._map4.set(i, s)), this.ctx.newNumber(i).consume((u) => {
+-      this._call(this._mapSet, void 0, t, u, s != null ? s : this.ctx.undefined);
++      this._call(this._mapSet, void 0, t, u, s != null ? s : this.ctx.undefined).dispose();
+     }), !0;
+   }
+   merge(e) {
+@@ -491,7 +783,7 @@ class O {
+   }
+   getByHandle(e) {
+     if (e.alive)
+-      return this._counterMap.get(this.ctx.getNumber(this._call(this._mapGet, void 0, e)));
++      return this._call(this._mapGet, void 0, e).consume((h) => this._counterMap.get(this.ctx.getNumber(h)));
+   }
+   has(e) {
+     return !!this.get(e);
+@@ -511,7 +803,7 @@ class O {
+       this._mapDelete,
+       void 0,
+       ...[s, o].filter((a) => !!(a != null && a.alive))
+-    ), this._map1.delete(e), this._map2.delete(e), this._map3.delete(r), this._map4.delete(r);
++    ).dispose(), this._map1.delete(e), this._map2.delete(e), this._map3.delete(r), this._map4.delete(r);
+     for (const [a, u] of this._map1)
+       if (u === r) {
+         this._map1.delete(a);
+@@ -534,7 +826,7 @@ class O {
+     typeof r != "undefined" && this.delete(r, t);
+   }
+   clear() {
+-    this._counter = 0, this._map1.clear(), this._map2.clear(), this._map3.clear(), this._map4.clear(), this._counterMap.clear(), this._mapClear.alive && this._call(this._mapClear, void 0);
++    this._counter = 0, this._map1.clear(), this._map2.clear(), this._map3.clear(), this._map4.clear(), this._counterMap.clear(), this._mapClear.alive && this._call(this._mapClear, void 0).dispose();
+   }
+   dispose() {
+     for (const e of this._disposables.values())
+@@ -614,6 +906,13 @@ function de(n, e, t, r, s, o, i) {
+   return a;
+ }
+ function me(n, e, t, r, s, o, i) {
++  const st = qesStates.get(n);
++  if (st && st.makeProxy) {
++    const kind = qesNumber(n, QES_HANDLE_KIND, e, r);
++    if (kind === 0 || i && !i(e, n)) return [void 0, !1];
++    if (kind === 2) return [e, !1];
++    return [n.unwrapResult(n.callFunction(st.makeProxy, n.undefined, e)), !0];
++  }
+   if (!J(n, e) || i && !i(e, n))
+     return [void 0, !1];
+   if (F(n, e, r)) return [e, !1];
+@@ -694,16 +993,8 @@ function he(n, e) {
+   return v(n) && !!n[e];
+ }
+ function F(n, e, t) {
+-  return !!n.dump(
+-    y(
+-      n,
+-      // promise and date cannot be wrapped
+-      '(a, s) => (a instanceof Promise) || (a instanceof Date) || (typeof a === "object" && a !== null || typeof a === "function") && !!a[s]',
+-      void 0,
+-      e,
+-      t
+-    )
+-  );
++  // promise and date cannot be wrapped
++  return !!qesNumber(n, QES_IS_WRAPPED, e, t);
+ }
+ class ve {
+   /** Constructs a new Arena instance. It requires a quickjs-emscripten context initialized with `quickjs.newContext()`. */
+@@ -715,6 +1006,8 @@ class ve {
+     c(this, "_sync", /* @__PURE__ */ new Set());
+     c(this, "_temporalSync", /* @__PURE__ */ new Set());
+     c(this, "_symbol", /* @__PURE__ */ Symbol());
++    // Handles owned by the identity maps; every other unmarshalled handle is disposed.
++    c(this, "_qesStored", /* @__PURE__ */ new WeakSet());
+     c(this, "_symbolHandle");
+     c(this, "_options");
+     c(this, "_isMarshalable", (e) => {
+@@ -743,6 +1036,9 @@ class ve {
+     });
+     c(this, "_marshal", (e) => {
+       var s, o;
++      const qt = typeof e;
++      if (e === null || qt !== "object" && qt !== "function" && qt !== "symbol" && qt !== "bigint")
++        return [te(this.context, e), !0];
+       const t = this._registeredMap.get(e);
+       if (t)
+         return [t, !1];
+@@ -755,7 +1051,7 @@ class ve {
+         preApply: this._marshalPreApply,
+         custom: (o = this._options) == null ? void 0 : o.customMarshaller
+       });
+-      return [r, !this._map.hasHandle(r)];
++      return [r, !this._qesStored.has(r)];
+     });
+     c(this, "_preUnmarshal", (e, t) => {
+       var r;
+@@ -763,21 +1059,36 @@ class ve {
+     });
+     c(this, "_unmarshalFind", (e) => {
+       var t;
++      const st = this._qesState;
++      if (st && st.findBoth && e.alive) {
++        const code = qesCallNumber(this.context, st.findBoth, e);
++        if (code < 0)
++          return (t = this._registeredMap._counterMap.get(code)) != null ? t : this._map.getByHandle(e);
++        return code > 0 ? this._map._counterMap.get(-code) : void 0;
++      }
+       return (t = this._registeredMap.getByHandle(e)) != null ? t : this._map.getByHandle(e);
+     });
+     c(this, "_unmarshal", (e) => {
+       var s;
++      const qt = this.context.typeof(e);
++      if (qt === "undefined" || qt === "number" || qt === "string" || qt === "boolean")
++        return qesPrimitive(this.context, e, qt);
+       const t = this._registeredMap.getByHandle(e);
+       if (typeof t != "undefined")
+         return t;
+-      const [r] = this._wrapHandle(e);
+-      return le(r != null ? r : e, {
+-        ctx: this.context,
+-        marshal: this._marshal,
+-        find: this._unmarshalFind,
+-        pre: this._preUnmarshal,
+-        custom: (s = this._options) == null ? void 0 : s.customUnmarshaller
+-      });
++      const [r, created] = this._wrapHandle(e);
++      try {
++        return le(r != null ? r : e, {
++          ctx: this.context,
++          marshal: this._marshal,
++          find: this._unmarshalFind,
++          pre: this._preUnmarshal,
++          custom: (s = this._options) == null ? void 0 : s.customUnmarshaller
++        });
++      } catch (err) {
++        // A wrapper created for a value that failed before registration is unowned.
++        throw created && r && r.alive && !this._qesStored.has(r) && r.dispose(), err;
++      }
+     });
+     c(this, "_syncMode", (e) => {
+       const t = this._unwrap(e);
+@@ -791,13 +1102,71 @@ class ve {
+     t != null && t.compat && !("runtime" in e) && (e.runtime = {
+       hasPendingJob: () => e.hasPendingJob(),
+       executePendingJobs: (s) => e.executePendingJobs(s)
+-    }), this.context = t != null && t.experimentalContextEx ? B(e) : e, this._options = t, this._symbolHandle = e.unwrapResult(e.evalCode("Symbol()")), this._map = new O(e), this._registeredMap = new O(e), this.registerAll((r = t == null ? void 0 : t.registeredObjects) != null ? r : I);
++    }), this.context = t != null && t.experimentalContextEx ? B(e) : e, this._options = t, this._symbolHandle = e.unwrapResult(e.evalCode("Symbol()")), this._map = new O(e), this._registeredMap = new O(e), this.registerAll((r = t == null ? void 0 : t.registeredObjects) != null ? r : I), this._qesInit(e);
++  }
++  /**
++   * Compiles boundary helpers before guest code runs. The helpers, the shared
++   * Proxy callback and the bulk describer live as long as this Arena.
++   */
++  _qesInit(e) {
++    const st = { helpers: /* @__PURE__ */ new Map(), owner: this };
++    for (const code of qesHelperSources.keys()) qesHelper(e, st, code);
++    const factory = (code) => e.unwrapResult(e.evalCode(code));
++    const proxyFuncs = e.newFunction("proxyFuncs", (l, ...f) => {
++      switch (e.getNumber(l)) {
++        case 1: {
++          const r = this._syncMode(this._unmarshal(f[0]));
++          return typeof r == "string" ? e.newString(r) : e.undefined;
++        }
++        case 2: {
++          const m = this._unmarshal(f[0]);
++          if (!m) return;
++          const h = this._unmarshal(f[1]);
++          if (h === "__proto__") return;
++          const _ = this._unmarshal(f[2]);
++          w(m, this._symbol)[h] = _;
++          return;
++        }
++        case 3: {
++          const d = this._unmarshal(f[0]);
++          if (!d) return;
++          const m = this._unmarshal(f[1]);
++          Reflect.deleteProperty(w(d, this._symbol), m);
++          return;
++        }
++      }
++      return e.undefined;
++    });
++    try {
++      factory(QES_PROXY_FACTORY).consume((p) => {
++        st.makeProxy = e.unwrapResult(e.callFunction(p, e.undefined, this._symbolHandle, proxyFuncs));
++      });
++      factory(QES_BULK_DESCRIBE).consume((p) => {
++        st.bulkDescribe = e.unwrapResult(e.callFunction(p, e.undefined, this._registeredMap._mapGet, this._map._mapGet));
++      });
++      factory(QES_FIND_BOTH).consume((p) => {
++        st.findBoth = e.unwrapResult(e.callFunction(p, e.undefined, this._registeredMap._mapGet, this._map._mapGet));
++      });
++      st.defineBatch = factory(QES_DEFINE_BATCH);
++    } finally {
++      proxyFuncs.dispose();
++    }
++    st.contexts = this.context !== e ? [e, this.context] : [e];
++    this._qesState = st;
++    for (const ctx of st.contexts) qesStates.set(ctx, st);
+   }
+   /**
+    * Dispose of the arena and managed handles. This method won't dispose the VM itself, so the VM has to be disposed of manually.
+    */
+   dispose() {
+     var e, t;
++    const st = this._qesState;
++    if (st) {
++      for (const h of st.helpers.values()) h.alive && h.dispose();
++      for (const h of [st.makeProxy, st.bulkDescribe, st.findBoth, st.defineBatch]) h != null && h.alive && h.dispose();
++      st.helpers.clear(), this._qesState = void 0;
++      for (const ctx of st.contexts) qesStates.get(ctx) === st && qesStates.delete(ctx);
++    }
+     this._map.dispose(), this._registeredMap.dispose(), this._symbolHandle.dispose(), (t = (e = this.context).disposeEx) == null || t.call(e);
+   }
+   /**
+@@ -969,7 +1338,7 @@ class ve {
+   register(e, t) {
+     if (this._registeredMap.has(e)) return;
+     const r = typeof t == "string" ? this._unwrapResult(this.context.evalCode(t)) : t;
+-    this.context.sameValue(r, this.context.undefined) || (typeof t == "string" && this._registeredMapDispose.add(e), this._registeredMap.set(e, r));
++    this.context.sameValue(r, this.context.undefined) || (typeof t == "string" && this._registeredMapDispose.add(e), this._registeredMap.set(e, r) && this._qesStored.add(r));
+   }
+   /**
+    * Execute `register` methods for each pair.
+@@ -1002,22 +1371,25 @@ class ve {
+   _unwrapResult(e) {
+     if ("value" in e)
+       return e.value;
+-    throw this._unwrapIfNotSynced(e.error.consume(this._unmarshal));
++    throw this._unwrapIfNotSynced(qesConsume(e.error, this._unmarshal));
+   }
+   _unwrapResultAndUnmarshal(e) {
+     if (e)
+-      return this._unwrapIfNotSynced(this._unwrapResult(e).consume(this._unmarshal));
++      return this._unwrapIfNotSynced(qesConsume(this._unwrapResult(e), this._unmarshal));
+   }
+   _register(e, t, r = this._map, s) {
+     if (this._registeredMap.has(e) || this._registeredMap.hasHandle(t))
+       return;
+     let o = this._wrap(e);
+-    const [i] = this._wrapHandle(t), a = e instanceof Promise;
+-    if (!i || !o && !a) return;
++    const [i, created] = this._wrapHandle(t), a = e instanceof Promise;
++    if (!i || !o && !a) {
++      created && i && i.alive && i.dispose();
++      return;
++    }
+     a && (o = e);
+     const u = this._unwrap(e), [p, l] = this._unwrapHandle(t);
+     if (r.set(o, i, u, p))
+-      s && this._sync.add(u);
++      s && this._sync.add(u), this._qesStored.add(i), p && this._qesStored.add(p);
+     else throw l && p.dispose(), new Error("already registered");
+     return [o, i];
+   }
