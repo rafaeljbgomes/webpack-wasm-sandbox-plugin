@@ -52,7 +52,11 @@ HostVmMembrane -> HostCapabilities: Executes allowed\noperation
 activate HostCapabilities
 HostCapabilities --> HostVmMembrane: Result
 deactivate HostCapabilities
-HostVmMembrane --> Library: Mediated result
+alt Fresh plain-data result
+    HostVmMembrane --> Library: Copied value
+else Other host object
+    HostVmMembrane --> Library: Mediated result
+end
 deactivate HostVmMembrane
 deactivate Library
 
