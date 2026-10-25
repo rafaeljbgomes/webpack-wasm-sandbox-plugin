@@ -7,6 +7,8 @@ hide footbox
 skinparam defaultFontSize 15
 
 actor "Developer" as Developer
+participant "Capability Advisor\n(optional preparation)" as Advisor
+participant "SubQ System One API" as SubQ
 
 box "Host Environment" #f1f1f1
     participant "Sandbox\nConfiguration" as Config
@@ -20,7 +22,17 @@ box "Sandbox" #e9e9e9
     participant "Isolated\nLibrary" as Library
 end box
 
-Developer -> Config: Defines libraries\nand permissions
+opt Capability preparation
+    Developer -> Config: Selects libraries
+    Developer -> Advisor: Requests capability draft
+    Advisor -> Library: Compiles and extracts installed code evidence
+    Advisor -> SubQ: Sends bounded evidence and typed questions
+    SubQ --> Advisor: Classifications and probabilities
+    Advisor --> Developer: Editable draft and evidence report
+    Developer -> Config: Reviews and copies permissions
+end
+
+Developer -> Config: Defines reviewed libraries\nand permissions
 activate Developer
 activate Config
 Plugin -> Config: Reads isolation policy
@@ -30,7 +42,7 @@ Config --> Plugin: Configured libraries
 deactivate Config
 
 loop For each configured library
-    Plugin -> Generator: Requests proxy for\nthe exported surface
+    Plugin -> Generator: Requests proxy and\ncompiler-selected permissions
     activate Generator
     Generator -> Proxy: Creates a module compatible\nwith the expected API
     activate Proxy

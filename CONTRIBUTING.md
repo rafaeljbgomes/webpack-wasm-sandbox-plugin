@@ -37,6 +37,8 @@ npm run build:bundles
 
 The bundle build on `main` generates ten library bundles. It validates dependency resolution and proxy generation, not runtime compatibility. Benchmark workload adapters are maintained exclusively on `feat/sandbox-benchmarking` and are not part of this branch's configuration.
 
+Run `npm test` before and after every change. It runs the offline unit suite (`npm run test:unit`: sandbox runtime tests under `.sandbox/test/` and plugin tests under `webpack-sandbox-plugin/test/`) and the advisor suite. It needs no bundles or upstream suites and must leave the working tree unchanged. Build sandbox fixtures with `.sandbox/test/helpers/fixture-sandbox.mjs`, which passes explicit permissions and disposes each sandbox after its test. Give plugin tests a temporary `proxyDirectory`. Record a known limitation as a `todo` test that references its issue or specification section, not as a passing expectation.
+
 The repository intentionally does not version upstream-derived compatibility suites. After obtaining the required suites under `test-harness/<library>/`, an internal parser/planner check is available through `node --test compatibility-harness/test/parsers.test.mjs`. It does not provide sandbox-runtime regression coverage; validate runtime changes with a targeted native/sandbox compatibility campaign.
 
 ## Change the sandbox runtime

@@ -16,12 +16,14 @@ export class ProxyGenerator {
    * @param libraryData Runtime export information parsed from declarations.
    * @param libraryName Package request used to locate the isolated bundle.
    * @param workloads Workloads that share the dependency's sandbox.
+   * @param permissions Compiler-selected host capabilities, including an explicit empty policy.
    * @returns JavaScript source for the generated proxy module.
    */
   public generate(
     libraryData: LibraryData,
     libraryName: string,
     workloads: ProxyWorkload[] = [],
+    permissions: string[] = [],
   ): string {
     let content = `// Auto-generated Sandbox Proxy for ${libraryName}\n`;
     content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
@@ -43,7 +45,8 @@ export class ProxyGenerator {
     content += `// Initialize the per-library QuickJS context before exposing exports.\n`;
     content += `const librarySandbox = await SandboxManager.createSandbox(\n`;
     content += `  "${libraryName}",\n`;
-    content += `  libraryCode\n`;
+    content += `  libraryCode,\n`;
+    content += `  { permissions: ${JSON.stringify(permissions)} }\n`;
     content += `);\n\n`;
     content += `// Initialization needs a referenced job pump; steady-state Node.js usage does not.\n`;
     content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;

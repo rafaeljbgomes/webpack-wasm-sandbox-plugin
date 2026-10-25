@@ -15,12 +15,14 @@ The project explores a specific security question: can a browser application con
 - Compatibility campaigns across ten npm libraries.
 - Browser security scenarios for prototype pollution and unauthorised capability use.
 - Optional coarse-grained workload adapters in the plugin contract.
+- An optional SubQ System One preparation command that produces evidence-backed, reviewable capability drafts without changing the active policy.
 
 Performance instrumentation and its collection/analysis tools are intentionally maintained on [`feat/sandbox-benchmarking`](#performance-benchmarking). They are not part of the uninstrumented `main` runtime.
 
 ## Prerequisites
 
 - Node.js with npm. The current dependency lock is the source of truth for package versions.
+- Node.js 20 or newer for the optional capability advisor and its System One SDK transport.
 - PowerShell for the documented Windows commands.
 - Python 3 for serving the browser demonstrations.
 - A Chromium-based browser for manual browser validation.
@@ -90,9 +92,31 @@ export default {
 };
 ```
 
-- `permissions` lists host globals to expose. An empty list is the default security posture.
+- `permissions` lists host globals to expose. Omission normalizes to `[]`; malformed values fail the build. Generated proxies carry the compiler-selected permissions into the runtime, including explicit empty lists.
 - `workloads` is optional. Each entry defines code that executes inside the owning library sandbox and the functions exported through `sandbox-workload/<library>/<workload>`.
 - The runtime currently supports explicitly configured globals and a constrained `crypto` capability. Adding a name to the configuration does not automatically make an unsupported global safe or usable.
+
+## Suggested capability configuration
+
+Select libraries in the policy, then preview the optional advisor:
+
+```powershell
+npm run sandbox:suggest -- --dry-run
+```
+
+Configure `SUBQ_API_KEY` in your terminal environment to request SubQ Snap classifications, then run `npm run sandbox:suggest`. Review the timestamped report and suggested policy under ignored `capability-advisor-results/`, edit the draft, and copy reviewed permissions into the active policy before rebuilding. The advisor preserves existing permissions and workloads. Sensitive or unvalidated browser APIs remain explicit review items. Normal builds require neither a key nor an API call.
+
+See the [advisor guide](capability-advisor/README.md) for evidence handling, catalogue coverage, cache/offline options, limitations and validation. Run focused advisor regressions with `npm run test:advisor`.
+
+## Unit tests
+
+Run the fast, offline regression suite before every change:
+
+```powershell
+npm test
+```
+
+`npm test` runs `npm run test:unit` and `npm run test:advisor`. The unit suite drives the real QuickJS runtime with inline fixture libraries and compiles plugin fixtures into temporary directories. It needs no bundles, upstream suites, network, or browser, and does not write into the working tree. It currently covers sandbox lifecycle, capability exposure, the constrained crypto facade, the forward and reverse membranes, the registered marshallers, context isolation and workloads, plus the build-time path: declaration parsing, proxy generation, generated proxies run against the real runtime, policy loading, and import redirection with child bundles. Known limitations are reported as `todo` cases that do not fail the run. CI runs the same command on Ubuntu and Windows. The unit suite does not replace compatibility campaigns or browser security validation; see the [unit-suite design](docs/architecture/unit-test-suite-design.md) for scope and rollout.
 
 ## Compatibility testing
 
@@ -106,7 +130,7 @@ node compatibility-harness/run-compat.mjs --library lodash --build
 
 Use `--build` when bundles and proxies must be refreshed. Results are written to `compatibility-results/<library>/<timestamp>/` and are ignored by Git. See the [compatibility harness guide](compatibility-harness/README.md) and [testing architecture](docs/architecture/compat-testing-plan.md).
 
-The repository has no standalone sandbox-runtime regression suite at present. The following internal check validates parser behaviour and harness planning only; it does not establish correctness of the sandbox or plugin. It also requires the upstream suites to have been populated locally:
+The advisor regression suite includes focused runtime policy checks; it does not establish full sandbox correctness. The following internal check validates parser behaviour and harness planning only; it does not establish correctness of the sandbox or plugin. It also requires the upstream suites to have been populated locally:
 
 ```powershell
 node --test compatibility-harness/test/parsers.test.mjs
@@ -158,11 +182,13 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 | Path | Purpose |
 |---|---|
 | `webpack-sandbox-plugin/src/` | Webpack plugin, declaration parser, and proxy generator |
+| `webpack-sandbox-plugin/test/` | Build-time unit tests: policy loading, parsing, proxy generation, and import redirection |
 | `.sandbox/core/` | QuickJS/Arena lifecycle and capability exposure |
 | `.sandbox/membrane/` | Forward and reverse boundary wrappers |
 | `.sandbox/marshallers/` | Registered cross-runtime type conversions |
 | `.sandbox/sandbox.config.js` | Per-library permissions and optional workloads |
-| `test-sandbox-redirect/` | ESM and CommonJS redirection for compatibility suites |
+| `.sandbox/test/` | Runtime unit tests and fixture helpers |
+| `test-sandbox-redirect/` | ESM and CommonJS redirection for compatibility suites, plus shared runtime aliases |
 | `compatibility-harness/` | Campaign manifest, runners, parsers, and unit tests |
 | `lib-test/security/app/` | Isolated browser security validation application |
 | `docs/` | Developer documentation and versioned PlantUML diagrams |

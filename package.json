@@ -20,7 +20,11 @@
     "build:bundles": "webpack --config webpack.bundles.config.cjs",
     "build:lodash-test": "npm run build:bundles && npx webpack --config webpack.lodash-sandbox-test.config.cjs",
     "test:compat": "npm run build:bundles && node --import ./test-sandbox-redirect/register-sandbox.mjs --test",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "sandbox:suggest": "node capability-advisor/suggest.mjs",
+    "test:advisor": "node --test capability-advisor/test/*.test.mjs",
+    "test:unit": "node --import ./.sandbox/test/helpers/register-runtime-aliases.mjs --import tsx --test --test-timeout=30000 \".sandbox/test/*.test.mjs\" \"webpack-sandbox-plugin/test/*.test.mjs\"",
+    "test": "npm run test:unit && npm run test:advisor"
   },
   "keywords": [
     "webpack",
@@ -40,6 +44,7 @@
   "devDependencies": {
     "@types/lodash": "^4.17.24",
     "@types/luxon": "^3.7.1",
+    "@typesafe-ai/sdk": "^0.6.0",
     "ava": "^7.0.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.20",
@@ -51,8 +56,8 @@
     "marked": "^17.0.4",
     "mime": "^4.1.0",
     "patch-package": "^8.0.1",
-    "tsx": "^4.21.0",
     "strip-ansi": "^7.2.0",
+    "tsx": "^4.21.0",
     "tweetnacl": "^1.0.3",
     "validator": "^13.15.26",
     "vitest": "^4.1.0",

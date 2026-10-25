@@ -123,6 +123,17 @@ function createCryptoCapability(arena) {
 }
 
 /**
+ * Validates explicit caller policy before a QuickJS context is allocated.
+ * @param {string[]|undefined} permissions Explicit list or the legacy omission sentinel.
+ * @returns {void}
+ */
+export function validatePermissions(permissions) {
+  if (permissions !== undefined && (!Array.isArray(permissions) || permissions.some((name) => typeof name !== "string" || !name))) {
+    throw new TypeError("Sandbox permissions must be an array of nonempty strings");
+  }
+}
+
+/**
  * Iterates the permission list for libraryName, wraps each allowed host global
  * via the forward membrane, and exposes it to the arena.
  *
@@ -132,14 +143,18 @@ function createCryptoCapability(arena) {
  *
  * @param {import("quickjs-emscripten-sync").Arena} arena Target sandbox bridge.
  * @param {string} libraryName Policy key whose permissions are applied.
+ * @param {string[]} [permissions] Explicit compiler policy; omission retains the direct-call fallback.
  * @returns {void}
  */
-export function exposeWebAPIs(arena, libraryName) {
-  const config = sandboxConfig[libraryName] || { permissions: [] };
+export function exposeWebAPIs(arena, libraryName, permissions) {
+  const selectedPermissions = permissions === undefined
+    ? (sandboxConfig[libraryName]?.permissions ?? [])
+    : permissions;
+  validatePermissions(selectedPermissions);
   const exposedAPIs = {};
   const installers = [];
 
-  for (const apiName of config.permissions) {
+  for (const apiName of selectedPermissions) {
     if (apiName === "crypto") {
       const cryptoCapability = createCryptoCapability(arena);
       if (cryptoCapability) {
@@ -149,7 +164,7 @@ export function exposeWebAPIs(arena, libraryName) {
       continue;
     }
 
-    if (globalThis[apiName] !== "undefined") {
+    if (typeof globalThis[apiName] !== "undefined") {
       let rootAPI = globalThis[apiName];
       if (typeof rootAPI === "function") {
         rootAPI = makeCallable(rootAPI, globalThis);

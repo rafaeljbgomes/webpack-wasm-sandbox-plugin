@@ -63,7 +63,7 @@ python -m http.server 9000
 Each build writes `dist/bundle.js`. Keep the server running, rebuild the desired
 mode in another terminal, and reload the page after each build.
 
-`webpack.security.config.cjs` validates both `scenario` and `mode`. Native mode does not instantiate `WebpackSandboxPlugin`. Sandbox mode loads the scenario-specific build policy and replaces the runtime sandbox configuration import with the same scenario policy.
+`webpack.security.config.cjs` validates both `scenario` and `mode`. Native mode does not instantiate `WebpackSandboxPlugin`. Sandbox mode loads the scenario-specific build policy; generated proxies explicitly pass those permissions into the runtime. Its existing policy-import replacement remains for direct runtime callers using the legacy fallback.
 
 Native builds do not instantiate `WebpackSandboxPlugin`. Sandbox builds use the
 unchanged plugin behavior: read the selected configuration, resolve the package

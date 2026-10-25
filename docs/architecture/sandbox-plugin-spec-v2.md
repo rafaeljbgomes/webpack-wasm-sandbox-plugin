@@ -24,6 +24,7 @@ The Webpack-facing API is:
 ```ts
 export interface SandboxPluginOptions {
   configPath: string;
+  proxyDirectory?: string;
 }
 ```
 
@@ -36,6 +37,8 @@ new WebpackSandboxPlugin({
 ```
 
 `configPath` is resolved from `compiler.context`. The configuration module may expose its object directly or as a default export. The build fails if the policy file is missing or cannot be loaded, if it does not export a library-keyed object, or if a configured package cannot be resolved from the compiler context.
+
+`proxyDirectory` is optional and selects where generated proxy modules are written. It is resolved from the process working directory and defaults to `.sandbox/proxys`. Generated proxies import `../core/sandbox-manager.js` and read `../../dist/<library>.bundle.js` relative to themselves, so only the default location works with the repository runtime. Tests use a temporary directory so compilation leaves the working tree unchanged.
 
 ### 2.2 Library policy
 
@@ -57,12 +60,16 @@ export default {
 
 | Field | Required | Meaning |
 |---|---|---|
-| `<library>.permissions` | Yes in maintained configuration | Host global names made available to this library. Use `[]` for no host capabilities. |
+| `<library>.permissions` | Optional | Host global names made available to this library. Omission normalizes to `[]`; malformed values fail validation. |
 | `<library>.workloads` | No | Coarse-grained adapters that execute inside the same sandbox as the library. |
 | `workloads.<name>.entry` | Yes for a workload | Repository-relative JavaScript entry bundled by a child compiler. |
 | `workloads.<name>.exports` | Yes for a workload | Functions exposed by the generated workload proxy. |
 
-The plugin treats every top-level key as a library to bundle and redirect. It validates the policy-file presence, module shape, and package resolution before compilation, but does not validate a separate schema for every library option.
+The plugin treats every top-level key as a library to bundle and redirect. The shared policy loader validates file presence, module and per-library object shapes, permission lists, and package resolution before compilation. Other library options retain their existing contract.
+
+### Optional capability preparation
+
+`npm run sandbox:suggest` is a separate Node command. Its analysis plugin shares policy loading and isolated library child compilation with the runtime plugin, retains selected Webpack resolution/loader settings, and excludes the host entry and runtime proxy generation. It gathers transformed installed/transitive module evidence without evaluating emitted dependency code, asks pinned SubQ Snap (`subq-snap-1.1`) typed System One questions, and writes an editable draft and reports under an ignored result directory. Local host modules and workloads are excluded from remote evidence; incomplete, sensitive and unvalidated capability results require review. The developer edits and transfers reviewed permissions to the active policy before a normal build. See the [advisor operational guide](../../capability-advisor/README.md) for the maintained catalogue, budgets, API/cache contracts and validation limits. Preparation adds no runtime model dependency.
 
 ## 3. Build-time architecture
 
@@ -90,6 +97,8 @@ During the compiler's asynchronous `make` hook, the plugin creates a Webpack chi
 - enables Webpack's `var` library output;
 - writes `dist/<library>.bundle.js`;
 - assigns the package export to the QuickJS-side global `__SANDBOXED_LIB__`.
+
+The entry is resolved with Node.js resolution, so a package-level `browser` entry is not bundled. Modules inside the package are resolved by the inherited Webpack resolver, so for a web target a `browser` map of internal files still selects the browser file. This known limitation is recorded as a `todo` case in the unit suite.
 
 Webpack documents a child compiler as a second compiler with its own settings created within the parent compilation. In this prototype, child compilation separates the library asset from the host application bundle; runtime execution in QuickJS creates the actual isolation boundary.
 
@@ -121,7 +130,9 @@ Generated proxies use top-level await and run in both Node.js and browsers.
 4. In Node.js, call `unrefPump()` after initialization so the job-pump timer alone does not keep the process alive.
 5. Export wrappers derived from the declarations.
 
-Named functions route calls through a precompiled QuickJS call expression. Classes use `librarySandbox.createInstance()` so construction and instance identity remain inside QuickJS before the returned proxy is created. Callable singleton exports receive `apply`, `get`, and `construct` traps. Other named values are read from `librarySandbox.exports`.
+Named functions route calls through a precompiled QuickJS call expression. Classes use `librarySandbox.createInstance()` so construction and instance identity remain inside QuickJS before the returned proxy is created. Callable singleton exports receive `apply`, `get`, and `construct` traps. The `construct` trap calls the value without `new`, so an `export =` class cannot currently be constructed through its proxy. Other named values are read from `librarySandbox.exports`.
+
+The parser also reports interfaces and type aliases as export names. Their generated bindings are `undefined`, and a type name can be chosen as the default-export constructor fallback. Both limitations are recorded as `todo` cases in the unit suite.
 
 Every generated library proxy exposes `disposeLibrary()`. Applications that create and discard sandboxes dynamically must call it; otherwise the QuickJS context, Arena, helper functions, and job-pump interval remain allocated.
 
@@ -151,7 +162,7 @@ Disposal clears the interval, disposes all registered marshallers and precompile
 
 ## 6. Capability exposure and forward membrane
 
-`exposeWebAPIs()` reads the selected library's `permissions` list. Ordinary globals are obtained from `globalThis`, wrapped, synchronized through Arena, and exposed under the same name.
+Generated proxies serialize the compiler-selected permissions into `SandboxManager.createSandbox(libraryName, libraryCode, { permissions })`. Both synchronous and asynchronous runtime paths forward an explicit list to `exposeWebAPIs()`. An explicit empty list never falls back to another policy. Direct runtime callers omitting `options.permissions` retain the default policy-module fallback. Ordinary globals are obtained from `globalThis`, wrapped, synchronized through Arena, and exposed under the same name; absent host globals are skipped.
 
 The forward membrane in `forward-membrane.js` protects host receiver semantics:
 
@@ -193,7 +204,7 @@ Values that already have supported value semantics—arrays, typed arrays, `Arra
 | `typed-array.js` | Copies typed-array view bytes and preserves the concrete typed-array constructor. Raw `ArrayBuffer` is not claimed by this custom marshaller. |
 | `regexp.js` | Preserves pattern source and flags. |
 | `arguments.js` | Tags and recreates arguments-like values. |
-| `error.js` | Recreates supported host/QuickJS error constructors and copies message, stack, cause, and bounded JSON-safe custom fields. |
+| `error.js` | Recreates supported host/QuickJS error constructors for returned and argument errors. It copies `name`, `message`, `stack` and bounded JSON-safe values of `errors`, `inner`, `path`, `type`, `value`, `params` and `issues`. `cause` and other custom fields are not copied. Thrown QuickJS errors reach the host as Arena unwrap errors that carry these fields but are not instances of the host subclass. |
 
 Each marshaller implements `isWrappable`, `isHandleWrappable`, `marshal`, `unmarshal`, and `dispose`. Arena uses the first applicable custom conversion; a marshaller file that is not imported and registered in `index.js` is inactive.
 

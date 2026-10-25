@@ -4,19 +4,17 @@ import { Compiler, NormalModuleReplacementPlugin } from "webpack";
 import { ProxyGenerator } from "./proxy-generator";
 import { Parser } from "./core/parser";
 import { findAllDtsFiles } from "./utils/file-utils";
+import { compileLibrary, loadSandboxPolicy, WorkloadConfig } from "./build-helpers";
 
 /** Configuration accepted by {@link WebpackSandboxPlugin}. */
 export interface SandboxPluginOptions {
   /** Path to the sandbox policy, resolved from the Webpack compiler context. */
   configPath: string;
-}
-
-/** Workload definition read from a library's sandbox policy. */
-interface WorkloadConfig {
-  /** Project-relative module bundled and evaluated inside the library sandbox. */
-  entry: string;
-  /** Named workload exports exposed through the generated workload proxy. */
-  exports: string[];
+  /**
+   * Directory for generated proxy modules. Defaults to `.sandbox/proxys`
+   * under the process working directory; tests pass a temporary directory.
+   */
+  proxyDirectory?: string;
 }
 
 /** Workload definition enriched with its owning library and policy key. */
@@ -46,11 +44,14 @@ export class WebpackSandboxPlugin {
   /**
    * Creates a plugin instance and selects the generated-proxy directory.
    *
-   * @param options Sandbox policy location.
+   * @param options Sandbox policy location and optional proxy directory.
    */
   constructor(options: SandboxPluginOptions) {
     this.options = options;
-    this.sandboxCacheDir = path.resolve(process.cwd(), ".sandbox/proxys");
+    this.sandboxCacheDir = path.resolve(
+      process.cwd(),
+      options.proxyDirectory ?? ".sandbox/proxys",
+    );
   }
 
   /**
@@ -68,45 +69,8 @@ export class WebpackSandboxPlugin {
     let configuredLibraries: string[] = [];
     let configuredWorkloads: ConfiguredWorkload[] = [];
 
-    if (!fs.existsSync(configPath)) {
-      throw new Error(
-        `[SandboxPlugin] Sandbox policy file was not found at ${configPath}`,
-      );
-    }
-
-    let sandboxConfig: Record<string, { workloads?: Record<string, WorkloadConfig> }>;
-    try {
-      const configModule = require(configPath);
-      // Webpack configurations may load the policy through either module shape.
-      sandboxConfig = configModule.default || configModule;
-    } catch (error) {
-      throw new Error(
-        `[SandboxPlugin] Failed to load sandbox policy at ${configPath}`,
-        { cause: error },
-      );
-    }
-
-    if (
-      typeof sandboxConfig !== "object" ||
-      sandboxConfig === null ||
-      Array.isArray(sandboxConfig)
-    ) {
-      throw new Error(
-        `[SandboxPlugin] Sandbox policy at ${configPath} must export an object keyed by library name`,
-      );
-    }
-
+    const sandboxConfig = loadSandboxPolicy(configPath, compiler.context);
     configuredLibraries = Object.keys(sandboxConfig);
-    for (const libraryName of configuredLibraries) {
-      try {
-        require.resolve(libraryName, { paths: [compiler.context] });
-      } catch (error) {
-        throw new Error(
-          `[SandboxPlugin] Configured sandbox library could not be resolved: ${libraryName}`,
-          { cause: error },
-        );
-      }
-    }
 
     configuredWorkloads = configuredLibraries.flatMap((libraryName) => {
       const workloads = sandboxConfig[libraryName]?.workloads ?? {};
@@ -131,6 +95,7 @@ export class WebpackSandboxPlugin {
         this.generateProxyForLibrary(
           libName,
           compiler.context,
+          sandboxConfig[libName].permissions,
           configuredWorkloads.filter(
             (workload) => workload.libraryName === libName,
           ),
@@ -181,71 +146,9 @@ export class WebpackSandboxPlugin {
     compiler.hooks.make.tapAsync(
       "WebpackSandboxPlugin",
       (compilation, callback) => {
-        const libraryBundlePromises = configuredLibraries.map((libName) => {
-          return new Promise<void>((resolve, reject) => {
-            const outputOptions = {
-              filename: `${libName}.bundle.js`,
-              path: path.resolve(compiler.options.output.path || "dist"),
-              library: {
-                type: "var" as const,
-                name: "__SANDBOXED_LIB__",
-              },
-            };
-
-            const { EnableLibraryPlugin } = compiler.webpack.library;
-
-            const childCompiler = compilation.createChildCompiler(
-              `SandboxCompiler-${libName}`,
-              outputOptions,
-              [new EnableLibraryPlugin("var")],
-            );
-
-            let libEntryPath;
-            try {
-              libEntryPath = require.resolve(libName, {
-                paths: [compiler.context],
-              });
-            } catch (err) {
-              reject(
-                new Error(
-                  `[SandboxPlugin] Configured sandbox library could not be resolved: ${libName}`,
-                  { cause: err },
-                ),
-              );
-              return;
-            }
-
-            const EntryPlugin = compiler.webpack.EntryPlugin;
-            new EntryPlugin(compiler.context, libEntryPath, {
-              name: libName,
-            }).apply(childCompiler);
-
-            childCompiler.runAsChild((err, entries, childCompilation) => {
-              if (err) {
-                console.error(
-                  `[SandboxPlugin] Child compiler error for ${libName}:`,
-                  err,
-                );
-                reject(err);
-              } else if (
-                childCompilation &&
-                childCompilation.errors &&
-                childCompilation.errors.length > 0
-              ) {
-                console.error(
-                  `[SandboxPlugin] Child compilation errors for ${libName}:`,
-                  childCompilation.errors,
-                );
-                reject(childCompilation.errors[0]);
-              } else {
-                console.log(
-                  `[SandboxPlugin] Successfully built isolated bundle for ${libName}`,
-                );
-                resolve();
-              }
-            });
-          });
-        });
+        const libraryBundlePromises = configuredLibraries.map((libName) =>
+          compileLibrary(compiler, compilation, libName),
+        );
         const workloadBundlePromises = configuredWorkloads.map((workload) => {
           return new Promise<void>((resolve, reject) => {
             const bundleName = `${workload.libraryName}.${workload.workloadName}.workload.bundle.js`;
@@ -326,11 +229,13 @@ export class WebpackSandboxPlugin {
    *
    * @param libraryName Package request configured for isolation.
    * @param context Webpack project context used for module resolution.
+   * @param permissions Compiler-selected host capabilities.
    * @param workloads Workloads sharing the library's QuickJS context.
    */
   private generateProxyForLibrary(
     libraryName: string,
     context: string,
+    permissions: string[],
     workloads: ConfiguredWorkload[] = [],
   ) {
     const proxyPath = path.resolve(
@@ -379,7 +284,7 @@ export class WebpackSandboxPlugin {
     const libraryData = parser.parse();
 
     const generator = new ProxyGenerator();
-    const proxyContent = generator.generate(libraryData, libraryName, workloads);
+    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions);
 
     fs.writeFileSync(proxyPath, proxyContent);
     console.log(

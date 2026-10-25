@@ -1,7 +1,7 @@
 import { getQuickJSSync, newQuickJSAsyncWASMModule } from "quickjs-emscripten";
 import { Arena } from "quickjs-emscripten-sync";
 import { createArenaConfig } from "../marshallers/index.js";
-import { exposeWebAPIs } from "./webapi-exposure.js";
+import { exposeWebAPIs, validatePermissions } from "./webapi-exposure.js";
 import {
   bindSandboxExport,
   maybeWrapResult,
@@ -17,14 +17,14 @@ export { bindWebApi } from "../membrane/forward-membrane.js";
  * @param {import("quickjs-emscripten").QuickJSContext} vm QuickJS context owned by the sandbox.
  * @param {string} libraryName Policy key for the isolated dependency.
  * @param {string} libraryCode Bundled dependency source that defines `__SANDBOXED_LIB__`.
- * @param {object} [options] Optional workload definitions loaded into the same context.
+ * @param {object} [options] Optional explicit permissions and workload definitions loaded into the same context.
  * @returns {object} Sandbox exports, workload access, boundary helpers, and lifecycle controls.
  */
 function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   const { arenaOptions, dispose: disposeMarshallers } = createArenaConfig(vm);
   const arena = new Arena(vm, arenaOptions);
 
-  exposeWebAPIs(arena, libraryName);
+  exposeWebAPIs(arena, libraryName, options.permissions);
 
   // The child bundle publishes its exports through this agreed global.
   const libExports = arena.evalCode(`${libraryCode}; __SANDBOXED_LIB__;`);
@@ -156,10 +156,11 @@ export class SandboxManager {
    *
    * @param {string} libraryName Policy key for the isolated dependency.
    * @param {string} libraryCode Bundled dependency source.
-   * @param {object} [options] Optional workload definitions.
+   * @param {object} [options] Optional explicit permissions and workload definitions.
    * @returns {object} Initialized sandbox runtime.
    */
   static createSandboxSync(libraryName, libraryCode, options = {}) {
+    validatePermissions(options.permissions);
     const qjs = getQuickJSSync();
     const sandbox = buildSandbox(
       qjs.newContext(),
@@ -175,10 +176,11 @@ export class SandboxManager {
    *
    * @param {string} libraryName Policy key for the isolated dependency.
    * @param {string} libraryCode Bundled dependency source.
-   * @param {object} [options] Optional workload definitions.
+   * @param {object} [options] Optional explicit permissions and workload definitions.
    * @returns {Promise<object>} Initialized sandbox runtime.
    */
   static async createSandbox(libraryName, libraryCode, options = {}) {
+    validatePermissions(options.permissions);
     const qjs = await newQuickJSAsyncWASMModule();
     const sandbox = buildSandbox(
       qjs.newContext(),
