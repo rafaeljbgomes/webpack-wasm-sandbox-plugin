@@ -44,6 +44,49 @@ const EXTRA_ERROR_FIELDS = [
   "issues",
 ];
 
+/** QuickJS predicate used by both the standalone check and the classifier. */
+const ERROR_TEST = "h instanceof Error";
+
+/** QuickJS source that copies standard and supported custom Error fields. */
+const QUICKJS_ERROR_PAYLOAD = `(err) => {
+  const fields = ${JSON.stringify(EXTRA_ERROR_FIELDS)};
+  const seen = new Set();
+  /** Copies a bounded JSON-compatible field within QuickJS. */
+  function copy(value, depth = 0) {
+    if (value === null || value === undefined) return value;
+    const valueType = typeof value;
+    if (valueType === "string" || valueType === "number" || valueType === "boolean") return value;
+    if (valueType === "bigint") return String(value);
+    if (valueType === "symbol" || valueType === "function") return undefined;
+    if (depth > 4 || seen.has(value)) return undefined;
+    seen.add(value);
+    if (value instanceof Error) return copyError(value, depth + 1);
+    if (value instanceof Set) return Array.from(value).slice(0, 100).map((entry) => copy(entry, depth + 1));
+    if (value instanceof Map) return Array.from(value).slice(0, 100).map(([key, entry]) => [copy(key, depth + 1), copy(entry, depth + 1)]);
+    if (Array.isArray(value)) return value.slice(0, 100).map((entry) => copy(entry, depth + 1));
+    const proto = Object.getPrototypeOf(value);
+    if (proto !== Object.prototype && proto !== null) return String(value);
+    const output = {};
+    for (const key of Object.keys(value).slice(0, 50)) {
+      const copied = copy(value[key], depth + 1);
+      if (copied !== undefined) output[key] = copied;
+    }
+    return output;
+  }
+  /** Extracts supported fields from a QuickJS Error. */
+  function copyError(error, depth = 0) {
+    const output = { name: error.name, message: error.message, stack: error.stack };
+    for (const key of fields) {
+      if (key in error) {
+        const copied = copy(error[key], depth + 1);
+        if (copied !== undefined) output[key] = copied;
+      }
+    }
+    return output;
+  }
+  return copyError(err);
+}`;
+
 /**
  * Produces a bounded, cycle-safe representation of an error field.
  *
@@ -138,16 +181,51 @@ function applyErrorPayload(error, payload) {
  */
 export function createErrorMarshaller(vm) {
   const isErrorInVM = vm.unwrapResult(
-    vm.evalCode("(h) => h instanceof Error"),
+    vm.evalCode(`(h) => ${ERROR_TEST}`),
   );
 
   let creator = null;
-  let getName = null;
-  let getMessage = null;
-  let getStack = null;
   let getPayload = null;
 
+  /**
+   * Reconstructs a host Error from a handle already known to be a QuickJS Error.
+   *
+   * The QuickJS payload already carries `name`, `message`, and `stack`, so one
+   * crossing replaces the separate per-field reads.
+   *
+   * @param {import("quickjs-emscripten").QuickJSHandle} handle QuickJS Error.
+   * @param {import("quickjs-emscripten").QuickJSContext} ctx Owning context.
+   * @returns {Error} Host Error of the corresponding subclass.
+   */
+  function copyOut(handle, ctx) {
+    getPayload ??= ctx.unwrapResult(ctx.evalCode(QUICKJS_ERROR_PAYLOAD));
+    const payloadHandle = ctx.unwrapResult(
+      ctx.callFunction(getPayload, ctx.undefined, handle),
+    );
+    const payload = ctx.dump(payloadHandle) || {};
+    payloadHandle.dispose();
+
+    const name = payload.name || "Error";
+    const message = payload.message || "";
+    const stack = payload.stack || "";
+
+    const ErrorCtor = getHostErrorCtor(name);
+    const error =
+      name === "AggregateError" && typeof AggregateError === "function" && ErrorCtor === AggregateError
+        ? new ErrorCtor([], message)
+        : new ErrorCtor(message);
+
+    try { error.name = name; } catch (_e) {}
+    if (typeof stack === "string" && stack.length > 0) {
+      try { error.stack = stack; } catch (_e) {}
+    }
+    return applyErrorPayload(error, payload);
+  }
+
   return {
+    /** QuickJS expression over `h` used by the combined Arena classifier. */
+    handleTest: ERROR_TEST,
+
     /** Prevents Arena from proxy-wrapping host Error instances. */
     isWrappable(value) {
       return !isErrorLike(value);
@@ -159,7 +237,7 @@ export function createErrorMarshaller(vm) {
       const result = ctx.unwrapResult(
         ctx.callFunction(isErrorInVM, ctx.undefined, handle),
       );
-      const isErr = ctx.dump(result);
+      const isErr = ctx.getNumber(result) !== 0;
       result.dispose();
       return !isErr;
     },
@@ -205,101 +283,17 @@ export function createErrorMarshaller(vm) {
 
     /** Reconstructs a QuickJS Error as the corresponding host subclass. */
     unmarshal(handle, ctx) {
-      if (ctx.typeof(handle) !== "object") return undefined;
-
-      const checkResult = ctx.unwrapResult(
-        ctx.callFunction(isErrorInVM, ctx.undefined, handle),
-      );
-      const isErr = ctx.dump(checkResult);
-      checkResult.dispose();
-      if (!isErr) return undefined;
-
-      if (!getName) {
-        getName = ctx.unwrapResult(ctx.evalCode("(h) => h.name"));
-        getMessage = ctx.unwrapResult(ctx.evalCode("(h) => h.message"));
-        getStack = ctx.unwrapResult(ctx.evalCode("(h) => h.stack"));
-        getPayload = ctx.unwrapResult(ctx.evalCode(`(err) => {
-          const fields = ["errors", "inner", "path", "type", "value", "params", "issues"];
-          const seen = new Set();
-          /** Copies a bounded JSON-compatible field within QuickJS. */
-          function copy(value, depth = 0) {
-            if (value === null || value === undefined) return value;
-            const valueType = typeof value;
-            if (valueType === "string" || valueType === "number" || valueType === "boolean") return value;
-            if (valueType === "bigint") return String(value);
-            if (valueType === "symbol" || valueType === "function") return undefined;
-            if (depth > 4 || seen.has(value)) return undefined;
-            seen.add(value);
-            if (value instanceof Error) return copyError(value, depth + 1);
-            if (value instanceof Set) return Array.from(value).slice(0, 100).map((entry) => copy(entry, depth + 1));
-            if (value instanceof Map) return Array.from(value).slice(0, 100).map(([key, entry]) => [copy(key, depth + 1), copy(entry, depth + 1)]);
-            if (Array.isArray(value)) return value.slice(0, 100).map((entry) => copy(entry, depth + 1));
-            const proto = Object.getPrototypeOf(value);
-            if (proto !== Object.prototype && proto !== null) return String(value);
-            const output = {};
-            for (const key of Object.keys(value).slice(0, 50)) {
-              const copied = copy(value[key], depth + 1);
-              if (copied !== undefined) output[key] = copied;
-            }
-            return output;
-          }
-          /** Extracts supported fields from a QuickJS Error. */
-          function copyError(error, depth = 0) {
-            const output = { name: error.name, message: error.message, stack: error.stack };
-            for (const key of fields) {
-              if (key in error) {
-                const copied = copy(error[key], depth + 1);
-                if (copied !== undefined) output[key] = copied;
-              }
-            }
-            return output;
-          }
-          return copyError(err);
-        }`));
-      }
-
-      const nameHandle = ctx.unwrapResult(
-        ctx.callFunction(getName, ctx.undefined, handle),
-      );
-      const messageHandle = ctx.unwrapResult(
-        ctx.callFunction(getMessage, ctx.undefined, handle),
-      );
-      const stackHandle = ctx.unwrapResult(
-        ctx.callFunction(getStack, ctx.undefined, handle),
-      );
-      const payloadHandle = ctx.unwrapResult(
-        ctx.callFunction(getPayload, ctx.undefined, handle),
-      );
-
-      const name = ctx.dump(nameHandle) || "Error";
-      const message = ctx.dump(messageHandle) || "";
-      const stack = ctx.dump(stackHandle) || "";
-      const payload = ctx.dump(payloadHandle) || {};
-      nameHandle.dispose();
-      messageHandle.dispose();
-      stackHandle.dispose();
-      payloadHandle.dispose();
-
-      const ErrorCtor = getHostErrorCtor(name);
-      const error =
-        name === "AggregateError" && typeof AggregateError === "function" && ErrorCtor === AggregateError
-          ? new ErrorCtor([], message)
-          : new ErrorCtor(message);
-
-      try { error.name = name; } catch (_e) {}
-      if (typeof stack === "string" && stack.length > 0) {
-        try { error.stack = stack; } catch (_e) {}
-      }
-      return applyErrorPayload(error, payload);
+      if (this.isHandleWrappable(handle, ctx)) return undefined;
+      return copyOut(handle, ctx);
     },
+
+    /** Reconstructs a handle that the combined classifier already claimed. */
+    unmarshalClaimed: copyOut,
 
     /** Releases every QuickJS detector, constructor, and property reader. */
     dispose() {
       if (isErrorInVM.alive) isErrorInVM.dispose();
       if (creator && creator.alive) creator.dispose();
-      if (getName && getName.alive) getName.dispose();
-      if (getMessage && getMessage.alive) getMessage.dispose();
-      if (getStack && getStack.alive) getStack.dispose();
       if (getPayload && getPayload.alive) getPayload.dispose();
     },
   };
