@@ -94,11 +94,25 @@ test("bindWebApi exposes prototype methods bound to the native owner", () => {
   assert.equal(wrapper.format(1234.5), "1,234.5");
 });
 
-test("bindWebApi assignments write through to the host object", () => {
+test("bindWebApi assignments of primitives write through to the host object", () => {
   const target = { mode: "a" };
   const wrapper = bindWebApi(target);
-  wrapper.mode = "b";
-  assert.equal(target.mode, "b");
+  for (const value of ["b", 2, true, 3n, Symbol.iterator, null, undefined]) {
+    wrapper.mode = value;
+    assert.equal(target.mode, value);
+  }
+});
+
+test("bindWebApi rejects function and object assignments and leaves the host unchanged", () => {
+  const target = { mode: "a" };
+  const wrapper = bindWebApi(target);
+  for (const value of [() => "planted", { value: 1 }, [1], new Uint8Array(1), wrapper]) {
+    assert.throws(() => { wrapper.mode = value; }, {
+      name: "TypeError",
+      message: /only assign primitive values to host property "mode"/,
+    });
+  }
+  assert.equal(target.mode, "a");
 });
 
 test("an exposed host object keeps its native receiver inside QuickJS", async (t) => {
@@ -134,6 +148,19 @@ test("QuickJS writes to an exposed host object reach the host", async (t) => {
   });
   assert.equal(sandbox.exports.set(), "b");
   assert.equal(settings.mode, "b");
+});
+
+test("QuickJS can catch a rejected function write to an exposed host object", async (t) => {
+  const settings = { mode: "a", onChange: null };
+  const sandbox = await createFixtureSandbox(t, `
+    return {
+      set: () => {
+        try { TestSettings.onChange = () => "planted"; return null; } catch (e) { return [e.name, TestSettings.onChange]; }
+      },
+    };
+  `, { permissions: [defineHostGlobal(t, "TestSettings", settings)] });
+  assert.deepEqual(sandbox.exports.set(), ["TypeError", null]);
+  assert.equal(settings.onChange, null);
 });
 
 test("a self-referencing exposed object keeps its identity inside QuickJS", async (t) => {

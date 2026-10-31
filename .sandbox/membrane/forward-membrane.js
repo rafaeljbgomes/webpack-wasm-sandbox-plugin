@@ -2,6 +2,27 @@ import { isTypedArrayView, REQUIRES_NEW_RE, sandboxDisposedError } from "../core
 import { isPlainJsonGraph } from "../core/json-transfer.js";
 
 /**
+ * Rejects a value that QuickJS may not store in a host property.
+ *
+ * A granted host object is one object for every sandbox that receives it, so
+ * whatever one sandbox writes into it is read by the others. A function or an
+ * object written from QuickJS is an Arena handle (or the writer's own wrapper)
+ * that runs the writer's code when a sibling calls it or reads through it.
+ * Primitives carry no behaviour and no live reference, so only they write
+ * through.
+ *
+ * @param {unknown} value Value assigned inside QuickJS.
+ * @param {string} key Host property being assigned.
+ * @returns {void}
+ * @throws {TypeError} When the value is a function or an object.
+ */
+function assertInertHostValue(value, key) {
+  if (value !== null && (typeof value === "object" || typeof value === "function")) {
+    throw new TypeError(`Sandboxed code can only assign primitive values to host property "${key}"`);
+  }
+}
+
+/**
  * Creates the forward membrane owned by one sandbox.
  *
  * Wrappers are cached per sandbox, not per process. A wrapper is a mutable host
@@ -116,9 +137,10 @@ export function createForwardMembrane({ offerJsonTransfer } = {}) {
           Object.defineProperty(boundObject, key, {
             /** Reads and recursively wraps the current host property value. */
             get: () => bindWebApi(apiObject[key]),
-            /** Applies an allowed assignment to the underlying host object. */
+            /** Writes a primitive through to the host object; rejects anything else. */
             set: (val) => {
               liveCache();
+              assertInertHostValue(val, key);
               apiObject[key] = val;
             },
           });
