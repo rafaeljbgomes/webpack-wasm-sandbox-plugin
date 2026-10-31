@@ -1,33 +1,7 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
 import { SandboxManager } from "../core/sandbox-manager.js";
-import { createFixtureSandbox, createFixtureSandboxSync, fixtureBundle } from "./helpers/fixture-sandbox.mjs";
-
-const hookUrl = new URL("./helpers/register-runtime-aliases.mjs", import.meta.url).href;
-const managerUrl = new URL("../core/sandbox-manager.js", import.meta.url).href;
-const projectRoot = fileURLToPath(new URL("../../", import.meta.url));
-
-/**
- * Runs an ES module snippet in a fresh Node.js process so process-wide state
- * (the shared QuickJS module, event-loop handles) starts empty.
- *
- * @param {string} source Module source; `SandboxManager` and `fixtureBundle` are in scope.
- * @returns {{status: number|null, stdout: string, stderr: string}} Process outcome.
- */
-function runIsolated(source) {
-  const prelude = [
-    `import { SandboxManager } from ${JSON.stringify(managerUrl)};`,
-    `const fixtureBundle = ${fixtureBundle.toString()};`,
-  ].join("\n");
-  const result = spawnSync(
-    process.execPath,
-    ["--import", hookUrl, "--input-type=module", "-e", `${prelude}\n${source}`],
-    { cwd: projectRoot, encoding: "utf8", timeout: 30_000 },
-  );
-  return { status: result.status, stdout: result.stdout, stderr: result.stderr };
-}
+import { createFixtureSandbox, createFixtureSandboxSync, fixtureBundle, runIsolated } from "./helpers/fixture-sandbox.mjs";
 
 test("asynchronous creation evaluates the bundle and binds its exports", async (t) => {
   const sandbox = await createFixtureSandbox(t, "return { add: (a, b) => a + b, label: 'fixture' };");

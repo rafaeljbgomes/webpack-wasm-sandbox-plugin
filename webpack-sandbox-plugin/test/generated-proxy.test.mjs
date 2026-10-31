@@ -248,5 +248,6 @@ test("disposeLibrary() releases the sandbox and later calls fail", async (t) => 
 
   proxy.disposeLibrary();
 
-  assert.throws(() => proxy.add(1, 1), { name: "QuickJSUseAfterFree" });
+  // The membrane rejects the call before it reaches the released context.
+  assert.throws(() => proxy.add(1, 1), { message: /sandbox has been disposed/ });
 });

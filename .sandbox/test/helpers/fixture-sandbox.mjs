@@ -6,8 +6,14 @@
  * bundling, `dist/`, or upstream suites.
  */
 
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { getQuickJS } from "quickjs-emscripten";
 import { SandboxManager } from "../../core/sandbox-manager.js";
+
+const hookUrl = new URL("./register-runtime-aliases.mjs", import.meta.url).href;
+const managerUrl = new URL("../../core/sandbox-manager.js", import.meta.url).href;
+const projectRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
 /**
  * Wraps a fixture body in the child-bundle global contract.
@@ -100,4 +106,26 @@ export async function createFixtureSandboxSync(t, body, options = {}) {
     workloads,
   });
   return ownSandbox(t, sandbox);
+}
+
+/**
+ * Runs an ES module snippet in a fresh Node.js process so process-wide state
+ * (the shared QuickJS module, event-loop handles, the heap) starts empty.
+ *
+ * @param {string} source Module source; `SandboxManager` and `fixtureBundle` are in scope.
+ * @param {object} [options] Child process options.
+ * @param {string[]} [options.execArgv] Extra Node.js flags, such as `--expose-gc`.
+ * @returns {{status: number|null, stdout: string, stderr: string}} Process outcome.
+ */
+export function runIsolated(source, { execArgv = [] } = {}) {
+  const prelude = [
+    `import { SandboxManager } from ${JSON.stringify(managerUrl)};`,
+    `const fixtureBundle = ${fixtureBundle.toString()};`,
+  ].join("\n");
+  const result = spawnSync(
+    process.execPath,
+    [...execArgv, "--import", hookUrl, "--input-type=module", "-e", `${prelude}\n${source}`],
+    { cwd: projectRoot, encoding: "utf8", timeout: 30_000 },
+  );
+  return { status: result.status, stdout: result.stdout, stderr: result.stderr };
 }
