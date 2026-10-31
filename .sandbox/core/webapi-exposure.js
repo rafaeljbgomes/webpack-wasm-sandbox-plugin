@@ -1,5 +1,4 @@
 import sandboxConfig from "../sandbox.config.js";
-import { bindWebApi, makeCallable } from "../membrane/forward-membrane.js";
 
 const INTEGER_TYPED_ARRAY_NAMES = new Set([
   "Int8Array",
@@ -135,7 +134,7 @@ export function validatePermissions(permissions) {
 
 /**
  * Iterates the permission list for libraryName, wraps each allowed host global
- * via the forward membrane, and exposes it to the arena.
+ * via the sandbox's own forward membrane, and exposes it to the arena.
  *
  * Functions (constructors like TextEncoder, Crypto) go through makeCallable so
  * the Arena can invoke them without `new`. Plain objects go through bindWebApi
@@ -143,10 +142,12 @@ export function validatePermissions(permissions) {
  *
  * @param {import("quickjs-emscripten-sync").Arena} arena Target sandbox bridge.
  * @param {string} libraryName Policy key whose permissions are applied.
- * @param {string[]} [permissions] Explicit compiler policy; omission retains the direct-call fallback.
+ * @param {string[]|undefined} permissions Explicit compiler policy; omission retains the direct-call fallback.
+ * @param {{makeCallable: Function, bindWebApi: Function}} forwardMembrane Wrapper factory owned by the same sandbox as `arena`.
  * @returns {void}
  */
-export function exposeWebAPIs(arena, libraryName, permissions) {
+export function exposeWebAPIs(arena, libraryName, permissions, forwardMembrane) {
+  const { bindWebApi, makeCallable } = forwardMembrane;
   const selectedPermissions = permissions === undefined
     ? (sandboxConfig[libraryName]?.permissions ?? [])
     : permissions;

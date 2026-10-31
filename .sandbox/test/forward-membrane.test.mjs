@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { bindWebApi, makeCallable } from "../membrane/forward-membrane.js";
+import { createForwardMembrane } from "../membrane/forward-membrane.js";
 import { REQUIRES_NEW_RE } from "../core/sb-utils.js";
 import { createFixtureSandbox, defineHostGlobal } from "./helpers/fixture-sandbox.mjs";
+
+// Unit cases share one membrane, as the forward membrane of a single sandbox.
+const { bindWebApi, makeCallable } = createForwardMembrane();
 
 /** Host class whose methods only work on the real receiver. */
 class HostCounter {

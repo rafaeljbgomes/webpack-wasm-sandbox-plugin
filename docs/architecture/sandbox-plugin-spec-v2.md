@@ -154,18 +154,20 @@ Both paths delegate to `buildSandbox()` and create a new QuickJS context for the
 1. memoizes `vm.typeof()` per handle, because a handle's QuickJS type cannot change;
 2. removes the QuickJS context reference from errors raised by `vm.unwrapResult()`, so error serializers cannot reach the WebAssembly heap;
 3. installs the job pump's observers on the context entry points `callFunction`, `evalCode`, `getProp`, and `setProp`;
-4. creates the registered Arena marshaller configuration;
-5. creates an Arena for the QuickJS context;
-6. exposes configured host capabilities;
-7. evaluates the library bundle and reads `__SANDBOXED_LIB__`;
-8. precompiles helpers for temporary-object storage, method calls, property reads, and construction;
-9. evaluates and binds a workload bundle when its generated workload proxy first requests it;
-10. wraps the library exports through the reverse membrane;
-11. starts the job pump's 10 ms fallback interval.
+4. creates this sandbox's by-value transfer offers and forward membrane (§6.2);
+5. creates the registered Arena marshaller configuration, connected to the same transfer offers;
+6. creates an Arena for the QuickJS context;
+7. exposes configured host capabilities through the sandbox's forward membrane;
+8. evaluates the library bundle and reads `__SANDBOXED_LIB__`;
+9. precompiles helpers for temporary-object storage, method calls, property reads, and construction;
+10. creates this sandbox's reverse membrane over the Arena and helpers;
+11. evaluates and binds a workload bundle when its generated workload proxy first requests it;
+12. wraps the library exports through the reverse membrane;
+13. starts the job pump's 10 ms fallback interval.
 
 The job pump exists because Promise reactions queued inside QuickJS do not run automatically from the host event loop. After any observed context entry, the pump schedules one host microtask that calls `arena.executePendingJobs()` when `vm.runtime.hasPendingJob()` is true, so sandboxed `async` code settles before host timers run and an awaited sandbox Promise needs no live timer handle. The fallback interval covers uninstrumented entry points. It remains referenced during top-level-await initialization and is unreferenced afterwards only in Node-generated proxies.
 
-Disposal stops the job pump, disposes all registered marshallers and precompiled helpers, then disposes the Arena and QuickJS context. Any new handle or helper introduced by a runtime change must participate in this lifecycle.
+Disposal stops the job pump, releases the reverse and forward membrane state, disposes all registered marshallers and precompiled helpers, then disposes the Arena and QuickJS context. Releasing the membranes first means a host wrapper that outlives the sandbox fails with `The sandbox has been disposed` instead of reaching the released context, and the sandbox no longer retains wrappers for host values that outlive it. Any new handle or helper introduced by a runtime change must participate in this lifecycle.
 
 ### 5.1 Patched Arena boundary
 
@@ -187,11 +189,11 @@ The forward membrane in `forward-membrane.js` protects host receiver semantics:
 - `bindWebApi()` walks own properties and the prototype chain up to `Object.prototype`;
 - functions are rebound to their real owner through `makeCallable()`;
 - nested values are wrapped lazily through accessors;
-- a `WeakMap` preserves repeated references and handles cycles;
+- a `WeakMap` owned by the sandbox preserves repeated references and handles cycles;
 - constructor-only host functions first receive `Reflect.apply`; recognized constructor errors trigger `Reflect.construct`;
 - a fresh call result that is plain JSON data (arrays, plain or null-prototype objects, strings, booleans, finite numbers other than `-0`, and `null`, without accessors, holes, shared references, or more than 10,000 nodes) is copied into QuickJS by value instead of being wrapped. `formatToParts()` and `resolvedOptions()` results are typical examples.
 
-This handling is required for APIs with native internal slots, including `Intl` objects and browser constructors such as `TextEncoder`. The by-value copy applies only to values `makeCallable()` itself offered for transfer (`.sandbox/core/json-transfer.js`) and is re-checked when Arena consumes the offer, so host objects reached any other way keep the wrapped, identity-tracked path.
+This handling is required for APIs with native internal slots, including `Intl` objects and browser constructors such as `TextEncoder`. The by-value copy applies only to values the same sandbox's `makeCallable()` offered for transfer (`.sandbox/core/json-transfer.js`) and is re-checked when that sandbox's Arena consumes the offer, so host objects reached any other way keep the wrapped, identity-tracked path.
 
 ### 6.1 Constrained crypto capability
 
@@ -202,15 +204,29 @@ The `crypto` permission is special. The runtime does not expose the complete hos
 
 Random bytes and UUIDs are produced by host functions synchronized into Arena and hidden after the QuickJS facade is installed.
 
+### 6.2 Membrane ownership
+
+All mutable membrane state belongs to one sandbox. `buildSandbox()` creates it with `createForwardMembrane()`, `createReverseMembrane()`, and `createJsonTransfer()`; the membrane modules keep no module-scoped caches, offers, or counters. This state comprises:
+
+- the forward wrapper cache;
+- the reverse export and returned-object wrapper caches;
+- the by-value transfer offers;
+- the `__SANDBOX_TEMP__` identifier counter.
+
+A forward wrapper is a mutable host object that its Arena synchronizes with QuickJS: guest code can add properties to it or replace its methods. Two sandboxes granted the same host object therefore each receive their own wrapper, so a method one library replaces is never called by another, and arguments passed by one library never reach a function defined by another. A reverse wrapper routes every call through its own sandbox's Arena and helpers, even when two sandboxes wrap the same host value. Identity is preserved within a sandbox, not across sandboxes. `__SANDBOX_TEMP__` identifiers are visible to guest code and start at zero in each sandbox, so they reveal nothing about other sandboxes.
+
+Separate wrappers do not copy host state. A host object granted to several libraries remains one object: an assignment to one of its existing data properties goes through to the host and is visible to every grantee, including a function value written by one library and later called by another. Granting one mutable host object to several untrusted libraries is therefore still a shared channel ([limitations](isolation-coverage-and-cache-limitations.md)).
+
 ## 7. Reverse membrane
 
 The reverse membrane makes QuickJS exports usable by the host without treating an Arena dump as the authoritative object.
 
-- `bindSandboxExport()` wraps exported objects and functions, caches wrappers, and routes method access back to QuickJS-side closures.
+- `bindSandboxExport()` wraps exported objects and functions, caches wrappers per sandbox, and routes method access back to QuickJS-side closures.
 - `bindSandboxFunction()` implements direct calls, construction delegation, and static-property access. Its QuickJS call expression is built from an access path whose property keys are escaped string literals, so any string key, including quotes and line terminators, resolves as data.
 - `wrapReturned()` pins stateful QuickJS objects in `globalThis.__SANDBOX_TEMP__` and routes later methods and getters to the original object.
 - `createInstance()` constructs in QuickJS before crossing the boundary, preserving WeakMap/private-field identity.
 - host-side method overrides are retained for test mocking and marshalled back on later calls.
+- after disposal, every wrapper and boundary helper of the sandbox throws `The sandbox has been disposed` (§5).
 
 Values that already have supported value semantics—arrays, typed arrays, `ArrayBuffer`, `Date`, `RegExp`, `Error`, `Map`, `Set`, `arguments`, primitives, and plain objects—are not all pinned through `wrapReturned`. Their fidelity depends on Arena and the registered marshallers.
 
@@ -235,7 +251,7 @@ The implemented boundary provides:
 
 - separate QuickJS globals and heaps for each configured library;
 - no ambient host globals unless configuration exposes them or host arguments convey them;
-- membrane-mediated access to explicitly exposed host objects;
+- membrane-mediated access to explicitly exposed host objects, with membrane wrappers, caches, and transfer offers owned by each sandbox (§6.2);
 - isolation of QuickJS prototype/global mutations from the host realm;
 - deterministic host import replacement for evaluated package requests;
 - generated host proxies that embed package declaration metadata only as escaped literals, so a declaration file cannot inject host code (§3.1).
@@ -247,7 +263,7 @@ It does not provide:
 - revocation of capabilities supplied through arguments;
 - complete JavaScript cross-realm observational equivalence;
 - a guarantee that every possible host global is safe when named in `permissions`;
-- independent membrane wrappers when multiple sandboxes receive the same mutable host object identity;
+- isolation of host state shared by granting the same mutable host object to several libraries, including values written into its existing data properties (§6.2);
 - production packaging, versioned public APIs, or long-term compatibility guarantees.
 
 ## 10. Compatibility limitations

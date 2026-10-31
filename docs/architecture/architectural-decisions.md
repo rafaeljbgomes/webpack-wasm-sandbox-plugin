@@ -627,3 +627,23 @@ Sandbox initialisation also fell for every library (date-fns from 1,490 ms to 37
 
 **Consequences:** A package's declarations can no longer add code to the host proxy. Unusual but legitimate export names become usable instead of breaking the generated module. Identifier export names keep their previous aliases, so generated proxies for the evaluated libraries change only in how the default-constructor fallback is read (`proxyExports["Mime"]` instead of `proxyExports.Mime`). This closes one build-time injection path; it is not a review of all generated code, and the parser still reports type-only names as runtime exports. Regressions live in `webpack-sandbox-plugin/test/source-literals.test.mjs`, `proxy-generator.test.mjs`, `generated-proxy.test.mjs` (hostile names imported end to end) and `.sandbox/test/reverse-membrane.test.mjs`.
 
+---
+
+## 31/10/2026 - 29. Membrane state is owned by each sandbox
+
+**Problem:** The forward wrapper cache, the reverse export and returned-object caches, the by-value transfer offers and the `__SANDBOX_TEMP__` identifier counter were module-scoped, so every sandbox in a process shared them (issue #3). Two concrete failures followed:
+
+1. A forward wrapper is a mutable host object that its Arena synchronizes with QuickJS. When sandbox A replaced `TestShared.describe` on a granted host object, the replacement was stored on the shared wrapper. Sandbox B, created later with the same permission, received that wrapper, so its call to `TestShared.describe(secret)` ran A's QuickJS function with B's arguments.
+2. `sandbox.wrapResult(value)` returned the cached reverse wrapper of whichever sandbox wrapped `value` first. Calls through B's result therefore ran in A's context and failed with `Lifetime not alive` once A was disposed.
+
+The module-scoped caches also kept wrappers for long-lived host values after their sandbox was disposed, and those wrappers kept the disposed Arena, and through it the WebAssembly module, reachable. Identifiers in `__SANDBOX_TEMP__` are visible to guest code and revealed how many objects other sandboxes had pinned.
+
+**Decision:** `buildSandbox()` creates the membrane state for its sandbox through three factories: `createJsonTransfer()`, `createForwardMembrane({ offerJsonTransfer })` and `createReverseMembrane(arena, sbHelpers)`. The membrane modules keep no mutable module-scoped state. `exposeWebAPIs()` and `createArenaConfig()` receive the sandbox's forward membrane and transfer offers explicitly, and `createArenaConfig()` without offers transfers nothing by value. Sandbox disposal releases both membranes before the marshallers, helpers, Arena and context. After that, every wrapper and boundary helper of the sandbox throws `The sandbox has been disposed` rather than reaching the released context.
+
+**Consequences:**
+
+- Identity is preserved for repeated references and cycles within a sandbox, not across sandboxes. A replaced method or added property on one sandbox's wrapper is invisible to its siblings.
+- Separate wrappers do not copy host state. Writes to existing data properties of a granted host object still go through to the host, so a function one library writes there remains callable by another library granted the same object. This is recorded as a `todo` case and in [isolation-coverage-and-cache-limitations.md](isolation-coverage-and-cache-limitations.md).
+- A call through a disposed sandbox now throws a plain `Error` with that message instead of `QuickJSUseAfterFree`; `generated-proxy.test.mjs` pins the new message for `disposeLibrary()`. A second `dispose()` still throws `QuickJSUseAfterFree` from the Arena.
+- Per-sandbox closures add no boundary crossings, and steady-state calls still compile no QuickJS source (`boundary-runtime.test.mjs`).
+- `.sandbox/test/membrane-ownership.test.mjs` reproduces both failures above and checks, in a child process with `--expose-gc`, that disposal releases wrappers and the Arena while wrapped host values stay alive.
