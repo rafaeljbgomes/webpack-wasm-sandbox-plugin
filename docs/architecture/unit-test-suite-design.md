@@ -217,6 +217,8 @@ Most cases come from failures that compatibility campaigns already found and tha
 | workloads | workload loaded once, shares library context and `__SANDBOXED_LIB__` | ADR 21 |
 | parser | named, default, duplicate, reserved-word, `export =` declaration fixtures | ADR 7, 12 |
 | proxy-generator | permissions serialised exactly, including `[]` | ADR 25 |
+| proxy-generator, generated-proxy | hostile and colliding export names stay data; malformed names fail generation | ADR 28 |
+| reverse-membrane | export keys with quotes and line terminators remain callable | ADR 28 |
 | generated-proxy | named, class, default-singleton, `export =`, workload and `disposeLibrary()` paths execute; `apply` traps; `unrefPump()` after initialization | Spec §4, ADR 10, 12, 17 |
 | policy-loading | omission → `[]`; `null`, non-array and empty-string entries rejected | `build-helpers.ts` |
 | import-redirection | configured root and workload requests redirected; unconfigured untouched; child bundles emitted and evaluated; Node entry chosen over a `browser` entry; `@types` fallback and stub proxy | Spec §3, ADR 6, 11 |
@@ -251,6 +253,7 @@ Most decisions in [architectural-decisions.md](architectural-decisions.md) recor
 | 24 | Browser constructor-only messages | Covered at matcher level (step 2) | Browser execution remains with the security scenarios |
 | 25 | Explicit runtime policy, no silent fallback | Covered: explicit list vs fallback, sync and async validation, fail-closed plugin policy loading (step 1) | — |
 | 27 | Boundary fast path and handle ownership | Covered: `boundary-runtime.test.mjs`, one case per change and correction | — |
+| 28 | Declaration export names are escaped in generated code | Covered: literal helpers, generator output, hostile names and fallback imported end to end, escaped reverse-membrane keys | — |
 
 ADRs 15 (bridge assessment), 18 (crossing cost) and 26 (advisor model) do not record boundary defects. The advisor has its own suite.
 
