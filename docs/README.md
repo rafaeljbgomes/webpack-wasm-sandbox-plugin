@@ -18,7 +18,7 @@ This index covers the maintained documentation for users and contributors. The [
 | [Capability advisor guide](../capability-advisor/README.md) | Operational, experimental | SubQ System One preparation, evidence handling, reviewed drafts and cache behavior |
 | [Capability advisor validation](../capability-advisor/VALIDATION.md) | Scoped validation snapshot | Implementation checks, browser scenarios and unmeasured model accuracy |
 | [Host-argument capability limitation](architecture/host-argument-capability-limitation.md) | Current limitation | Authority conveyed through host-supplied arguments |
-| [Import coverage and cache limitations](architecture/isolation-coverage-and-cache-limitations.md) | Current limitation | Exact import matching, shared membrane cache scope, and future hardening |
+| [Import coverage and cache limitations](architecture/isolation-coverage-and-cache-limitations.md) | Current limitation | Exact import matching, shared host-object state, and future hardening |
 | [Strict host-argument modes](architecture/host-argument-strict-mode-future-work.md) | Future work | Candidate attenuation designs; none are implemented |
 | [Security validation application](../lib-test/security/app/README.md) | Operational | Reproducible native and sandbox security scenarios |
 | [Unit regression suite design](architecture/unit-test-suite-design.md) | Partially implemented; remainder future work | Fast, hermetic runtime and plugin tests; steps 1–3 implemented, steps 4–5 planned |
