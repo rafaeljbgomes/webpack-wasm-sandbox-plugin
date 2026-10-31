@@ -202,6 +202,50 @@ test(
   },
 );
 
+/**
+ * Export names a hostile package could declare. Each one broke out of a string
+ * literal, export clause, property access or comment in the generated host module.
+ */
+const hostileExportNames = [
+  'x"]; globalThis.__proxyInjected = "string"; //',
+  `y\nglobalThis.__proxyInjected = "comment";`,
+  `z${String.fromCharCode(0x2028)}globalThis.__proxyInjected = "separator";`,
+  "a-b",
+  "a_b",
+];
+
+test("treats hostile declaration export names as data", async (t) => {
+  t.after(() => delete globalThis.__proxyInjected);
+  const proxy = await importGeneratedProxy(t, {
+    libraryData: { exportedNames: hostileExportNames },
+    // QuickJS does not accept a raw U+2028 inside the guest's string literals.
+    body: `return Object.fromEntries(${JSON.stringify(hostileExportNames).replace(
+      String.fromCharCode(0x2028),
+      "\\u2028",
+    )}.map((name, i) => [name, () => i]));`,
+  });
+
+  assert.equal(globalThis.__proxyInjected, undefined);
+  // Names that sanitise to the same identifier stay separate bindings.
+  assert.deepEqual(hostileExportNames.map((name) => proxy[name]()), [0, 1, 2, 3, 4]);
+});
+
+test("treats a hostile default-constructor fallback name as data", async (t) => {
+  t.after(() => delete globalThis.__proxyInjected);
+  const [fallbackName] = hostileExportNames;
+  const proxy = await importGeneratedProxy(t, {
+    libraryData: { exportedNames: ["default", fallbackName] },
+    body: `
+      class Box { constructor(v) { this.v = v; } get() { return this.v; } }
+      return { default: new Box(1), [${JSON.stringify(fallbackName)}]: Box };
+    `,
+  });
+
+  assert.equal(globalThis.__proxyInjected, undefined);
+  assert.equal(proxy.default.get(), 1);
+  assert.equal(new proxy.default(7).get(), 7);
+});
+
 test("serialises permissions into the sandbox it creates", async (t) => {
   const body = `return { probe: () => [typeof crypto, typeof fetch, typeof Intl].join() };`;
   const denied = await importGeneratedProxy(t, { libraryData: { exportedNames: ["probe"] }, body });

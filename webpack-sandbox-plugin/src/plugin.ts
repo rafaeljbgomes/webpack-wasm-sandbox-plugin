@@ -4,6 +4,7 @@ import { Compiler, NormalModuleReplacementPlugin } from "webpack";
 import { ProxyGenerator } from "./proxy-generator";
 import { Parser } from "./core/parser";
 import { findAllDtsFiles } from "./utils/file-utils";
+import { toJsStringLiteral } from "./utils/source-literals";
 import { compileLibrary, loadSandboxPolicy, WorkloadConfig } from "./build-helpers";
 
 /** Configuration accepted by {@link WebpackSandboxPlugin}. */
@@ -311,7 +312,7 @@ export class WebpackSandboxPlugin {
       const safeName = exportName.replace(/[^a-zA-Z0-9_$]/g, "_");
       const safeIdentifier = `_workload_${safeName}`;
       return [
-        `const ${safeIdentifier} = await __getSandboxWorkloadExport("${workload.workloadName}", "${exportName}");`,
+        `const ${safeIdentifier} = await __getSandboxWorkloadExport(${toJsStringLiteral(workload.workloadName)}, ${toJsStringLiteral(exportName)});`,
         `export function ${safeName}(...args) {`,
         `  return ${safeIdentifier}(...args);`,
         `}`,
@@ -320,8 +321,8 @@ export class WebpackSandboxPlugin {
     });
 
     const proxyContent = [
-      `// Auto-generated Sandbox Workload Proxy for ${workload.libraryName}/${workload.workloadName}`,
-      `import { __getSandboxWorkloadExport } from "./${workload.libraryName}-proxy.js";`,
+      `// Auto-generated Sandbox Workload Proxy for ${toJsStringLiteral(`${workload.libraryName}/${workload.workloadName}`)}`,
+      `import { __getSandboxWorkloadExport } from ${toJsStringLiteral(`./${workload.libraryName}-proxy.js`)};`,
       "",
       ...exportLines,
       `export function disposeWorkload() {`,
