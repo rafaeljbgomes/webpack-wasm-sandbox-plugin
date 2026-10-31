@@ -1,4 +1,5 @@
 import { LibraryData } from "./domain/types";
+import { isIdentifierName, toJsStringLiteral, toModuleExportName } from "./utils/source-literals";
 
 /** Workload metadata used when generating lazy proxy accessors. */
 export interface ProxyWorkload {
@@ -25,7 +26,7 @@ export class ProxyGenerator {
     workloads: ProxyWorkload[] = [],
     permissions: string[] = [],
   ): string {
-    let content = `// Auto-generated Sandbox Proxy for ${libraryName}\n`;
+    let content = `// Auto-generated Sandbox Proxy for ${toJsStringLiteral(libraryName)}\n`;
     content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
 
     content += `// Load the isolated bundle from the active runtime.\n`;
@@ -36,15 +37,15 @@ export class ProxyGenerator {
     content += `  const { fileURLToPath } = await import('url');\n`;
     content += `  const __proxyDir = dirname(fileURLToPath(import.meta.url));\n`;
     content += `  const __projectRoot = resolve(__proxyDir, '..', '..');\n`;
-    content += `  libraryCode = readFileSync(resolve(__projectRoot, 'dist', '${libraryName}.bundle.js'), 'utf-8');\n`;
+    content += `  libraryCode = readFileSync(resolve(__projectRoot, 'dist', ${toJsStringLiteral(`${libraryName}.bundle.js`)}), 'utf-8');\n`;
     content += `} else {\n`;
-    content += `  libraryCode = await fetch('/dist/${libraryName}.bundle.js').then(r => r.text());\n`;
+    content += `  libraryCode = await fetch(${toJsStringLiteral(`/dist/${libraryName}.bundle.js`)}).then(r => r.text());\n`;
     content += `}\n`;
     content += `\n`;
 
     content += `// Initialize the per-library QuickJS context before exposing exports.\n`;
     content += `const librarySandbox = await SandboxManager.createSandbox(\n`;
-    content += `  "${libraryName}",\n`;
+    content += `  ${toJsStringLiteral(libraryName)},\n`;
     content += `  libraryCode,\n`;
     content += `  { permissions: ${JSON.stringify(permissions)} }\n`;
     content += `);\n\n`;
@@ -89,20 +90,24 @@ export class ProxyGenerator {
     // Declaration files can report the same runtime export more than once.
     const exportedNames = new Set<string>();
 
-    libraryData.exportedNames.forEach((name) => {
+    libraryData.exportedNames.forEach((name, index) => {
       if (exportedNames.has(name)) {
         return;
       }
       exportedNames.add(name);
+      // Export names come from the dependency's own declarations. They are
+      // embedded only as escaped literals, never as raw source text.
+      const nameLiteral = toJsStringLiteral(name);
 
       if (name === "default") {
         // Some declaration sets describe a singleton default alongside the
         // named class that actually supports construction.
         const fallbackName = libraryData.exportedNames.find((n) => n !== "default") ?? null;
-        const fallbackExpr = fallbackName
-          ? `(typeof proxyExports.${fallbackName} === "function" ? proxyExports.${fallbackName} : null)`
+        const fallbackAccess = fallbackName ? `proxyExports[${toJsStringLiteral(fallbackName)}]` : null;
+        const fallbackExpr = fallbackAccess
+          ? `(typeof ${fallbackAccess} === "function" ? ${fallbackAccess} : null)`
           : `null`;
-        const fallbackCtorKey = fallbackName ?? "default";
+        const fallbackCtorKey = toJsStringLiteral(fallbackName ?? "default");
 
         content += `// If proxyExports.default is a singleton (not a constructor), fall back to the\n`;
         content += `// first named class export so that both \`new Default()\` and singleton method\n`;
@@ -121,7 +126,7 @@ export class ProxyGenerator {
         content += `        return _defaultProxyTarget(...args);\n`;
         content += `      },\n`;
         content += `      construct(_target, args) {\n`;
-        content += `        const ctorKey = typeof proxyExports.default === "function" ? "default" : "${fallbackCtorKey}";\n`;
+        content += `        const ctorKey = typeof proxyExports.default === "function" ? "default" : ${fallbackCtorKey};\n`;
         content += `        return librarySandbox.createInstance(ctorKey, args);\n`;
         content += `      },\n`;
         content += `      get(_target, key, receiver) {\n`;
@@ -134,27 +139,31 @@ export class ProxyGenerator {
         content += `    })\n`;
         content += `  : proxyExports.default;\n\n`;
       } else {
-        const safeName = name.replace(/[^a-zA-Z0-9_$]/g, '_');
-        const safeIdentifier = `_export_${safeName}`;
-        content += `// Use a constructable host target while routing calls into ${name}.\n`;
-        content += `function _${safeName}_target() {}\n`;
-        content += `const ${safeIdentifier} = typeof proxyExports["${name}"] === "function"\n`;
-        content += `  ? new Proxy(_${safeName}_target, {\n`;
+        // Identifier names keep readable aliases. Other names get positional
+        // aliases under a distinct prefix, so two names never share a binding.
+        const aliasSuffix = isIdentifierName(name) ? `_${name}` : `String${index}`;
+        const safeIdentifier = `_export${aliasSuffix}`;
+        const targetIdentifier = `_target${aliasSuffix}`;
+        const exportAccess = `proxyExports[${nameLiteral}]`;
+        content += `// Use a constructable host target while routing calls into ${nameLiteral}.\n`;
+        content += `function ${targetIdentifier}() {}\n`;
+        content += `const ${safeIdentifier} = typeof ${exportAccess} === "function"\n`;
+        content += `  ? new Proxy(${targetIdentifier}, {\n`;
         content += `      apply(_target, _thisArg, args) {\n`;
-        content += `        return proxyExports["${name}"](...args);\n`;
+        content += `        return ${exportAccess}(...args);\n`;
         content += `      },\n`;
         content += `      construct(_target, args) {\n`;
-        content += `        return librarySandbox.createInstance("${name}", args);\n`;
+        content += `        return librarySandbox.createInstance(${nameLiteral}, args);\n`;
         content += `      },\n`;
         content += `      get(_target, key, receiver) {\n`;
-        content += `        if (typeof key === "symbol") return Reflect.get(proxyExports["${name}"], key, receiver);\n`;
+        content += `        if (typeof key === "symbol") return Reflect.get(${exportAccess}, key, receiver);\n`;
         content += `        if (key === "prototype") return Reflect.get(_target, key, receiver);\n`;
-        content += `        return proxyExports["${name}"][key];\n`;
+        content += `        return ${exportAccess}[key];\n`;
         content += `      }\n`;
         content += `    })\n`;
-        content += `  : proxyExports["${name}"];\n`;
-        // Identifier aliases also support declaration names that are reserved words.
-        content += `export { ${safeIdentifier} as ${name} };\n\n`;
+        content += `  : ${exportAccess};\n`;
+        // Aliases also support reserved words; other names use the ES2022 string form.
+        content += `export { ${safeIdentifier} as ${toModuleExportName(name)} };\n\n`;
       }
     });
 
@@ -185,7 +194,7 @@ export class ProxyGenerator {
 
     let content = `const workloadManifest = {\n`;
     for (const workload of workloads) {
-      content += `  "${workload.workloadName}": {\n`;
+      content += `  ${toJsStringLiteral(workload.workloadName)}: {\n`;
       content += `    globalName: "__SANDBOXED_WORKLOAD_${this.toSafeGlobalName(workload.workloadName)}__"\n`;
       content += `  },\n`;
     }
@@ -193,7 +202,7 @@ export class ProxyGenerator {
 
     content += `/** Loads a workload bundle in Node.js or the browser. */\n`;
     content += `async function loadWorkloadBundle(workloadName) {\n`;
-    content += `  const bundleName = \`${libraryName}.\${workloadName}.workload.bundle.js\`;\n`;
+    content += `  const bundleName = ${toJsStringLiteral(`${libraryName}.`)} + workloadName + ".workload.bundle.js";\n`;
     content += `  if (typeof process !== 'undefined' && process.versions?.node) {\n`;
     content += `    const { readFileSync } = await import('fs');\n`;
     content += `    const { resolve, dirname } = await import('path');\n`;

@@ -90,8 +90,36 @@ test("aliases reserved-word export names through a safe identifier", () => {
 test("falls back to the first named export for a default constructor", () => {
   const source = generate({ exportedNames: ["default", "Mime"] });
 
-  assert.ok(source.includes('typeof proxyExports.Mime === "function" ? proxyExports.Mime : null'));
+  assert.ok(source.includes('typeof proxyExports["Mime"] === "function" ? proxyExports["Mime"] : null'));
   assert.ok(source.includes('"default" : "Mime"'));
+});
+
+test("embeds declaration export names only as escaped literals", () => {
+  const hostile = 'x"]; globalThis.pwned = 1; //';
+  const source = generate({ exportedNames: [hostile, "a-b", "a_b"] });
+
+  assert.equal(source.includes(hostile), false);
+  assert.ok(source.includes(`proxyExports[${JSON.stringify(hostile)}]`));
+  assert.ok(source.includes(`export { _exportString0 as ${JSON.stringify(hostile)} };`));
+  // Sanitising to `a_b` used to declare `_export_a_b` twice.
+  assert.ok(source.includes('export { _exportString1 as "a-b" };'));
+  assert.ok(source.includes("export { _export_a_b as a_b };"));
+});
+
+test("rejects export names that are not well-formed Unicode", () => {
+  assert.throws(() => generate({ exportedNames: ["x\uD800"] }), /malformed name/);
+});
+
+test("escapes policy-supplied library and workload names", () => {
+  const source = new ProxyGenerator().generate(
+    { exportedNames: ["add"] },
+    "evil'lib",
+    [{ workloadName: 'w"x', exports: ["total"] }],
+  );
+
+  assert.ok(source.includes(`'dist', "evil'lib.bundle.js"`));
+  assert.ok(source.includes(`"w\\"x": {`));
+  assert.ok(source.includes(`const bundleName = "evil'lib." + workloadName + ".workload.bundle.js";`));
 });
 
 test("emits only a callable default for export =", () => {

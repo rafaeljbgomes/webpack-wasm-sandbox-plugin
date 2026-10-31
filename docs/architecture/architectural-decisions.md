@@ -611,3 +611,19 @@ Sandbox initialisation also fell for every library (date-fns from 1,490 ms to 37
 - The patch is now a substantial diff over a bundled upstream file. Upgrading `quickjs-emscripten-sync` requires regenerating and re-validating it.
 - A leaked QuickJS object now fails disposal deterministically. `.sandbox/test/boundary-runtime.test.mjs` holds a focused regression for each change and correction above.
 
+---
+
+## 30/10/2026 - 28. Declaration export names are untrusted input to code generation
+
+**Problem:** The proxy generator copied export names reported by the TypeScript compiler into the generated host module as raw source text: inside string literals (`proxyExports["${name}"]`), in a comment, in the export clause, and as a property access for the default-constructor fallback (`proxyExports.${name}`). Those names come from the `.d.ts` files of the package being isolated. TypeScript accepts arbitrary string export names (`export { x as "..." }`), so a hostile declaration such as `export { x as "x\"]; <host code> //" }` produced a proxy that ran `<host code>` in the host realm at import time, outside QuickJS and outside the permission policy. Separately, sanitising names to identifiers mapped `a-b` and `a_b` to the same alias, which declared one binding twice. The reverse membrane had the same pattern on the QuickJS side: it built call expressions as `` `${accessPath}["${key}"]` ``, so a key containing a quote or line terminator produced invalid QuickJS source and the export could not be called.
+
+**Decision:**
+
+1. Treat every name embedded in generated source as data. `webpack-sandbox-plugin/src/utils/source-literals.ts` serialises names as JSON string literals, also escaping U+2028 and U+2029, which JSON leaves raw but JavaScript treats as line terminators.
+2. Keep identifier export names (including reserved words) in identifier form with an `_export_<name>` alias. Export other names in the ES2022 string form with a positional `_exportString<n>` alias. Webpack 5 and Node.js accept string export names.
+3. Fail generation for names that are not well-formed Unicode, which a module cannot export.
+4. Escape library and workload names from the policy the same way. They are developer-controlled, but the generator should not depend on that.
+5. Build reverse-membrane access paths with escaped keys (`memberAccessPath()`).
+
+**Consequences:** A package's declarations can no longer add code to the host proxy. Unusual but legitimate export names become usable instead of breaking the generated module. Identifier export names keep their previous aliases, so generated proxies for the evaluated libraries change only in how the default-constructor fallback is read (`proxyExports["Mime"]` instead of `proxyExports.Mime`). This closes one build-time injection path; it is not a review of all generated code, and the parser still reports type-only names as runtime exports. Regressions live in `webpack-sandbox-plugin/test/source-literals.test.mjs`, `proxy-generator.test.mjs`, `generated-proxy.test.mjs` (hostile names imported end to end) and `.sandbox/test/reverse-membrane.test.mjs`.
+
