@@ -57,6 +57,21 @@ test("exported objects, methods and nested objects keep stable host wrappers", a
   assert.equal(exports.settings.nested.level.label, "deep");
 });
 
+test("export keys with quotes and line terminators bind as data", async (t) => {
+  // Keys were spliced into QuickJS source as `path["key"]`, so these broke the call.
+  const keys = ['a"]; globalThis.injected = 1; //', "b\nc", `d${String.fromCharCode(0x2028)}e`];
+  const { exports } = await createFixtureSandbox(
+    t,
+    `return {
+      fns: Object.fromEntries(${JSON.stringify(keys).replace(String.fromCharCode(0x2028), "\\u2028")}.map((k, i) => [k, () => i])),
+      probe: () => typeof globalThis.injected,
+    };`,
+  );
+
+  assert.deepEqual(keys.map((key) => exports.fns[key]()), [0, 1, 2]);
+  assert.equal(exports.probe(), "undefined");
+});
+
 test("callable exports expose their static properties", async (t) => {
   const { exports } = await createFixtureSandbox(t, LIBRARY_BODY);
   assert.equal(exports.versioned(), "called");

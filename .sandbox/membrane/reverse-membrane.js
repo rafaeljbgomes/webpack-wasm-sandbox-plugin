@@ -4,6 +4,26 @@ const exportBindCache = new WeakMap();
 const returnedObjCache = new WeakMap();
 let tempIdCounter = 0;
 const ARG_TAG = "[object Arguments]";
+const LINE_SEPARATOR = String.fromCharCode(0x2028);
+const PARAGRAPH_SEPARATOR = String.fromCharCode(0x2029);
+
+/**
+ * Builds a QuickJS member expression for one property of an access path.
+ *
+ * Property keys reach this point from host code and from library export
+ * names, so they are embedded as escaped string literals. QuickJS rejects raw
+ * U+2028 and U+2029 inside string literals, which JSON leaves unescaped.
+ *
+ * @param {string} accessPath QuickJS expression resolving the owner.
+ * @param {string} key Property name to read.
+ * @returns {string} QuickJS expression resolving the property.
+ */
+function memberAccessPath(accessPath, key) {
+  const keyLiteral = JSON.stringify(key)
+    .split(LINE_SEPARATOR).join("\\u2028")
+    .split(PARAGRAPH_SEPARATOR).join("\\u2029");
+  return `${accessPath}[${keyLiteral}]`;
+}
 
 /**
  * Detects host Arguments objects that already crossed through a marshaller.
@@ -80,13 +100,13 @@ function makeGetTrap(arena, accessPath, fnCache, depth, sbHelpers) {
       if (!fnCache.has(key)) {
         fnCache.set(
           key,
-          bindSandboxFunction(arena, value, `${accessPath}["${key}"]`, depth + 1, sbHelpers),
+          bindSandboxFunction(arena, value, memberAccessPath(accessPath, key), depth + 1, sbHelpers),
         );
       }
       return fnCache.get(key);
     }
     if (typeof value === "object" && value !== null && !isTypedArrayView(value)) {
-      return bindSandboxExport(arena, value, `${accessPath}["${key}"]`, sbHelpers, depth + 1);
+      return bindSandboxExport(arena, value, memberAccessPath(accessPath, key), sbHelpers, depth + 1);
     }
     return value;
   };
