@@ -1,6 +1,26 @@
 import { isTypedArrayView, sandboxDisposedError } from "../core/sb-utils.js";
 
 const ARG_TAG = "[object Arguments]";
+const LINE_SEPARATOR = String.fromCharCode(0x2028);
+const PARAGRAPH_SEPARATOR = String.fromCharCode(0x2029);
+
+/**
+ * Builds a QuickJS member expression for one property of an access path.
+ *
+ * Property keys reach this point from host code and from library export
+ * names, so they are embedded as escaped string literals. QuickJS rejects raw
+ * U+2028 and U+2029 inside string literals, which JSON leaves unescaped.
+ *
+ * @param {string} accessPath QuickJS expression resolving the owner.
+ * @param {string} key Property name to read.
+ * @returns {string} QuickJS expression resolving the property.
+ */
+function memberAccessPath(accessPath, key) {
+  const keyLiteral = JSON.stringify(key)
+    .split(LINE_SEPARATOR).join("\\u2028")
+    .split(PARAGRAPH_SEPARATOR).join("\\u2029");
+  return `${accessPath}[${keyLiteral}]`;
+}
 
 /**
  * Detects host Arguments objects that already crossed through a marshaller.
@@ -111,13 +131,13 @@ export function createReverseMembrane(arena, sbHelpers) {
         if (!fnCache.has(key)) {
           fnCache.set(
             key,
-            bindSandboxFunction(value, `${accessPath}["${key}"]`, depth + 1),
+            bindSandboxFunction(value, memberAccessPath(accessPath, key), depth + 1),
           );
         }
         return fnCache.get(key);
       }
       if (typeof value === "object" && value !== null && !isTypedArrayView(value)) {
-        return bindSandboxExport(value, `${accessPath}["${key}"]`, depth + 1);
+        return bindSandboxExport(value, memberAccessPath(accessPath, key), depth + 1);
       }
       return value;
     };

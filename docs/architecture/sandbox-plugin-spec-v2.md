@@ -88,6 +88,8 @@ The library rule is intentionally exact in the current implementation. A configu
 
 The declaration parser records named exports and detects TypeScript `export = identifier` patterns used by callable singleton packages such as Lodash. It does not map TypeScript types into runtime validation rules. If no declarations are available, the plugin writes a minimal proxy whose default function throws `Sandbox Proxy Generation Failed`.
 
+Declarations ship with the package being isolated, so their export names are untrusted input to host code generation. The generator embeds every export name, and every library and workload name from the policy, only as an escaped JavaScript string literal (`src/utils/source-literals.ts`). It never splices a name into source as raw text. Export names that are identifiers keep an identifier export and a readable `_export_<name>` alias. Other names use the ES2022 string export form (`export { _exportString0 as "a-b" }`) with a positional alias, so names that sanitise to the same identifier stay separate. A name that is not well-formed Unicode cannot be exported by a module, and generation fails for that library.
+
 ### 3.2 Isolated library bundles
 
 During the compiler's asynchronous `make` hook, the plugin creates a Webpack child compiler for each configured library. Each child compiler:
@@ -220,7 +222,7 @@ Separate wrappers do not copy host state. A host object granted to several libra
 The reverse membrane makes QuickJS exports usable by the host without treating an Arena dump as the authoritative object.
 
 - `bindSandboxExport()` wraps exported objects and functions, caches wrappers per sandbox, and routes method access back to QuickJS-side closures.
-- `bindSandboxFunction()` implements direct calls, construction delegation, and static-property access.
+- `bindSandboxFunction()` implements direct calls, construction delegation, and static-property access. Its QuickJS call expression is built from an access path whose property keys are escaped string literals, so any string key, including quotes and line terminators, resolves as data.
 - `wrapReturned()` pins stateful QuickJS objects in `globalThis.__SANDBOX_TEMP__` and routes later methods and getters to the original object.
 - `createInstance()` constructs in QuickJS before crossing the boundary, preserving WeakMap/private-field identity.
 - host-side method overrides are retained for test mocking and marshalled back on later calls.
@@ -251,7 +253,8 @@ The implemented boundary provides:
 - no ambient host globals unless configuration exposes them or host arguments convey them;
 - membrane-mediated access to explicitly exposed host objects, with membrane wrappers, caches, and transfer offers owned by each sandbox (§6.2);
 - isolation of QuickJS prototype/global mutations from the host realm;
-- deterministic host import replacement for evaluated package requests.
+- deterministic host import replacement for evaluated package requests;
+- generated host proxies that embed package declaration metadata only as escaped literals, so a declaration file cannot inject host code (§3.1).
 
 It does not provide:
 
