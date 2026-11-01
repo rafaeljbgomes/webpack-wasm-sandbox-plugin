@@ -192,6 +192,7 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 | `test-sandbox-redirect/` | ESM and CommonJS redirection for compatibility suites, plus shared runtime aliases |
 | `compatibility-harness/` | Campaign manifest, runners, parsers, and unit tests |
 | `lib-test/security/app/` | Isolated browser security validation application |
+| `index.html` | Host page for the security scenarios; loads `dist/bundle.js` |
 | `docs/` | Developer documentation and versioned PlantUML diagrams |
 | `dist/`, `.sandbox/proxys/` | Generated output; never edit or commit |
 

@@ -103,6 +103,7 @@ webpack-sandbox-plugin/test/
   proxy-generator.test.mjs
   generated-proxy.test.mjs
   import-redirection.test.mjs
+  security-host-page.test.mjs
 ```
 
 Plugin tests write their fixture packages and declaration files into `mkdtemp` directories, so there is no checked-in fixture tree.
@@ -226,6 +227,7 @@ Most cases come from failures that compatibility campaigns already found and tha
 | generated-proxy | named, class, default-singleton, `export =`, workload and `disposeLibrary()` paths execute; `apply` traps; `unrefPump()` after initialization | Spec §4, ADR 10, 12, 17 |
 | policy-loading | omission → `[]`; `null`, non-array and empty-string entries rejected | `build-helpers.ts` |
 | import-redirection | configured root and workload requests redirected; unconfigured untouched; child bundles emitted and evaluated; Node entry chosen over a `browser` entry; `@types` fallback and stub proxy | Spec §3, ADR 6, 11 |
+| security-host-page | the page the security README names exists, has `#output` and loads `/dist/bundle.js`; every scenario/mode build writes that bundle | `lib-test/security/app/README.md` |
 
 ### 5.1 Previously corrected defects
 
