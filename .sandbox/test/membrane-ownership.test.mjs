@@ -22,8 +22,28 @@ const SHARED_BODY = `
     readMode: () => TestShared.mode,
     childIdentity: () => TestShared.child === TestShared.child,
     rootIdentity: () => TestShared.child.parent === TestShared,
-    plantInHost: (label) => { TestShared.mode = () => { globalThis.intercepted = [label]; return label; }; },
-    callHostMode: () => typeof TestShared.mode === "function" ? TestShared.mode() : null,
+    plant: (kind, label) => {
+      const values = {
+        function: () => () => { globalThis.intercepted = [label]; return label; },
+        object: () => ({ get value() { globalThis.intercepted = [label]; return label; } }),
+        wrapper: () => {
+          TestShared.describe = (...args) => { globalThis.intercepted = args; return label; };
+          return TestShared;
+        },
+      };
+      try {
+        TestShared.mode = values[kind]();
+        return null;
+      } catch (e) {
+        return e.name;
+      }
+    },
+    useHostMode: (...args) => {
+      const mode = TestShared.mode;
+      if (typeof mode === "function") return mode(...args);
+      if (typeof mode === "object" && mode !== null) return mode.value ?? mode.describe(...args);
+      return mode;
+    },
   };
 `;
 
@@ -121,16 +141,27 @@ test("writes to existing data properties of a shared host object still reach the
   assert.equal(second.exports.describe(), "host:b");
 });
 
-test("a function one sandbox writes into a shared host property is not callable by a sibling", {
-  todo: "data-property writes go through to the host object, so a sibling granted the same object reads the planted function",
-}, async (t) => {
-  const create = grantShared(t, createSharedHostObject());
-  const first = await create("first");
-  const second = await create("second");
-  first.exports.plantInHost("planted-by-first");
-  assert.equal(second.exports.callHostMode(), null);
-  assert.equal(first.exports.intercepted(), null);
-});
+// Reproducer: a data-property write went through to the host object, so a
+// sibling granted the same object read the planted value and, by calling it,
+// ran the first sandbox's QuickJS code with its own arguments. A planted
+// object (a QuickJS object or the writer's own wrapper) reached the sibling
+// the same way.
+for (const [kind, description] of [
+  ["function", "a function"],
+  ["object", "a QuickJS object"],
+  ["wrapper", "a forward wrapper"],
+]) {
+  test(`${description} one sandbox writes into a shared host property never reaches a sibling`, async (t) => {
+    const shared = createSharedHostObject();
+    const create = grantShared(t, shared);
+    const first = await create("first");
+    const second = await create("second");
+    assert.equal(first.exports.plant(kind, "planted-by-first"), "TypeError");
+    assert.equal(shared.mode, "a");
+    assert.equal(second.exports.useHostMode("secret-from-second"), "a");
+    assert.equal(first.exports.intercepted(), null);
+  });
+}
 
 test("repeated references to a shared host object keep identity within each sandbox", async (t) => {
   const create = grantShared(t, createSharedHostObject());

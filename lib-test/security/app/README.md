@@ -60,8 +60,11 @@ Serve the repository root and open `http://localhost:9000/index.html`:
 python -m http.server 9000
 ```
 
-Each build writes `dist/bundle.js`. Keep the server running, rebuild the desired
-mode in another terminal, and reload the page after each build.
+Each build writes `dist/bundle.js`, which the repository-root `index.html` loads
+into its `#output` element. Keep the server running, rebuild the desired mode in
+another terminal, and reload the page after each build.
+`webpack-sandbox-plugin/test/security-host-page.test.mjs` keeps this page and
+the build output path aligned.
 
 `webpack.security.config.cjs` validates both `scenario` and `mode`. Native mode does not instantiate `WebpackSandboxPlugin`. Sandbox mode loads the scenario-specific build policy; generated proxies explicitly pass those permissions into the runtime. Its existing policy-import replacement remains for direct runtime callers using the legacy fallback.
 

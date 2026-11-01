@@ -103,6 +103,7 @@ webpack-sandbox-plugin/test/
   proxy-generator.test.mjs
   generated-proxy.test.mjs
   import-redirection.test.mjs
+  security-host-page.test.mjs
 ```
 
 Plugin tests write their fixture packages and declaration files into `mkdtemp` directories, so there is no checked-in fixture tree.
@@ -226,6 +227,7 @@ Most cases come from failures that compatibility campaigns already found and tha
 | generated-proxy | named, class, default-singleton, `export =`, workload and `disposeLibrary()` paths execute; `apply` traps; `unrefPump()` after initialization | Spec §4, ADR 10, 12, 17 |
 | policy-loading | omission → `[]`; `null`, non-array and empty-string entries rejected | `build-helpers.ts` |
 | import-redirection | configured root and workload requests redirected; unconfigured untouched; child bundles emitted and evaluated; Node entry chosen over a `browser` entry; `@types` fallback and stub proxy | Spec §3, ADR 6, 11 |
+| security-host-page | the page the security README names exists, has `#output` and loads `/dist/bundle.js`; every scenario/mode build writes that bundle | `lib-test/security/app/README.md` |
 
 ### 5.1 Previously corrected defects
 
@@ -258,7 +260,8 @@ Most decisions in [architectural-decisions.md](architectural-decisions.md) recor
 | 25 | Explicit runtime policy, no silent fallback | Covered: explicit list vs fallback, sync and async validation, fail-closed plugin policy loading (step 1) | — |
 | 27 | Boundary fast path and handle ownership | Covered: `boundary-runtime.test.mjs`, one case per change and correction | — |
 | 28 | Declaration export names are escaped in generated code | Covered: literal helpers, generator output, hostile names and fallback imported end to end, escaped reverse-membrane keys | — |
-| 29 | Per-sandbox membrane state | Covered: `membrane-ownership.test.mjs`, including both reproducers from #3 and garbage-collection checks in a child process | Functions written into shared host data properties stay callable by siblings (`todo`) |
+| 29 | Per-sandbox membrane state | Covered: `membrane-ownership.test.mjs`, including both reproducers from #3 and garbage-collection checks in a child process | — |
+| 30 | Primitive-only write-through to host objects | Covered: `forward-membrane.test.mjs` (accepted primitives, rejected functions and objects, catchable `TypeError`) and `membrane-ownership.test.mjs` (planted function, QuickJS object and wrapper never reach a sibling) | — |
 
 ADRs 15 (bridge assessment), 18 (crossing cost) and 26 (advisor model) do not record boundary defects. The advisor has its own suite.
 
@@ -279,7 +282,6 @@ Behaviour that the specification lists as a limitation, or that the probe showed
 | Interfaces and type aliases are reported as runtime exports | `parser.test.mjs` |
 | The `export =` construct trap calls the value without `new`, so a class cannot be constructed | `generated-proxy.test.mjs` |
 | `browser` maps for internal modules select the browser file in child bundles (ADR 11) | `import-redirection.test.mjs` |
-| A function one sandbox writes into a shared host data property is callable by a sibling (spec §6.2) | `membrane-ownership.test.mjs` |
 | Configured-package subpath imports are not redirected (#2) | `known-gaps.test.mjs` (step 4) |
 | Authority-bearing host arguments produce no diagnostics (#1) | `known-gaps.test.mjs` (step 4) |
 | No CPU, memory or interrupt limits (spec §9) | `known-gaps.test.mjs` (step 4) |

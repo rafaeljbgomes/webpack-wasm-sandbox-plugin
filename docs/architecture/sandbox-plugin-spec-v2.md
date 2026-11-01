@@ -189,6 +189,7 @@ The forward membrane in `forward-membrane.js` protects host receiver semantics:
 - `bindWebApi()` walks own properties and the prototype chain up to `Object.prototype`;
 - functions are rebound to their real owner through `makeCallable()`;
 - nested values are wrapped lazily through accessors;
+- an assignment to an existing property writes through to the host only when the value is a primitive; functions and objects are rejected (§6.2);
 - a `WeakMap` owned by the sandbox preserves repeated references and handles cycles;
 - constructor-only host functions first receive `Reflect.apply`; recognized constructor errors trigger `Reflect.construct`;
 - a fresh call result that is plain JSON data (arrays, plain or null-prototype objects, strings, booleans, finite numbers other than `-0`, and `null`, without accessors, holes, shared references, or more than 10,000 nodes) is copied into QuickJS by value instead of being wrapped. `formatToParts()` and `resolvedOptions()` results are typical examples.
@@ -215,7 +216,7 @@ All mutable membrane state belongs to one sandbox. `buildSandbox()` creates it w
 
 A forward wrapper is a mutable host object that its Arena synchronizes with QuickJS: guest code can add properties to it or replace its methods. Two sandboxes granted the same host object therefore each receive their own wrapper, so a method one library replaces is never called by another, and arguments passed by one library never reach a function defined by another. A reverse wrapper routes every call through its own sandbox's Arena and helpers, even when two sandboxes wrap the same host value. Identity is preserved within a sandbox, not across sandboxes. `__SANDBOX_TEMP__` identifiers are visible to guest code and start at zero in each sandbox, so they reveal nothing about other sandboxes.
 
-Separate wrappers do not copy host state. A host object granted to several libraries remains one object: an assignment to one of its existing data properties goes through to the host and is visible to every grantee, including a function value written by one library and later called by another. Granting one mutable host object to several untrusted libraries is therefore still a shared channel ([limitations](isolation-coverage-and-cache-limitations.md)).
+Separate wrappers do not copy host state. A host object granted to several libraries remains one object, so an assignment to one of its existing properties goes through to the host and is visible to every grantee. The forward membrane therefore lets only primitive values (strings, numbers, booleans, bigints, symbols, `null`, and `undefined`) write through. Assigning a function or any object, including a QuickJS object, a typed array, or a forward wrapper, throws a `TypeError` inside QuickJS and leaves the host property unchanged. A primitive carries no behaviour and no live reference into the context that wrote it, so a sibling can read data another library stored but cannot call that library's code, reach its objects, or reach its wrappers. The guard covers property assignment only. Host methods that store their arguments, such as an event target's listeners, are outside it, so granting such an object to several untrusted libraries remains a shared channel ([limitations](isolation-coverage-and-cache-limitations.md)).
 
 ## 7. Reverse membrane
 
@@ -252,6 +253,7 @@ The implemented boundary provides:
 - separate QuickJS globals and heaps for each configured library;
 - no ambient host globals unless configuration exposes them or host arguments convey them;
 - membrane-mediated access to explicitly exposed host objects, with membrane wrappers, caches, and transfer offers owned by each sandbox (§6.2);
+- write-through to exposed host objects limited to primitive values, so one library cannot leave a function or object in a granted host object for another (§6.2);
 - isolation of QuickJS prototype/global mutations from the host realm;
 - deterministic host import replacement for evaluated package requests;
 - generated host proxies that embed package declaration metadata only as escaped literals, so a declaration file cannot inject host code (§3.1).
@@ -263,7 +265,7 @@ It does not provide:
 - revocation of capabilities supplied through arguments;
 - complete JavaScript cross-realm observational equivalence;
 - a guarantee that every possible host global is safe when named in `permissions`;
-- isolation of host state shared by granting the same mutable host object to several libraries, including values written into its existing data properties (§6.2);
+- isolation of host state shared by granting the same mutable host object to several libraries: primitive values written into its existing properties, and arguments its own methods store, remain visible to every grantee (§6.2);
 - production packaging, versioned public APIs, or long-term compatibility guarantees.
 
 ## 10. Compatibility limitations
@@ -275,6 +277,7 @@ Cross-runtime membranes cannot transparently preserve every observable property:
 - symbols with equal descriptions do not have equal identity across runtimes;
 - functions expose wrapper source rather than the original `toString()` result;
 - native internal-slot methods may reject a proxy receiver;
+- assigning a function or object to a property of an exposed host object, such as an `on<event>` handler property, throws a `TypeError`; the corresponding method, such as `addEventListener()`, must be used instead (§6.2);
 - copied objects do not preserve every non-enumerable descriptor, accessor, or mutation;
 - `null`/`undefined`, errors, and unusual test-runner values depend on the bridge path;
 - deeply nested or retained object graphs can increase memory pressure.

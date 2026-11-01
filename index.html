@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandbox Security Validation</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+      background: #fff;
+      color: #333;
+    }
+
+    #output {
+      margin-top: 10px;
+    }
+
+    #output th,
+    #output td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Host page for lib-test/security/app scenarios. Each
+       webpack.security.config.cjs build writes dist/bundle.js; the scenario's
+       reporter replaces the heading and renders its table into #output. -->
+  <h1>Sandbox security validation</h1>
+  <p>Build a scenario with <code>webpack.security.config.cjs</code>, then reload this page. Results also appear in the DevTools console.</p>
+  <div id="output"></div>
+
+  <script src="/dist/bundle.js"></script>
+</body>
+
+</html>

@@ -171,7 +171,7 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 - Cross-realm identity, prototype equality, symbols, function source text, and native internal slots cannot always be reproduced transparently.
 - Arguments supplied by the host can convey authority into the sandbox if they reference privileged host objects.
 - Configured bare package imports are redirected; package subpath imports are not currently covered by the isolation boundary. See the [import coverage and cache limitations](docs/architecture/isolation-coverage-and-cache-limitations.md).
-- Each sandbox owns its membrane wrappers, but a mutable host object granted to several libraries is still shared host state, including values one library writes into its existing data properties. See the [import coverage and cache limitations](docs/architecture/isolation-coverage-and-cache-limitations.md).
+- Each sandbox owns its membrane wrappers, but a mutable host object granted to several libraries is still shared host state. Sandboxed code can assign only primitive values to its properties, so one library cannot leave a function or object there for another, but primitive values and callbacks that the object's own methods store remain shared. See the [import coverage and cache limitations](docs/architecture/isolation-coverage-and-cache-limitations.md).
 - Proxy generation depends on the package's declarations and falls back to `@types/<package>` where available.
 - Pending QuickJS jobs run in a host microtask after each observed boundary entry, backed by a 10 ms fallback interval. The interval is unreferenced after proxy initialization in Node.js and remains part of the sandbox lifecycle until disposal.
 - Fresh plain-data results of permitted Web API calls are copied into QuickJS by value, so mutating such a result inside the sandbox does not change the host value. Other host objects keep identity-tracked wrappers.
@@ -192,6 +192,7 @@ That branch contains the browser scenarios, sandbox boundary-crossing instrument
 | `test-sandbox-redirect/` | ESM and CommonJS redirection for compatibility suites, plus shared runtime aliases |
 | `compatibility-harness/` | Campaign manifest, runners, parsers, and unit tests |
 | `lib-test/security/app/` | Isolated browser security validation application |
+| `index.html` | Host page for the security scenarios; loads `dist/bundle.js` |
 | `docs/` | Developer documentation and versioned PlantUML diagrams |
 | `dist/`, `.sandbox/proxys/` | Generated output; never edit or commit |
 
