@@ -4,7 +4,6 @@ import { createTypedArrayMarshaller } from "./typed-array.js";
 import { createRegExpMarshaller } from "./regexp.js";
 import { createArgumentsMarshaller } from "./arguments.js";
 import { createErrorMarshaller } from "./error.js";
-import { takeJsonTransfer } from "../core/json-transfer.js";
 
 /**
  * Compiles one QuickJS predicate that reports which registered marshaller, if
@@ -36,9 +35,12 @@ function compileClassifier(vm, marshallers) {
  * identity, replaces those repeated per-marshaller boundary calls.
  *
  * @param {import("quickjs-emscripten").QuickJSContext} vm Owning QuickJS context.
+ * @param {(value: unknown) => boolean} [takeJsonTransfer] Consumes a by-value
+ *   transfer offer made by the same sandbox's forward membrane. Without it,
+ *   every host object is identity-tracked.
  * @returns {{arenaOptions: object, dispose: Function}} Arena hooks and their disposer.
  */
-export function createArenaConfig(vm) {
+export function createArenaConfig(vm, takeJsonTransfer = () => false) {
   const marshallers = [
     createTypedArrayMarshaller(vm),
     createRegExpMarshaller(vm),

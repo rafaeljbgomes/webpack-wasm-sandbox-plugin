@@ -2,14 +2,9 @@ import { getQuickJSSync, newQuickJSWASMModule } from "quickjs-emscripten";
 import { Arena } from "quickjs-emscripten-sync";
 import { createArenaConfig } from "../marshallers/index.js";
 import { exposeWebAPIs, validatePermissions } from "./webapi-exposure.js";
-import {
-  bindSandboxExport,
-  maybeWrapResult,
-  wrapReturned,
-  nextTempId,
-} from "../membrane/reverse-membrane.js";
-
-export { bindWebApi } from "../membrane/forward-membrane.js";
+import { createJsonTransfer } from "./json-transfer.js";
+import { createForwardMembrane } from "../membrane/forward-membrane.js";
+import { createReverseMembrane } from "../membrane/reverse-membrane.js";
 
 /** Fallback job-pump period for VM entry points that are not instrumented. */
 export const FALLBACK_PUMP_INTERVAL_MS = 10;
@@ -151,10 +146,14 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   detachUnwrapErrorContext(vm);
   // Observe VM entries first so jobs queued during library initialization drain.
   const jobPump = createJobPump(vm, () => arena);
-  const { arenaOptions, dispose: disposeMarshallers } = createArenaConfig(vm);
+  // Membrane state is owned by this sandbox so wrappers, transfer offers, and
+  // temporary identifiers never cross into another QuickJS context.
+  const jsonTransfer = createJsonTransfer();
+  const forwardMembrane = createForwardMembrane({ offerJsonTransfer: jsonTransfer.offer });
+  const { arenaOptions, dispose: disposeMarshallers } = createArenaConfig(vm, jsonTransfer.take);
   arena = new Arena(vm, arenaOptions);
 
-  exposeWebAPIs(arena, libraryName, options.permissions);
+  exposeWebAPIs(arena, libraryName, options.permissions, forwardMembrane);
 
   // The child bundle publishes its exports through this agreed global.
   const libExports = arena.evalCode(`${libraryCode}; __SANDBOXED_LIB__;`);
@@ -180,6 +179,7 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
       "(ctorKey, id, ...args) => { const inst = new __SANDBOXED_LIB__[ctorKey](...args); globalThis.__SANDBOX_TEMP__.set(id, inst); return inst; }",
     ),
   };
+  const reverseMembrane = createReverseMembrane(arena, sbHelpers);
 
   const workloadExports = {};
 
@@ -198,11 +198,9 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     const rawWorkloadExports = arena.evalCode(
       `${workload.code}; ${workloadGlobalName};`,
     );
-    workloadExports[workload.name] = bindSandboxExport(
-      arena,
+    workloadExports[workload.name] = reverseMembrane.bindSandboxExport(
       rawWorkloadExports,
       workloadGlobalName,
-      sbHelpers,
       0,
     );
     return workloadExports[workload.name];
@@ -213,11 +211,9 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   }
 
   // Binding keeps method receivers and identity anchored in QuickJS.
-  const boundExports = bindSandboxExport(
-    arena,
+  const boundExports = reverseMembrane.bindSandboxExport(
     libExports,
     "__SANDBOXED_LIB__",
-    sbHelpers,
     0,
   );
 
@@ -234,10 +230,10 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     /** Calls a root export and applies reverse-membrane result handling. */
     callRootExport: (callExpression, args) => {
       const result = callExpression(...args);
-      return maybeWrapResult(arena, result, sbHelpers);
+      return reverseMembrane.maybeWrapResult(result);
     },
     /** Wraps a boundary result while preserving its live QuickJS receiver. */
-    wrapResult: (value) => maybeWrapResult(arena, value, sbHelpers),
+    wrapResult: (value) => reverseMembrane.maybeWrapResult(value),
     /**
      * Construct a new instance of `ctorKey` inside QJS and wrap it so that
      * all method calls keep the original QJS `this`.
@@ -252,15 +248,19 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
      * @returns {object} Host proxy bound to the live QuickJS instance.
      */
     createInstance: (ctorKey, constructorArgs) => {
-      const id = nextTempId();
+      const id = reverseMembrane.nextTempId();
       const result = sbHelpers.tempCreate(ctorKey, id, ...constructorArgs);
-      return wrapReturned(arena, result, id, sbHelpers);
+      return reverseMembrane.wrapReturned(result, id);
     },
     /** Allows Node.js to exit when the job pump is the only active handle. */
     unrefPump: () => jobPump.unref(),
-    /** Releases the job pump, marshallers, Arena, and QuickJS context. */
+    /** Releases the job pump, membrane state, marshallers, Arena, and QuickJS context. */
     dispose: () => {
       jobPump.dispose();
+      // Membranes go first so any wrapper still held by the host fails closed
+      // instead of reaching the context released below.
+      reverseMembrane.dispose();
+      forwardMembrane.dispose();
       disposeMarshallers();
       for (const fn of Object.values(sbHelpers)) {
         if (fn.alive) fn.dispose();

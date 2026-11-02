@@ -91,6 +91,7 @@ test-sandbox-redirect/
   crypto-capability.test.mjs
   forward-membrane.test.mjs
   reverse-membrane.test.mjs
+  membrane-ownership.test.mjs
   marshallers.test.mjs
   isolation.test.mjs
   workloads.test.mjs
@@ -102,6 +103,7 @@ webpack-sandbox-plugin/test/
   proxy-generator.test.mjs
   generated-proxy.test.mjs
   import-redirection.test.mjs
+  security-host-page.test.mjs
 ```
 
 Plugin tests write their fixture packages and declaration files into `mkdtemp` directories, so there is no checked-in fixture tree.
@@ -207,6 +209,9 @@ Most cases come from failures that compatibility campaigns already found and tha
 | reverse-membrane | host override on a returned object wins over the QuickJS method | Spec §7 |
 | reverse-membrane | callable exports also expose static properties | ADR 17 |
 | reverse-membrane | `new.target` preserved for sandbox subclasses (patched `ue()`) | ADR 16 |
+| membrane-ownership | two sandboxes granted one host object get separate forward wrappers; a replaced method or added property never reaches a sibling; identity kept within each sandbox | ADR 29, spec §6.2 |
+| membrane-ownership | reverse wrappers for one host value are per sandbox and survive a sibling's disposal; transfer offers and `__SANDBOX_TEMP__` identifiers are per sandbox | ADR 29, spec §6.2 |
+| membrane-ownership | disposed wrappers and helpers throw; disposal releases wrappers and the Arena while wrapped host values stay alive | ADR 29, spec §5 |
 | marshallers | each typed-array kind round-trips with offset/length views | ADR 2 |
 | marshallers | RegExp source and flags in both directions | Spec §8 |
 | marshallers | `arguments` round-trips with Arguments identity | Spec §8 |
@@ -222,6 +227,7 @@ Most cases come from failures that compatibility campaigns already found and tha
 | generated-proxy | named, class, default-singleton, `export =`, workload and `disposeLibrary()` paths execute; `apply` traps; `unrefPump()` after initialization | Spec §4, ADR 10, 12, 17 |
 | policy-loading | omission → `[]`; `null`, non-array and empty-string entries rejected | `build-helpers.ts` |
 | import-redirection | configured root and workload requests redirected; unconfigured untouched; child bundles emitted and evaluated; Node entry chosen over a `browser` entry; `@types` fallback and stub proxy | Spec §3, ADR 6, 11 |
+| security-host-page | the page the security README names exists, has `#output` and loads `/dist/bundle.js`; every scenario/mode build writes that bundle | `lib-test/security/app/README.md` |
 
 ### 5.1 Previously corrected defects
 
@@ -254,6 +260,8 @@ Most decisions in [architectural-decisions.md](architectural-decisions.md) recor
 | 25 | Explicit runtime policy, no silent fallback | Covered: explicit list vs fallback, sync and async validation, fail-closed plugin policy loading (step 1) | — |
 | 27 | Boundary fast path and handle ownership | Covered: `boundary-runtime.test.mjs`, one case per change and correction | — |
 | 28 | Declaration export names are escaped in generated code | Covered: literal helpers, generator output, hostile names and fallback imported end to end, escaped reverse-membrane keys | — |
+| 29 | Per-sandbox membrane state | Covered: `membrane-ownership.test.mjs`, including both reproducers from #3 and garbage-collection checks in a child process | — |
+| 30 | Primitive-only write-through to host objects | Covered: `forward-membrane.test.mjs` (accepted primitives, rejected functions and objects, catchable `TypeError`) and `membrane-ownership.test.mjs` (planted function, QuickJS object and wrapper never reach a sibling) | — |
 
 ADRs 15 (bridge assessment), 18 (crossing cost) and 26 (advisor model) do not record boundary defects. The advisor has its own suite.
 
@@ -274,7 +282,6 @@ Behaviour that the specification lists as a limitation, or that the probe showed
 | Interfaces and type aliases are reported as runtime exports | `parser.test.mjs` |
 | The `export =` construct trap calls the value without `new`, so a class cannot be constructed | `generated-proxy.test.mjs` |
 | `browser` maps for internal modules select the browser file in child bundles (ADR 11) | `import-redirection.test.mjs` |
-| Two sandboxes receiving one mutable host object share a forward wrapper (#3) | `known-gaps.test.mjs` (step 4) |
 | Configured-package subpath imports are not redirected (#2) | `known-gaps.test.mjs` (step 4) |
 | Authority-bearing host arguments produce no diagnostics (#1) | `known-gaps.test.mjs` (step 4) |
 | No CPU, memory or interrupt limits (spec §9) | `known-gaps.test.mjs` (step 4) |

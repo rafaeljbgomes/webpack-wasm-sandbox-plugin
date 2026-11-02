@@ -14,10 +14,17 @@ Developers should use the configured bare package request when relying on the pr
 
 **Future work:** support an explicit, tested policy for package subpaths, or reject subpath imports for configured packages until a corresponding proxy can be generated. Either approach must preserve the package's export shape and be covered by native-versus-sandbox compatibility tests.
 
-## Shared Host-Object Cache Scope
+## Shared Host-Object State
 
-Each configured library receives a separate QuickJS context. However, the current forward and reverse membrane caches are module-scoped. If two sandboxes receive the same mutable host object identity through their permitted capability graphs, a wrapper created for the first sandbox can be reused by the second. The prototype therefore does not yet guarantee independent membrane wrappers for that narrow shared-object scenario.
+Each configured library receives a separate QuickJS context and, since [AD#29](architectural-decisions.md), its own membrane state: forward and reverse wrapper caches, by-value transfer offers, and `__SANDBOX_TEMP__` identifiers ([specification §6.2](sandbox-plugin-spec-v2.md)). Two sandboxes granted the same mutable host object receive independent wrappers, so a method or property one library adds to its wrapper is not seen or called by another library.
 
-Developers should avoid exposing the same mutable host object to more than one untrusted library. This limitation is about membrane-wrapper ownership; it does not make an unconfigured browser global available to a sandbox.
+Separate wrappers do not make the host object itself private. A host object granted to several libraries is still one object, and assignments to its existing properties go through to the host, so every grantee observes them. Since [AD#30](architectural-decisions.md), only primitive values write through. Assigning a function or an object throws a `TypeError` inside QuickJS and leaves the host property unchanged, so one library can no longer leave code, a live QuickJS object, or its own wrapper where another library will read it ([specification §6.2](sandbox-plugin-spec-v2.md)). `.sandbox/test/membrane-ownership.test.mjs` guards all three cases.
 
-**Future work:** scope forward and reverse caches to the owning Arena or sandbox instance, for example with per-Arena `WeakMap` collections or a membrane factory created by `buildSandbox()`. Disposal must release the same per-sandbox state, and regression coverage must exercise two sandboxes sharing one host object.
+Two forms of sharing remain:
+
+- Primitive values one library writes into a granted object are visible to every other grantee. This is data, not code, but it is still a communication channel between libraries.
+- The guard covers property assignment through the membrane, not host methods. A host method that stores its arguments, such as `addEventListener()` on a shared event target, can keep a function from one library and later call it with arguments that originate from another library.
+
+Developers should therefore still avoid granting the same mutable host object to more than one untrusted library. This limitation concerns host state that the developer chose to share; it does not make an unconfigured browser global available to a sandbox.
+
+**Future work:** if a library needs to store structured data in a host property, add an explicit by-value copy for plain data rather than relaxing the primitive-only rule. Mediating callbacks stored by host methods would require per-capability facades, in the style of the constrained `crypto` capability.

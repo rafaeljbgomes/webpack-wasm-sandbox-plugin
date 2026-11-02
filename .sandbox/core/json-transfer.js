@@ -11,9 +11,6 @@
 /** Upper bound on visited values before falling back to Arena marshalling. */
 const MAX_JSON_NODES = 10000;
 
-// Results offered by the forward membrane; each entry is consumed once.
-const offeredResults = new WeakSet();
-
 /**
  * Tests whether a value round-trips through JSON without observable loss.
  *
@@ -65,25 +62,31 @@ export function isPlainJsonGraph(root) {
 }
 
 /**
- * Marks a fresh host call result as eligible for by-value transfer.
+ * Creates the offer set that links one sandbox's forward membrane to the
+ * Arena marshalling of the same sandbox.
  *
- * @param {object} result Value returned by a permitted host function.
- * @returns {void}
- */
-export function offerJsonTransfer(result) {
-  offeredResults.add(result);
-}
-
-/**
- * Consumes an offer and confirms that the value is still plain JSON data.
+ * Offers are scoped to the sandbox so a result produced for one QuickJS
+ * context can never change how another context's Arena marshals it.
  *
- * @param {unknown} value Value Arena is about to marshal into QuickJS.
- * @returns {boolean} Whether Arena should copy the value with JSON.
+ * @returns {{offer: (result: object) => void, take: (value: unknown) => boolean}}
+ *   `offer` marks a fresh host call result as eligible for by-value transfer;
+ *   `take` consumes an offer and confirms the value is still plain JSON data.
  */
-export function takeJsonTransfer(value) {
-  if ((typeof value !== "object" || value === null) || !offeredResults.has(value)) {
-    return false;
-  }
-  offeredResults.delete(value);
-  return isPlainJsonGraph(value);
+export function createJsonTransfer() {
+  // Results offered by the forward membrane; each entry is consumed once.
+  const offeredResults = new WeakSet();
+  return {
+    /** Marks a fresh host call result as eligible for by-value transfer. */
+    offer: (result) => {
+      offeredResults.add(result);
+    },
+    /** Consumes an offer and re-checks that the value is still plain JSON data. */
+    take: (value) => {
+      if ((typeof value !== "object" || value === null) || !offeredResults.has(value)) {
+        return false;
+      }
+      offeredResults.delete(value);
+      return isPlainJsonGraph(value);
+    },
+  };
 }

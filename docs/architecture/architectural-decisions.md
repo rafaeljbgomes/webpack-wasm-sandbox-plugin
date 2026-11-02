@@ -627,3 +627,44 @@ Sandbox initialisation also fell for every library (date-fns from 1,490 ms to 37
 
 **Consequences:** A package's declarations can no longer add code to the host proxy. Unusual but legitimate export names become usable instead of breaking the generated module. Identifier export names keep their previous aliases, so generated proxies for the evaluated libraries change only in how the default-constructor fallback is read (`proxyExports["Mime"]` instead of `proxyExports.Mime`). This closes one build-time injection path; it is not a review of all generated code, and the parser still reports type-only names as runtime exports. Regressions live in `webpack-sandbox-plugin/test/source-literals.test.mjs`, `proxy-generator.test.mjs`, `generated-proxy.test.mjs` (hostile names imported end to end) and `.sandbox/test/reverse-membrane.test.mjs`.
 
+---
+
+## 31/10/2026 - 29. Membrane state is owned by each sandbox
+
+**Problem:** The forward wrapper cache, the reverse export and returned-object caches, the by-value transfer offers and the `__SANDBOX_TEMP__` identifier counter were module-scoped, so every sandbox in a process shared them (issue #3). Two concrete failures followed:
+
+1. A forward wrapper is a mutable host object that its Arena synchronizes with QuickJS. When sandbox A replaced `TestShared.describe` on a granted host object, the replacement was stored on the shared wrapper. Sandbox B, created later with the same permission, received that wrapper, so its call to `TestShared.describe(secret)` ran A's QuickJS function with B's arguments.
+2. `sandbox.wrapResult(value)` returned the cached reverse wrapper of whichever sandbox wrapped `value` first. Calls through B's result therefore ran in A's context and failed with `Lifetime not alive` once A was disposed.
+
+The module-scoped caches also kept wrappers for long-lived host values after their sandbox was disposed, and those wrappers kept the disposed Arena, and through it the WebAssembly module, reachable. Identifiers in `__SANDBOX_TEMP__` are visible to guest code and revealed how many objects other sandboxes had pinned.
+
+**Decision:** `buildSandbox()` creates the membrane state for its sandbox through three factories: `createJsonTransfer()`, `createForwardMembrane({ offerJsonTransfer })` and `createReverseMembrane(arena, sbHelpers)`. The membrane modules keep no mutable module-scoped state. `exposeWebAPIs()` and `createArenaConfig()` receive the sandbox's forward membrane and transfer offers explicitly, and `createArenaConfig()` without offers transfers nothing by value. Sandbox disposal releases both membranes before the marshallers, helpers, Arena and context. After that, every wrapper and boundary helper of the sandbox throws `The sandbox has been disposed` rather than reaching the released context.
+
+**Consequences:**
+
+- Identity is preserved for repeated references and cycles within a sandbox, not across sandboxes. A replaced method or added property on one sandbox's wrapper is invisible to its siblings.
+- Separate wrappers do not copy host state. Writes to existing data properties of a granted host object still go through to the host, so a function one library writes there remains callable by another library granted the same object. AD#30 closes that path.
+- A call through a disposed sandbox now throws a plain `Error` with that message instead of `QuickJSUseAfterFree`; `generated-proxy.test.mjs` pins the new message for `disposeLibrary()`. A second `dispose()` still throws `QuickJSUseAfterFree` from the Arena.
+- Per-sandbox closures add no boundary crossings, and steady-state calls still compile no QuickJS source (`boundary-runtime.test.mjs`).
+- `.sandbox/test/membrane-ownership.test.mjs` reproduces both failures above and checks, in a child process with `--expose-gc`, that disposal releases wrappers and the Arena while wrapped host values stay alive.
+
+---
+
+## 31/10/2026 - 30. Only primitive values write through to exposed host objects
+
+**Problem:** AD#29 gave each sandbox its own forward wrappers, but a wrapper's accessor for an existing host property still assigned whatever QuickJS wrote straight onto the host object (`apiObject[key] = val`). When two sandboxes were granted the same mutable host object, sandbox A could assign a QuickJS function to such a property. Sandbox B then read the property, received A's Arena-wrapped function, and calling it ran A's QuickJS code with B's arguments. Functions were not the only carrier. A QuickJS object with a getter arrives on the host as a live Arena proxy, and a forward wrapper that A writes back (for example `TestShared.mode = TestShared`) is A's own mutable wrapper, on which A can replace methods. B reaching either one runs A's code just as directly.
+
+**Options considered:**
+
+1. Reject only function values. This leaves the object and wrapper paths open.
+2. Make write-through an explicit per-capability policy (read-only unless the policy marks a capability writable). This only moves the problem, because two sandboxes that are both granted write access to the same object reach the same channel. It also changes the policy format and the default for every existing permission.
+3. Let only primitive values write through and reject functions and every object.
+
+**Decision:** Option 3. The setter that `bindWebApi()` defines for an existing host property writes the value through only when it is `null` or neither an object nor a function. Otherwise it throws a `TypeError` naming the property, which reaches QuickJS as a catchable `TypeError`, and the host property is left unchanged. Arena forwards QuickJS assignments to synchronized host objects through this setter, so every assignment path from guest code meets the check. Properties that a sandbox adds to its own wrapper and methods that it replaces there remain local to that wrapper (AD#29) and are unaffected.
+
+**Consequences:**
+
+- A sandbox can no longer leave code, a live QuickJS object, or one of its wrappers in a granted host object for another sandbox to use. The former `todo` in `.sandbox/test/membrane-ownership.test.mjs` is now a guard for all three values. `forward-membrane.test.mjs` checks that every primitive type still writes through, that functions, plain objects, arrays, typed arrays and wrappers are rejected without changing the host, and that QuickJS can catch the error.
+- Primitive write-through, which `QuickJS writes to an exposed host object reach the host` exercises, is unchanged. The evaluated policies grant `Intl`, `TextEncoder`, `TextDecoder` and the `crypto` facade; the compatibility campaigns showed no new failures with the check in place.
+- Assigning a handler function to a host property, such as `element.onclick = fn`, now throws. Libraries that need this must use the corresponding method, such as `addEventListener()`. Typed arrays and plain data are rejected even though they would arrive as copies; a by-value copy can be added if a library needs one.
+- Primitive values written by one library remain visible to other grantees, and host methods that store their arguments (for example event listeners on a shared target) are outside the check. Granting one mutable host object to several untrusted libraries is still a shared channel, as [isolation-coverage-and-cache-limitations.md](isolation-coverage-and-cache-limitations.md) records.

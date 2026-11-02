@@ -164,7 +164,11 @@ test("absent host globals are skipped without membrane conversion", () => {
     sync() { assert.fail("An absent host global must not be converted"); },
     expose(value) { exposed = value; },
   };
-  exposeWebAPIs(arena, "fixture", ["__advisor_absent_host_global__"]);
+  const membrane = {
+    bindWebApi() { assert.fail("An absent host global must not be wrapped"); },
+    makeCallable() { assert.fail("An absent host global must not be wrapped"); },
+  };
+  exposeWebAPIs(arena, "fixture", ["__advisor_absent_host_global__"], membrane);
   assert.deepEqual(exposed, {});
 });
 
