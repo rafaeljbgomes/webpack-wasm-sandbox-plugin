@@ -1,1 +1,1 @@
-{"total": 72, "class identity (instanceof)": 24, "reference identity (Object.is)": 20, "error raised inside VM callback": 10, "internal API not in declarations": 6, "other": 6, "value/representation differs": 6}
+{"total": 96, "reference identity (Object.is)": 30, "class identity (instanceof)": 26, "other": 18, "value/representation differs": 14, "internal API not in declarations": 6, "host mocks/spies not seen by VM": 2}

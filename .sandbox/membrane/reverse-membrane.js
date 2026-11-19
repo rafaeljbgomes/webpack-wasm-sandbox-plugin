@@ -63,6 +63,7 @@ function shouldWrapReturned(value) {
     value instanceof Date ||
     value instanceof RegExp ||
     value instanceof Error ||
+    value instanceof Promise ||
     value instanceof Set ||
     value instanceof Map ||
     Array.isArray(value) ||

@@ -54,13 +54,13 @@ const LIBRARY_BODY = `
   };
 `;
 
-test("all four marshallers are registered and claim their host types", async () => {
+test("all six marshallers are registered and claim their host types", async () => {
   const qjs = await getQuickJS();
   const vm = qjs.newContext();
   const { arenaOptions, dispose } = createArenaConfig(vm);
   try {
-    assert.equal(arenaOptions.customMarshaller.length, 4);
-    assert.equal(arenaOptions.customUnmarshaller.length, 4);
+    assert.equal(arenaOptions.customMarshaller.length, 6);
+    assert.equal(arenaOptions.customUnmarshaller.length, 6);
     const args = (function () { return arguments; })(1);
     for (const value of [new Uint8Array(1), /x/, args, new Error("e")]) {
       assert.equal(arenaOptions.isWrappable(value), false, Object.prototype.toString.call(value));

@@ -4,6 +4,8 @@ import { createTypedArrayMarshaller } from "./typed-array.js";
 import { createRegExpMarshaller } from "./regexp.js";
 import { createArgumentsMarshaller } from "./arguments.js";
 import { createErrorMarshaller } from "./error.js";
+import { createArrayExtrasMarshaller } from "./array-extras.js";
+import { createSetMapMarshaller } from "./set-map.js";
 
 /**
  * Compiles one QuickJS predicate that reports which registered marshaller, if
@@ -46,6 +48,8 @@ export function createArenaConfig(vm, takeJsonTransfer = () => false) {
     createRegExpMarshaller(vm),
     createArgumentsMarshaller(vm),
     createErrorMarshaller(vm),
+    createArrayExtrasMarshaller(vm),
+    createSetMapMarshaller(vm),
   ];
 
   // Compiled before library code runs; the predicates keep the original
