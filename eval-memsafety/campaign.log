@@ -1,0 +1,295 @@
+Aborted()
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2966,JS_FreeAtomStruct)
+Aborted()
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_get_atom_index)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: descr < rt->atom_size, at: ../../vendor/quickjs/quickjs.c,3107,JS_NewSymbolFromAtom)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted()
+Aborted()
+Aborted()
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: sh->header.ref_�ount == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: atom < rt->atom_size, at: ../..�vendor/qic�js/quickjs.c,3123,JS_A�omGetStrR~)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted()
+Sandbox async execution error: RuntimeError: memory access out of bounds
+    at wasm://wasm/001eb57a:wasm-function[150]:0x7972
+    at ModuleMemory.newTypedArray (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:4:4496)
+    at ModuleMemory.newMutablePointerArray (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:4:4718)
+    at QuickJSRuntime.executePendingJobs (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:5:4814)
+    at ve.executePendingJobs (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js:1219:36)
+    at drain (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/.sandbox/core/sandbox-manager.js:47:15)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_get_atom_index)
+Aborted(Assertion failed: vd->is_captured, at: ../../vendor/quickjs/quickjs.c,16632,get_var_ref)
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2966,JS_FreeAtomStruct)
+Aborted()
+Aborted(Assertion failed: atom < rt->atom_size, at: ../../vendor/quickjs/quickjs.c,3177,__JS_AtomToValue)
+Aborted()
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_get_atom_index)
+Aborted(Assertion failed: atom < rt->atom_size, at: ../../vendor/quickjs/quickjs.c,3177,__JS_AtomToValue)
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_get_atom_index)
+Aborted()
+Aborted()
+Aborted(Assertion failed: atom < rt->atom_size, at: ../../vendor/quickjs/quickjs.c,3177,__JS_AtomToValue)
+Aborted()
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_get_atom_index)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_~et_atom_index)
+Aborted()
+Aborted()
+Sandbox async execution error: RuntimeError: memory access out of bounds
+    at wasm://wasm/001eb57a:wasm-function[150]:0x7972
+    at ModuleMemory.newTypedArray (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:4:4496)
+    at ModuleMemory.newMutablePointerArray (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:4:4718)
+    at QuickJSRuntime.executePendingJobs (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:5:4814)
+    at ve.executePendingJobs (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js:1219:36)
+    at drain (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/.sandbox/core/sandbox-manager.js:47:15)
+Sandbox async execution error: RuntimeError: memory access out of bounds
+    at wasm://wasm/001eb57a:wasm-function[150]:0x7972
+    at ModuleMemory.newTypedArray (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:4:4496)
+    at ModuleMemory.newMutablePointerArray (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:4:4718)
+    at QuickJSRuntime.executePendingJobs (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-core/dist/chunk-V2S4ZYJR.mjs:5:4814)
+    at ve.executePendingJobs (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js:1219:36)
+    at drain (file:///private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/.sandbox/core/sandbox-manager.js:47:15)
+Aborted()
+Aborted()
+Aborted()
+Aborted()
+Aborted()
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_get_atom_index)
+Aborted()
+Aborted(Assertion failed: p->ref_count == 0, at: ../../vendor/quickjs/quickjs.c,6009,free_zero_refcount)
+Aborted()
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2741,js_get_atom_index)
+Aborted(Assertion failed: var_ref_idx < b->var_ref_count, at: ../../vendor/quickjs/quickjs.c,16634,get_var_ref)
+Aborted()
+Aborted()
+Aborted(Assertion failed: vd->is_captured, at: ../../vendor/quickjs/quickjs.c,16632,get_var_ref)
+Aborted()
+Aborted()
+Aborted(Assertion failed: i != 0, at: ../../vendor/quickjs/quickjs.c,2966,JS_FreeAtomStruct)
+Aborted(Assertion failed: !s->is_completed, at: ../../vendor/quickjs/quickjs.c,20369,async_func_resume)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: sf->cur_sp != NULL, at: ../../vendor/quickjs/quickjs.c,20355,async_func_free_frame)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted(Assertion failed: descr < rt->atom_size, at: ../../vendor/quickjs/quickjs.c,3107,JS_NewSymbolFromAtom)
+Aborted(Assertion failed: sf->cur_sp != NULL, at: ../../vendor/quickjs/quickjs.c,20355,async_func_free_frame)
+Aborted(Assertion failed: i != 0, at: ../.�/vendor/quickjs/quickjs.c,2966,JS_FreeAtomStruct)
+Aborted(Assertion failed: p->ref_count == 0, at: ../../vendor/quickjs/quickjs.c,6009,free_zero_refcount)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+Aborted()
+Aborted(Assertion failed: atom < rt->atom_size, at: ../../vendor/quickjs/quickjs.c,3123,JS_AtomGetStrRT)
+Aborted(Assertion failed: sh->header.ref_count == 0, at: ../../vendor/quickjs/quickjs.c,4897,js_free_shape0)
+{
+ "node": "v25.8.1",
+ "v8": "14.1.146.11-node.21",
+ "summary": {
+  "strip-ansi|1": {
+   "trials": 100,
+   "A": {
+    "correct": 100
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "strip-ansi|16": {
+   "trials": 100,
+   "A": {
+    "correct": 94,
+    "js-exception": 4,
+    "wasm-trap": 2
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "strip-ansi|256": {
+   "trials": 100,
+   "A": {
+    "wasm-trap": 33,
+    "correct": 20,
+    "js-exception": 43,
+    "wrong-result": 3,
+    "hang": 1
+   },
+   "bOk": 99,
+   "hostOk": 99,
+   "bMemUnchanged": 99,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "strip-ansi|4096": {
+   "trials": 100,
+   "A": {
+    "wasm-trap": 87,
+    "js-exception": 12,
+    "hang": 1
+   },
+   "bOk": 99,
+   "hostOk": 99,
+   "bMemUnchanged": 99,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "strip-ansi|all": {
+   "trials": 20,
+   "A": {
+    "wasm-trap": 20
+   },
+   "bOk": 20,
+   "hostOk": 20,
+   "bMemUnchanged": 20,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "lodash|1": {
+   "trials": 100,
+   "A": {
+    "correct": 100
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "lodash|16": {
+   "trials": 100,
+   "A": {
+    "correct": 98,
+    "wasm-trap": 1,
+    "js-exception": 1
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 3,
+   "warmFail": 0
+  },
+  "lodash|256": {
+   "trials": 100,
+   "A": {
+    "correct": 75,
+    "wasm-trap": 6,
+    "js-exception": 18,
+    "hang": 1
+   },
+   "bOk": 99,
+   "hostOk": 99,
+   "bMemUnchanged": 99,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 44,
+   "warmFail": 0
+  },
+  "lodash|4096": {
+   "trials": 100,
+   "A": {
+    "js-exception": 57,
+    "wasm-trap": 41,
+    "wrong-result": 1,
+    "correct": 1
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 80,
+   "warmFail": 0
+  },
+  "lodash|all": {
+   "trials": 20,
+   "A": {
+    "wasm-trap": 20
+   },
+   "bOk": 20,
+   "hostOk": 20,
+   "bMemUnchanged": 20,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "marked|1": {
+   "trials": 100,
+   "A": {
+    "correct": 98,
+    "wasm-trap": 1,
+    "js-exception": 1
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "marked|16": {
+   "trials": 100,
+   "A": {
+    "correct": 84,
+    "wrong-result": 1,
+    "wasm-trap": 5,
+    "js-exception": 10
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "marked|256": {
+   "trials": 100,
+   "A": {
+    "wasm-trap": 44,
+    "correct": 14,
+    "js-exception": 42
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "marked|4096": {
+   "trials": 100,
+   "A": {
+    "wasm-trap": 65,
+    "js-exception": 35
+   },
+   "bOk": 100,
+   "hostOk": 100,
+   "bMemUnchanged": 100,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  },
+  "marked|all": {
+   "trials": 20,
+   "A": {
+    "wasm-trap": 20
+   },
+   "bOk": 20,
+   "hostOk": 20,
+   "bMemUnchanged": 20,
+   "callsOutsideA": 0,
+   "hostErrorsInA": 0,
+   "warmFail": 0
+  }
+ }
+}

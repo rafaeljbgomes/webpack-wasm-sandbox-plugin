@@ -1,7 +1,7 @@
 // Import the one QuickJS build the runtime uses. The `quickjs-emscripten`
 // entry point references all four builds (release/debug x sync/asyncify), so
 // importing it makes bundlers ship every .wasm file.
-import { newQuickJSWASMModuleFromVariant } from "quickjs-emscripten-core";
+import { newQuickJSWASMModuleFromVariant, newVariant } from "quickjs-emscripten-core";
 import RELEASE_SYNC from "@jitl/quickjs-wasmfile-release-sync";
 import { Arena } from "quickjs-emscripten-sync";
 import { createArenaConfig } from "../marshallers/index.js";
@@ -144,8 +144,65 @@ function detachUnwrapErrorContext(vm) {
  * @param {object} [options] Optional explicit permissions and workload definitions loaded into the same context.
  * @returns {object} Sandbox exports, workload access, boundary helpers, and lifecycle controls.
  */
+/** Wasm page size and the QuickJS build's initial memory (16 MiB). */
+const WASM_PAGE = 65536;
+const INITIAL_PAGES = 256;
+
+/**
+ * Returns the QuickJS variant for a dedicated module instance. With
+ * `limits.memoryBytes`, the instance gets a linear memory whose maximum is
+ * that size, so allocation past it fails inside QuickJS ("out of memory").
+ * QuickJS's own malloc limit is not used: in this build it cannot measure
+ * allocation sizes and does not bound the linear memory.
+ *
+ * @param {{memoryBytes?: number}} [limits] Limits.
+ */
+function variantFor(limits) {
+  if (limits?.memoryBytes === undefined) return RELEASE_SYNC;
+  const { memoryBytes } = limits;
+  if (!Number.isInteger(memoryBytes) || memoryBytes < INITIAL_PAGES * WASM_PAGE) {
+    throw new Error(`limits.memoryBytes must be an integer >= ${INITIAL_PAGES * WASM_PAGE}`);
+  }
+  const maximum = Math.floor(memoryBytes / WASM_PAGE);
+  return newVariant(RELEASE_SYNC, { wasmMemory: new WebAssembly.Memory({ initial: INITIAL_PAGES, maximum }) });
+}
+
+/**
+ * Applies the optional per-call time limit to a sandbox context.
+ *
+ * `callTimeMs` bounds the wall-clock time of each outermost entry into the VM:
+ * QuickJS polls the interrupt handler during execution and throws an
+ * InternalError ("interrupted") that sandboxed code cannot catch once the
+ * deadline passes. Time spent in host functions that the library called
+ * counts toward the deadline, but a host function is not stopped mid-way.
+ *
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Sandbox context.
+ * @param {{callTimeMs?: number}} [limits] Limits.
+ */
+function applyLimits(vm, limits) {
+  const callTimeMs = limits?.callTimeMs;
+  if (callTimeMs === undefined) return;
+  if (!(callTimeMs > 0)) throw new Error("limits.callTimeMs must be positive");
+  let depth = 0;
+  let deadline = Infinity;
+  vm.runtime.setInterruptHandler(() => depth > 0 && Date.now() > deadline);
+  for (const name of VM_ENTRY_POINTS) {
+    const original = vm[name];
+    if (typeof original !== "function") continue;
+    vm[name] = function limitedVmEntry(...args) {
+      if (depth++ === 0) deadline = Date.now() + callTimeMs;
+      try {
+        return original.apply(this, args);
+      } finally {
+        depth--;
+      }
+    };
+  }
+}
+
 function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   let arena;
+  applyLimits(vm, options.limits);
   memoizeHandleTypes(vm);
   detachUnwrapErrorContext(vm);
   // Observe VM entries first so jobs queued during library initialization drain.
@@ -349,6 +406,9 @@ export class SandboxManager {
     if (!sharedModule) {
       throw new Error("QuickJS module not loaded: await SandboxManager.ready() before createSandboxSync()");
     }
+    if (options.limits?.memoryBytes !== undefined) {
+      throw new Error("limits.memoryBytes needs a dedicated module: use createSandbox()");
+    }
     const qjs = sharedModule;
     const sandbox = buildSandbox(
       qjs.newContext(),
@@ -374,13 +434,28 @@ export class SandboxManager {
    */
   static async createSandbox(libraryName, libraryCode, options = {}) {
     validatePermissions(options.permissions, options.writable);
-    const qjs = await newQuickJSWASMModuleFromVariant(RELEASE_SYNC);
+    // Opt-in measurement hook: the evaluation harness defines the array.
+    const timings = globalThis.__SANDBOX_TIMINGS__;
+    const t0 = timings ? performance.now() : 0;
+    const qjs = await newQuickJSWASMModuleFromVariant(variantFor(options.limits));
+    const t1 = timings ? performance.now() : 0;
+    const vm = qjs.newContext();
+    const t2 = timings ? performance.now() : 0;
     const sandbox = buildSandbox(
-      qjs.newContext(),
+      vm,
       libraryName,
       libraryCode,
       options,
     );
+    if (Array.isArray(timings)) {
+      timings.push({
+        library: libraryName,
+        wasmInstantiateMs: t1 - t0,
+        contextMs: t2 - t1,
+        bundleAndMembraneMs: performance.now() - t2,
+        wasmMemoryBytes: qjs.getWasmMemory().buffer.byteLength,
+      });
+    }
     return sandbox;
   }
 }

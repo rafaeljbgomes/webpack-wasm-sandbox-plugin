@@ -23,8 +23,39 @@ export interface LibraryPolicy {
    * read-only otherwise: every other assignment to a granted host object fails.
    */
   writable?: Record<string, string[]>;
+  /**
+   * Resource limits for this library's sandbox: `callTimeMs` bounds each call
+   * into the VM, `memoryBytes` caps the Wasm linear memory of its instance.
+   */
+  limits?: SandboxLimits;
   workloads?: Record<string, WorkloadConfig>;
   [key: string]: unknown;
+}
+
+export interface SandboxLimits {
+  callTimeMs?: number;
+  memoryBytes?: number;
+}
+
+/** Validates `limits`: only known keys, positive numbers, memory >= 16 MiB. */
+export function normalizeLimits(name: string, value: unknown): SandboxLimits | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`[SandboxPlugin] Limits for ${name} must be an object`);
+  }
+  const out: SandboxLimits = {};
+  for (const [key, v] of Object.entries(value)) {
+    if (key === "callTimeMs") {
+      if (typeof v !== "number" || !(v > 0)) throw new Error(`[SandboxPlugin] limits.callTimeMs for ${name} must be a positive number`);
+      out.callTimeMs = v;
+    } else if (key === "memoryBytes") {
+      if (!Number.isInteger(v) || (v as number) < 16 * 1024 * 1024) throw new Error(`[SandboxPlugin] limits.memoryBytes for ${name} must be an integer >= 16 MiB`);
+      out.memoryBytes = v as number;
+    } else {
+      throw new Error(`[SandboxPlugin] Unknown limit "${key}" for ${name}`);
+    }
+  }
+  return out;
 }
 
 const isNonEmptyString = (value: unknown): value is string => typeof value === "string" && value.length > 0;
@@ -99,12 +130,14 @@ export function loadSandboxPolicy(configPath: string, context: string): Record<s
     resolveLibraryEntry(name, context);
     const subpaths = normalizeSubpaths(name, (value as LibraryPolicy).subpaths);
     const writable = normalizeWritable(name, (value as LibraryPolicy).writable, permissions);
+    const limits = normalizeLimits(name, (value as LibraryPolicy).limits);
     // The new fields appear only when declared, so existing policies normalize unchanged.
     normalized[name] = {
       ...value,
       permissions: [...permissions],
       ...(subpaths.length ? { subpaths } : {}),
       ...(Object.keys(writable).length ? { writable } : {}),
+      ...(limits ? { limits } : {}),
     };
   }
   return normalized;

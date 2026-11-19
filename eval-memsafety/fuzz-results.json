@@ -1,0 +1,253 @@
+{
+ "perLibrary": {
+  "sameModule": false,
+  "imports": {
+   "functions": 19,
+   "memories": 1,
+   "other": 0
+  },
+  "ctxA": 5348120,
+  "ctxB": 5348120,
+  "registeredHostFunctions": {
+   "A": 1,
+   "B": 13
+  },
+  "bSecretInAttackerMemory": false,
+  "callFunctionFuzz": {
+   "calls": 7224,
+   "outcomes": {
+    "returned": 7224
+   },
+   "hostFunctionInvocations": 6,
+   "owners": {
+    "A": 6
+   },
+   "names": [
+    "A:proxyFuncs"
+   ]
+  },
+  "freeHostRefAttack": {
+   "rtA": 5333400,
+   "rtB": 5333400,
+   "freed": 1,
+   "rejected": 299
+  },
+  "bAfter": true
+ },
+ "shared": {
+  "sameModule": true,
+  "imports": {
+   "functions": 19,
+   "memories": 1,
+   "other": 0
+  },
+  "ctxA": 5348120,
+  "ctxB": 5476568,
+  "registeredHostFunctions": {
+   "A": 1,
+   "B": 13
+  },
+  "bSecretInAttackerMemory": true,
+  "callFunctionFuzz": {
+   "calls": 7224,
+   "outcomes": {
+    "returned": 7224
+   },
+   "hostFunctionInvocations": 906,
+   "owners": {
+    "A": 3,
+    "B": 903
+   },
+   "names": [
+    "A:proxyFuncs",
+    "B:proxyFuncs",
+    "B:<anon>"
+   ]
+  },
+  "freeHostRefAttack": {
+   "rtA": 5333400,
+   "rtB": 5459840,
+   "freed": 300,
+   "rejected": 0
+  },
+  "bAfter": true
+ },
+ "allImports": {
+  "b": {
+   "src": "(a,c,b,e)=>N(`Assertion failed: ${R(a)}, at: `+[c?R(c):\"unkn",
+   "outcomes": {
+    "wasm-trap": 500
+   },
+   "consoleWrites": 500,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "q": {
+   "src": "()=>N(\"\")",
+   "outcomes": {
+    "wasm-trap": 500
+   },
+   "consoleWrites": 500,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "l": {
+   "src": "()=>{Q=!1;S=0}",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "m": {
+   "src": "function(a,c){a=-9007199254740992>a||9007199254740992<a?NaN:",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "j": {
+   "src": "(a,c)=>{T[a]&&(clearTimeout(T[a].id),delete T[a]);if(!c)retu",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 500,
+   "hostFunctionInvocations": 0
+  },
+  "n": {
+   "src": "(a,c,b,e)=>{var f=(new Date).getFullYear(),g=(new Date(f,0,1",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "p": {
+   "src": "()=>Date.now()",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "k": {
+   "src": "a=>{var c=K.length;a>>>=0;if(2147483648<a)return!1;for(var b",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "e": {
+   "src": "(a,c)=>{var b=0,e=0,f;for(f of ra()){var g=c+b;M[a+e>>2]=g;b",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "f": {
+   "src": "(a,c)=>{var b=ra();M[a>>2]=b.length;a=0;for(var e of b)a+=X(",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "d": {
+   "src": "()=>52",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "o": {
+   "src": "function(){return 70}",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "c": {
+   "src": "(a,c,b,e)=>{for(var f=0,g=0;g<b;g++){var h=M[c>>2],m=M[c+4>>",
+   "outcomes": {
+    "returned": 478,
+    "js-exception": 22
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "r": {
+   "src": "a=>{G=a;Q||0<S||(d.onExit?.(a),F=!0);v(a,new P(a))}",
+   "outcomes": {
+    "exit": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "s": {
+   "src": "function(a,c,b,e,f){return d.callbacks.callFunction(void 0,a",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 500,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "i": {
+   "src": "function(a){return d.callbacks.shouldInterrupt(void 0,a)}",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 500,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "h": {
+   "src": "function(a,c,b){b=R(b);return d.callbacks.loadModuleSource(v",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 500,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "g": {
+   "src": "function(a,c,b,e){b=R(b);e=R(e);return d.callbacks.normalize",
+   "outcomes": {
+    "returned": 500
+   },
+   "consoleWrites": 500,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "t": {
+   "src": "function(a,c){d.callbacks.freeHostRef(void 0,a,c)}",
+   "outcomes": {
+    "js-exception": 500
+   },
+   "consoleWrites": 0,
+   "timersScheduled": 0,
+   "hostFunctionInvocations": 0
+  },
+  "memoryGrowthBytes": 2130706432
+ },
+ "hostErrors": 228,
+ "node": "v25.8.1",
+ "v8": "14.1.146.11-node.21"
+}

@@ -1,0 +1,131 @@
+{
+ "callbackAbuse": {
+  "typeof": "function",
+  "toString": "function appCallback() {\n    [native code]\n}",
+  "probe": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "undefined,undefined,undefined,undefined",
+   "call.constructor": "undefined,undefined,undefined,undefined",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "craftedReturn": "url,fn",
+  "getterRunsDuringCall": 0,
+  "toctouReturn": "toctou",
+  "proxyArg": "",
+  "amplifiedCalls": 1000,
+  "hostErrorName": "TypeError",
+  "hostErrorProbe": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "returnedType": "object",
+  "returnedCall": "host-method-ran",
+  "returnedProbe": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "hostSawCraftedAs": {
+   "urlIsGetter": true,
+   "url": "https://attacker.example/x",
+   "fnType": "function"
+  },
+  "hostCallingVmFn": "vm-fn-ran",
+  "secretMethodRanOnHost": 1,
+  "toctouHostReads": [
+   "https://app.example/safe",
+   "https://attacker.example/evil"
+  ],
+  "replayAfterReturn": "replay",
+  "replayReachedHost": true
+ },
+ "grantedApiAbuse": {
+  "Intl.DateTimeFormat": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "undefined,undefined,undefined,undefined",
+   "call.constructor": "undefined,undefined,undefined,undefined",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "new Intl.DateTimeFormat()": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "dtf.format": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "undefined,undefined,undefined,undefined",
+   "call.constructor": "undefined,undefined,undefined,undefined",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "dtf.resolvedOptions()": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "dtf.formatToParts()": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "Intl.NumberFormat": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "undefined,undefined,undefined,undefined",
+   "call.constructor": "undefined,undefined,undefined,undefined",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "TextEncoder": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "undefined,undefined,undefined,undefined",
+   "call.constructor": "undefined,undefined,undefined,undefined",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "new TextEncoder().encode()": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "new TextDecoder()": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "crypto": {
+   "constructor.constructor": "threw TypeError",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "n/a"
+  },
+  "crypto.getRandomValues": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "undefined,undefined,undefined,undefined",
+   "call.constructor": "undefined,undefined,undefined,undefined",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "crypto.subtle": "undefined",
+  "hostErrorName": "RangeError",
+  "hostErrorProbe": {
+   "constructor.constructor": "undefined,undefined,undefined,undefined",
+   "getPrototypeOf.constructor": "threw TypeError",
+   "call.constructor": "n/a",
+   "__proto__.constructor": "undefined,undefined,undefined,undefined"
+  },
+  "craftedArgs": {
+   "getRandomValues(Proxy)": "threw TypeError",
+   "getRandomValues({length:1e9})": "threw TypeError",
+   "getRandomValues(Uint8Array(70000))": "threw QuotaExceededError",
+   "TextDecoder.decode(getter object)": "threw TypeError",
+   "DateTimeFormat(locale with toString)": "returned 1/1/1970"
+  },
+  "ungranted": "fetch:undefined XMLHttpRequest:undefined localStorage:undefined document:undefined process:undefined require:undefined setTimeout:undefined WebAssembly:undefined performance:undefined",
+  "hostIntrinsicsUnchanged": true
+ },
+ "node": "v25.8.1"
+}

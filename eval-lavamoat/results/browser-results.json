@@ -1,0 +1,363 @@
+{
+ "lodash--native": {
+  "title": "Lodash Prototype Pollution (native)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nHost canary before _.unset\thost-canary\thost-canary\tPASS\nVulnerable _.unset return value\ttrue\ttrue\tPASS\nHost canary after _.unset\tdeleted\tdeleted\tPASS\n\nBoth modes execute the same application and lodash@4.17.21 installation.\n\nThe vulnerable native dependency deleted the host prototype canary.",
+  "rows": [
+   [
+    "Host canary before _.unset",
+    "host-canary",
+    "host-canary",
+    "PASS"
+   ],
+   [
+    "Vulnerable _.unset return value",
+    "true",
+    "true",
+    "PASS"
+   ],
+   [
+    "Host canary after _.unset",
+    "deleted",
+    "deleted",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "lodash--sandbox": {
+  "title": "Lodash Prototype Pollution (sandbox)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nHost canary before _.unset\thost-canary\thost-canary\tPASS\nVulnerable _.unset return value\ttrue\ttrue\tPASS\nHost canary after _.unset\thost-canary\thost-canary\tPASS\n\nBoth modes execute the same application and lodash@4.17.21 installation.\n\nThe import was redirected to the generated proxy; the host prototype canary remained intact.",
+  "rows": [
+   [
+    "Host canary before _.unset",
+    "host-canary",
+    "host-canary",
+    "PASS"
+   ],
+   [
+    "Vulnerable _.unset return value",
+    "true",
+    "true",
+    "PASS"
+   ],
+   [
+    "Host canary after _.unset",
+    "host-canary",
+    "host-canary",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "lodash--lavamoat-clean": {
+  "title": "Sandbox security validation",
+  "verdict": null,
+  "text": "SCENARIO ERROR: Cannot add property __security_canary__, object is not extensible",
+  "rows": [],
+  "errors": [
+   "SCENARIO ERROR Cannot add property __security_canary__, object is not extensible"
+  ]
+ },
+ "lodash--lavamoat-regen": {
+  "title": "Sandbox security validation",
+  "verdict": null,
+  "text": "SCENARIO ERROR: Cannot add property __security_canary__, object is not extensible",
+  "rows": [],
+  "errors": [
+   "SCENARIO ERROR Cannot add property __security_canary__, object is not extensible"
+  ]
+ },
+ "strip-ansi--native": {
+  "title": "strip-ansi Supply-chain Fixture (native)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nNormal ANSI removal\tsecurity probe\tsecurity probe\tPASS\nHost API references\tintercepted\tintercepted\tPASS\nfetch transaction recipient\t0x9999999999999999999999999999999999999999\t0x9999999999999999999999999999999999999999\tPASS\nXMLHttpRequest transaction recipient\t0x9999999999999999999999999999999999999999\t0x9999999999999999999999999999999999999999\tPASS\nWallet transaction recipient\t0x9999999999999999999999999999999999999999\t0x9999999999999999999999999999999999999999\tPASS\n\nThe installed strip-ansi package contains a harmless evaluation patch that reproduces API interception and recipient rewriting without external requests.\n\nNative execution allowed the altered dependency to replace host APIs.",
+  "rows": [
+   [
+    "Normal ANSI removal",
+    "security probe",
+    "security probe",
+    "PASS"
+   ],
+   [
+    "Host API references",
+    "intercepted",
+    "intercepted",
+    "PASS"
+   ],
+   [
+    "fetch transaction recipient",
+    "0x9999999999999999999999999999999999999999",
+    "0x9999999999999999999999999999999999999999",
+    "PASS"
+   ],
+   [
+    "XMLHttpRequest transaction recipient",
+    "0x9999999999999999999999999999999999999999",
+    "0x9999999999999999999999999999999999999999",
+    "PASS"
+   ],
+   [
+    "Wallet transaction recipient",
+    "0x9999999999999999999999999999999999999999",
+    "0x9999999999999999999999999999999999999999",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "strip-ansi--sandbox": {
+  "title": "strip-ansi Supply-chain Fixture (sandbox)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nNormal ANSI removal\tsecurity probe\tsecurity probe\tPASS\nHost API references\tunchanged\tunchanged\tPASS\nfetch transaction recipient\t0x1111111111111111111111111111111111111111\t0x1111111111111111111111111111111111111111\tPASS\nXMLHttpRequest transaction recipient\t0x1111111111111111111111111111111111111111\t0x1111111111111111111111111111111111111111\tPASS\nWallet transaction recipient\t0x1111111111111111111111111111111111111111\t0x1111111111111111111111111111111111111111\tPASS\n\nThe installed strip-ansi package contains a harmless evaluation patch that reproduces API interception and recipient rewriting without external requests.\n\nThe sandbox received no browser capabilities, so the altered dependency could not replace host APIs.",
+  "rows": [
+   [
+    "Normal ANSI removal",
+    "security probe",
+    "security probe",
+    "PASS"
+   ],
+   [
+    "Host API references",
+    "unchanged",
+    "unchanged",
+    "PASS"
+   ],
+   [
+    "fetch transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x1111111111111111111111111111111111111111",
+    "PASS"
+   ],
+   [
+    "XMLHttpRequest transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x1111111111111111111111111111111111111111",
+    "PASS"
+   ],
+   [
+    "Wallet transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x1111111111111111111111111111111111111111",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "strip-ansi--lavamoat-clean": {
+  "title": "strip-ansi Supply-chain Fixture (lavamoat)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nNormal ANSI removal\tsecurity probe\tsecurity probe\tPASS\nHost API references\tunchanged\tunchanged\tPASS\nfetch transaction recipient\t0x1111111111111111111111111111111111111111\t0x1111111111111111111111111111111111111111\tPASS\nXMLHttpRequest transaction recipient\t0x1111111111111111111111111111111111111111\t0x1111111111111111111111111111111111111111\tPASS\nWallet transaction recipient\t0x1111111111111111111111111111111111111111\t0x1111111111111111111111111111111111111111\tPASS\n\nThe installed strip-ansi package contains a harmless evaluation patch that reproduces API interception and recipient rewriting without external requests.\n\nThe sandbox received no browser capabilities, so the altered dependency could not replace host APIs.",
+  "rows": [
+   [
+    "Normal ANSI removal",
+    "security probe",
+    "security probe",
+    "PASS"
+   ],
+   [
+    "Host API references",
+    "unchanged",
+    "unchanged",
+    "PASS"
+   ],
+   [
+    "fetch transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x1111111111111111111111111111111111111111",
+    "PASS"
+   ],
+   [
+    "XMLHttpRequest transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x1111111111111111111111111111111111111111",
+    "PASS"
+   ],
+   [
+    "Wallet transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x1111111111111111111111111111111111111111",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "strip-ansi--lavamoat-regen": {
+  "title": "strip-ansi Supply-chain Fixture (lavamoat)",
+  "verdict": "FAIL",
+  "text": "FAIL\nObservation\tExpected\tObserved\tResult\nNormal ANSI removal\tsecurity probe\tsecurity probe\tPASS\nHost API references\tunchanged\tintercepted\tFAIL\nfetch transaction recipient\t0x1111111111111111111111111111111111111111\t0x9999999999999999999999999999999999999999\tFAIL\nXMLHttpRequest transaction recipient\t0x1111111111111111111111111111111111111111\t0x9999999999999999999999999999999999999999\tFAIL\nWallet transaction recipient\t0x1111111111111111111111111111111111111111\t0x9999999999999999999999999999999999999999\tFAIL\n\nThe installed strip-ansi package contains a harmless evaluation patch that reproduces API interception and recipient rewriting without external requests.\n\nThe sandbox received no browser capabilities, so the altered dependency could not replace host APIs.",
+  "rows": [
+   [
+    "Normal ANSI removal",
+    "security probe",
+    "security probe",
+    "PASS"
+   ],
+   [
+    "Host API references",
+    "unchanged",
+    "intercepted",
+    "FAIL"
+   ],
+   [
+    "fetch transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x9999999999999999999999999999999999999999",
+    "FAIL"
+   ],
+   [
+    "XMLHttpRequest transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x9999999999999999999999999999999999999999",
+    "FAIL"
+   ],
+   [
+    "Wallet transaction recipient",
+    "0x1111111111111111111111111111111111111111",
+    "0x9999999999999999999999999999999999999999",
+    "FAIL"
+   ]
+  ],
+  "errors": [
+   "SCENARIO ERROR strip-ansi Supply-chain Fixture (lavamoat) failed. Inspect the result table for details."
+  ]
+ },
+ "image-js--native": {
+  "title": "image-js Granular Permissions (native)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nImage transformation\t4x4 output\t4x4\tPASS\nPNG Data URL encoding through TextDecoder\tcreated\tcreated\tPASS\nPatched image-js localStorage write\twritten-by-image-js\twritten-by-image-js\tPASS\nExisting host localStorage canary\thost-storage-canary\thost-storage-canary\tPASS\n\nThe installed image-js package contains a harmless evaluation patch in encodeDataURL that attempts to write a localStorage canary.\n\nNative execution completed the normal image operation and the additional localStorage write.",
+  "rows": [
+   [
+    "Image transformation",
+    "4x4 output",
+    "4x4",
+    "PASS"
+   ],
+   [
+    "PNG Data URL encoding through TextDecoder",
+    "created",
+    "created",
+    "PASS"
+   ],
+   [
+    "Patched image-js localStorage write",
+    "written-by-image-js",
+    "written-by-image-js",
+    "PASS"
+   ],
+   [
+    "Existing host localStorage canary",
+    "host-storage-canary",
+    "host-storage-canary",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "image-js--sandbox": {
+  "title": "image-js Granular Permissions (sandbox)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nImage transformation\t4x4 output\t4x4\tPASS\nPNG Data URL encoding through TextDecoder\tcreated\tcreated\tPASS\nPatched image-js localStorage write\tblocked\tblocked\tPASS\nExisting host localStorage canary\thost-storage-canary\thost-storage-canary\tPASS\n\nThe installed image-js package contains a harmless evaluation patch in encodeDataURL that attempts to write a localStorage canary.\n\nThe configured TextDecoder capability allowed encoding, while the unconfigured localStorage capability remained unavailable.",
+  "rows": [
+   [
+    "Image transformation",
+    "4x4 output",
+    "4x4",
+    "PASS"
+   ],
+   [
+    "PNG Data URL encoding through TextDecoder",
+    "created",
+    "created",
+    "PASS"
+   ],
+   [
+    "Patched image-js localStorage write",
+    "blocked",
+    "blocked",
+    "PASS"
+   ],
+   [
+    "Existing host localStorage canary",
+    "host-storage-canary",
+    "host-storage-canary",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "image-js--lavamoat-clean": {
+  "title": "image-js Granular Permissions (lavamoat)",
+  "verdict": "PASS",
+  "text": "PASS\nObservation\tExpected\tObserved\tResult\nImage transformation\t4x4 output\t4x4\tPASS\nPNG Data URL encoding through TextDecoder\tcreated\tcreated\tPASS\nPatched image-js localStorage write\tblocked\tblocked\tPASS\nExisting host localStorage canary\thost-storage-canary\thost-storage-canary\tPASS\n\nThe installed image-js package contains a harmless evaluation patch in encodeDataURL that attempts to write a localStorage canary.\n\nThe configured TextDecoder capability allowed encoding, while the unconfigured localStorage capability remained unavailable.",
+  "rows": [
+   [
+    "Image transformation",
+    "4x4 output",
+    "4x4",
+    "PASS"
+   ],
+   [
+    "PNG Data URL encoding through TextDecoder",
+    "created",
+    "created",
+    "PASS"
+   ],
+   [
+    "Patched image-js localStorage write",
+    "blocked",
+    "blocked",
+    "PASS"
+   ],
+   [
+    "Existing host localStorage canary",
+    "host-storage-canary",
+    "host-storage-canary",
+    "PASS"
+   ]
+  ],
+  "errors": []
+ },
+ "image-js--lavamoat-regen": {
+  "title": "image-js Granular Permissions (lavamoat)",
+  "verdict": "FAIL",
+  "text": "FAIL\nObservation\tExpected\tObserved\tResult\nImage transformation\t4x4 output\t4x4\tPASS\nPNG Data URL encoding through TextDecoder\tcreated\tcreated\tPASS\nPatched image-js localStorage write\tblocked\twritten-by-image-js\tFAIL\nExisting host localStorage canary\thost-storage-canary\thost-storage-canary\tPASS\n\nThe installed image-js package contains a harmless evaluation patch in encodeDataURL that attempts to write a localStorage canary.\n\nThe configured TextDecoder capability allowed encoding, while the unconfigured localStorage capability remained unavailable.",
+  "rows": [
+   [
+    "Image transformation",
+    "4x4 output",
+    "4x4",
+    "PASS"
+   ],
+   [
+    "PNG Data URL encoding through TextDecoder",
+    "created",
+    "created",
+    "PASS"
+   ],
+   [
+    "Patched image-js localStorage write",
+    "blocked",
+    "written-by-image-js",
+    "FAIL"
+   ],
+   [
+    "Existing host localStorage canary",
+    "host-storage-canary",
+    "host-storage-canary",
+    "PASS"
+   ]
+  ],
+  "errors": [
+   "SCENARIO ERROR image-js Granular Permissions (lavamoat) failed. Inspect the result table for details."
+  ]
+ },
+ "lodash--lavamoat-probe": {
+  "title": "Sandbox security validation",
+  "verdict": "{\"before\":\"function\",\"threw\":\"TypeError: Cannot delete property 'hasOwnProperty' of [object Object]\",\"after\":\"function\",\"frozen\":true}",
+  "text": "{\"before\":\"function\",\"threw\":\"TypeError: Cannot delete property 'hasOwnProperty' of [object Object]\",\"after\":\"function\",\"frozen\":true}",
+  "rows": [],
+  "errors": []
+ }
+}

@@ -1,0 +1,108 @@
+{
+ "node": "v25.8.1",
+ "limits": {
+  "callTimeMs": 500,
+  "memoryBytes": 268435456
+ },
+ "results": [
+  {
+   "attack": "spin",
+   "limits": null,
+   "outcome": "no return within 30 s (thread blocked)",
+   "elapsedMs": 30002
+  },
+  {
+   "attack": "spin",
+   "limits": {
+    "callTimeMs": 500,
+    "memoryBytes": 268435456
+   },
+   "outcome": "InternalError: interrupted",
+   "elapsedMs": 502,
+   "wasmMemoryMB": 16,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  },
+  {
+   "attack": "catchSpin",
+   "limits": null,
+   "outcome": "no return within 30 s (thread blocked)",
+   "elapsedMs": 30000
+  },
+  {
+   "attack": "catchSpin",
+   "limits": {
+    "callTimeMs": 500,
+    "memoryBytes": 268435456
+   },
+   "outcome": "InternalError: interrupted",
+   "elapsedMs": 502,
+   "wasmMemoryMB": 16,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  },
+  {
+   "attack": "alloc",
+   "limits": null,
+   "outcome": "InternalError: out of memory",
+   "elapsedMs": 1578,
+   "wasmMemoryMB": 2048,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  },
+  {
+   "attack": "alloc",
+   "limits": {
+    "callTimeMs": 500,
+    "memoryBytes": 268435456
+   },
+   "outcome": "InternalError: out of memory",
+   "elapsedMs": 191,
+   "wasmMemoryMB": 248,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  },
+  {
+   "attack": "string",
+   "limits": null,
+   "outcome": "InternalError: string too long",
+   "elapsedMs": 1,
+   "wasmMemoryMB": 16,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  },
+  {
+   "attack": "string",
+   "limits": {
+    "callTimeMs": 500,
+    "memoryBytes": 268435456
+   },
+   "outcome": "InternalError: string too long",
+   "elapsedMs": 1,
+   "wasmMemoryMB": 16,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  },
+  {
+   "attack": "recurse",
+   "limits": null,
+   "outcome": "InternalError: stack overflow",
+   "elapsedMs": 9,
+   "wasmMemoryMB": 16,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  },
+  {
+   "attack": "recurse",
+   "limits": {
+    "callTimeMs": 500,
+    "memoryBytes": 268435456
+   },
+   "outcome": "InternalError: stack overflow",
+   "elapsedMs": 8,
+   "wasmMemoryMB": 16,
+   "wasmMemoryStartMB": 16,
+   "sandboxUsableAfter": true
+  }
+ ]
+}

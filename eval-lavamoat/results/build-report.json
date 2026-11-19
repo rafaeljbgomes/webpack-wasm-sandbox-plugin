@@ -1,0 +1,481 @@
+{
+ "lodash--native": {
+  "built": true
+ },
+ "lodash--sandbox": {
+  "built": true
+ },
+ "lodash--lavamoat-clean": {
+  "policy": {
+   "resources": {
+    "lodash": {
+     "globals": {
+      "define": true
+     }
+    }
+   }
+  },
+  "built": true
+ },
+ "lodash--lavamoat-regen": {
+  "policy": {
+   "resources": {
+    "lodash": {
+     "globals": {
+      "define": true
+     }
+    }
+   }
+  },
+  "built": true
+ },
+ "strip-ansi--native": {
+  "built": true
+ },
+ "strip-ansi--sandbox": {
+  "built": true
+ },
+ "strip-ansi--lavamoat-clean": {
+  "policy": {
+   "resources": {
+    "strip-ansi": {
+     "packages": {
+      "strip-ansi>ansi-regex": true
+     }
+    }
+   }
+  },
+  "built": true
+ },
+ "strip-ansi--lavamoat-regen": {
+  "policy": {
+   "resources": {
+    "strip-ansi": {
+     "globals": {
+      "XMLHttpRequest": "write",
+      "ethereum": "write",
+      "fetch": "write"
+     },
+     "packages": {
+      "strip-ansi>ansi-regex": true
+     }
+    }
+   }
+  },
+  "built": true
+ },
+ "image-js--native": {
+  "built": true
+ },
+ "image-js--sandbox": {
+  "built": true
+ },
+ "image-js--lavamoat-clean": {
+  "policy": {
+   "resources": {
+    "image-js>fast-bmp": {
+     "packages": {
+      "image-js>tiff>iobuffer": true
+     }
+    },
+    "image-js>fast-jpeg": {
+     "packages": {
+      "image-js>tiff>iobuffer": true,
+      "image-js>tiff": true
+     }
+    },
+    "image-js>fast-png": {
+     "globals": {
+      "TextDecoder": true
+     },
+     "packages": {
+      "image-js>tiff>fflate": true,
+      "image-js>tiff>iobuffer": true
+     }
+    },
+    "image-js>tiff>fflate": {
+     "globals": {
+      "Blob": true,
+      "TextDecoder": true,
+      "TextEncoder": true,
+      "URL.createObjectURL": true,
+      "Worker": true,
+      "onmessage": "write",
+      "postMessage": true,
+      "queueMicrotask": true,
+      "setTimeout": true
+     }
+    },
+    "image-js>image-type>file-type": {
+     "globals": {
+      "Buffer.isBuffer": true
+     }
+    },
+    "image-js": {
+     "globals": {
+      "Float32Array": true,
+      "Float64Array": true,
+      "ImageData": true,
+      "Intl.ListFormat": true,
+      "OffscreenCanvas": true,
+      "TextDecoder": true,
+      "document.createElement": true,
+      "fetch": true,
+      "process": true
+     },
+     "packages": {
+      "image-js>bresenham-zingl": true,
+      "image-js>colord": true,
+      "image-js>fast-bmp": true,
+      "image-js>fast-jpeg": true,
+      "image-js>fast-png": true,
+      "image-js>image-type": true,
+      "image-js>jpeg-js": true,
+      "image-js>js-priority-queue": true,
+      "image-js>median-quickselect": true,
+      "image-js>ml-affine-transform": true,
+      "image-js>ml-convolution": true,
+      "image-js>ml-matrix": true,
+      "image-js>ml-ransac": true,
+      "image-js>ml-regression-multivariate-linear": true,
+      "image-js>ml-regression-polynomial-2d": true,
+      "image-js>ml-spectra-processing": true,
+      "image-js>robust-point-in-polygon": true,
+      "image-js>tiff": true,
+      "image-js>ts-pattern": true,
+      "image-js>uint8-base64": true
+     }
+    },
+    "image-js>image-type": {
+     "packages": {
+      "image-js>image-type>file-type": true
+     }
+    },
+    "image-js>tiff>iobuffer": {
+     "globals": {
+      "Float32Array": true,
+      "Float64Array": true,
+      "TextDecoder": true,
+      "TextEncoder": true
+     }
+    },
+    "image-js>jpeg-js": {
+     "globals": {
+      "Buffer.alloc": true,
+      "Buffer.from": true,
+      "XMLHttpRequest": true,
+      "document.createElement": true,
+      "document.getElementById": true
+     }
+    },
+    "image-js>js-priority-queue": {
+     "globals": {
+      "define": true
+     }
+    },
+    "image-js>median-quickselect": {
+     "globals": {
+      "median": "write"
+     }
+    },
+    "image-js>ml-affine-transform": {
+     "packages": {
+      "image-js>ml-matrix": true
+     }
+    },
+    "image-js>ml-ransac>ml-array-median": {
+     "packages": {
+      "image-js>ml-matrix>is-any-array": true,
+      "image-js>median-quickselect": true
+     }
+    },
+    "image-js>ml-convolution": {
+     "packages": {
+      "image-js>ml-convolution>fft.js": true,
+      "image-js>ml-convolution>next-power-of-two": true
+     }
+    },
+    "image-js>ml-matrix": {
+     "globals": {
+      "Float64Array": true,
+      "console.warn": true
+     }
+    },
+    "image-js>ml-ransac>ml-random": {
+     "packages": {
+      "$root$": true
+     }
+    },
+    "image-js>ml-ransac": {
+     "packages": {
+      "image-js>ml-ransac>ml-array-median": true,
+      "image-js>ml-ransac>ml-random": true
+     }
+    },
+    "image-js>ml-regression-multivariate-linear": {
+     "packages": {
+      "image-js>ml-matrix": true
+     }
+    },
+    "image-js>ml-regression-polynomial-2d": {
+     "globals": {
+      "Float64Array": true
+     },
+     "packages": {
+      "image-js>ml-matrix>is-any-array": true,
+      "image-js>ml-matrix": true,
+      "image-js>ml-regression-polynomial-2d>ml-regression-base": true
+     }
+    },
+    "image-js>ml-spectra-processing": {
+     "globals": {
+      "Float64Array": true,
+      "structuredClone": true
+     },
+     "packages": {
+      "$root$": true,
+      "image-js>ml-convolution>fft.js": true,
+      "image-js>ml-matrix>is-any-array": true,
+      "image-js>ml-matrix": true
+     }
+    },
+    "image-js>robust-point-in-polygon>robust-orientation": {
+     "packages": {
+      "image-js>robust-point-in-polygon>robust-orientation>robust-scale": true,
+      "image-js>robust-point-in-polygon>robust-orientation>robust-subtract": true,
+      "image-js>robust-point-in-polygon>robust-orientation>robust-sum": true,
+      "image-js>robust-point-in-polygon>robust-orientation>two-product": true
+     }
+    },
+    "image-js>robust-point-in-polygon": {
+     "packages": {
+      "image-js>robust-point-in-polygon>robust-orientation": true
+     }
+    },
+    "image-js>robust-point-in-polygon>robust-orientation>robust-scale": {
+     "packages": {
+      "image-js>robust-point-in-polygon>robust-orientation>two-product": true,
+      "image-js>robust-point-in-polygon>robust-orientation>robust-scale>two-sum": true
+     }
+    },
+    "image-js>tiff": {
+     "globals": {
+      "Float32Array": true,
+      "Float64Array": true
+     },
+     "packages": {
+      "image-js>tiff>fflate": true,
+      "image-js>tiff>iobuffer": true
+     }
+    }
+   }
+  },
+  "built": true
+ },
+ "image-js--lavamoat-regen": {
+  "policy": {
+   "resources": {
+    "image-js>fast-bmp": {
+     "packages": {
+      "image-js>tiff>iobuffer": true
+     }
+    },
+    "image-js>fast-jpeg": {
+     "packages": {
+      "image-js>tiff>iobuffer": true,
+      "image-js>tiff": true
+     }
+    },
+    "image-js>fast-png": {
+     "globals": {
+      "TextDecoder": true
+     },
+     "packages": {
+      "image-js>tiff>fflate": true,
+      "image-js>tiff>iobuffer": true
+     }
+    },
+    "image-js>tiff>fflate": {
+     "globals": {
+      "Blob": true,
+      "TextDecoder": true,
+      "TextEncoder": true,
+      "URL.createObjectURL": true,
+      "Worker": true,
+      "onmessage": "write",
+      "postMessage": true,
+      "queueMicrotask": true,
+      "setTimeout": true
+     }
+    },
+    "image-js>image-type>file-type": {
+     "globals": {
+      "Buffer.isBuffer": true
+     }
+    },
+    "image-js": {
+     "globals": {
+      "Float32Array": true,
+      "Float64Array": true,
+      "ImageData": true,
+      "Intl.ListFormat": true,
+      "OffscreenCanvas": true,
+      "TextDecoder": true,
+      "document.createElement": true,
+      "fetch": true,
+      "localStorage": true,
+      "process": true
+     },
+     "packages": {
+      "image-js>bresenham-zingl": true,
+      "image-js>colord": true,
+      "image-js>fast-bmp": true,
+      "image-js>fast-jpeg": true,
+      "image-js>fast-png": true,
+      "image-js>image-type": true,
+      "image-js>jpeg-js": true,
+      "image-js>js-priority-queue": true,
+      "image-js>median-quickselect": true,
+      "image-js>ml-affine-transform": true,
+      "image-js>ml-convolution": true,
+      "image-js>ml-matrix": true,
+      "image-js>ml-ransac": true,
+      "image-js>ml-regression-multivariate-linear": true,
+      "image-js>ml-regression-polynomial-2d": true,
+      "image-js>ml-spectra-processing": true,
+      "image-js>robust-point-in-polygon": true,
+      "image-js>tiff": true,
+      "image-js>ts-pattern": true,
+      "image-js>uint8-base64": true
+     }
+    },
+    "image-js>image-type": {
+     "packages": {
+      "image-js>image-type>file-type": true
+     }
+    },
+    "image-js>tiff>iobuffer": {
+     "globals": {
+      "Float32Array": true,
+      "Float64Array": true,
+      "TextDecoder": true,
+      "TextEncoder": true
+     }
+    },
+    "image-js>jpeg-js": {
+     "globals": {
+      "Buffer.alloc": true,
+      "Buffer.from": true,
+      "XMLHttpRequest": true,
+      "document.createElement": true,
+      "document.getElementById": true
+     }
+    },
+    "image-js>js-priority-queue": {
+     "globals": {
+      "define": true
+     }
+    },
+    "image-js>median-quickselect": {
+     "globals": {
+      "median": "write"
+     }
+    },
+    "image-js>ml-affine-transform": {
+     "packages": {
+      "image-js>ml-matrix": true
+     }
+    },
+    "image-js>ml-ransac>ml-array-median": {
+     "packages": {
+      "image-js>ml-matrix>is-any-array": true,
+      "image-js>median-quickselect": true
+     }
+    },
+    "image-js>ml-convolution": {
+     "packages": {
+      "image-js>ml-convolution>fft.js": true,
+      "image-js>ml-convolution>next-power-of-two": true
+     }
+    },
+    "image-js>ml-matrix": {
+     "globals": {
+      "Float64Array": true,
+      "console.warn": true
+     }
+    },
+    "image-js>ml-ransac>ml-random": {
+     "packages": {
+      "$root$": true
+     }
+    },
+    "image-js>ml-ransac": {
+     "packages": {
+      "image-js>ml-ransac>ml-array-median": true,
+      "image-js>ml-ransac>ml-random": true
+     }
+    },
+    "image-js>ml-regression-multivariate-linear": {
+     "packages": {
+      "image-js>ml-matrix": true
+     }
+    },
+    "image-js>ml-regression-polynomial-2d": {
+     "globals": {
+      "Float64Array": true
+     },
+     "packages": {
+      "image-js>ml-matrix>is-any-array": true,
+      "image-js>ml-matrix": true,
+      "image-js>ml-regression-polynomial-2d>ml-regression-base": true
+     }
+    },
+    "image-js>ml-spectra-processing": {
+     "globals": {
+      "Float64Array": true,
+      "structuredClone": true
+     },
+     "packages": {
+      "$root$": true,
+      "image-js>ml-convolution>fft.js": true,
+      "image-js>ml-matrix>is-any-array": true,
+      "image-js>ml-matrix": true
+     }
+    },
+    "image-js>robust-point-in-polygon>robust-orientation": {
+     "packages": {
+      "image-js>robust-point-in-polygon>robust-orientation>robust-scale": true,
+      "image-js>robust-point-in-polygon>robust-orientation>robust-subtract": true,
+      "image-js>robust-point-in-polygon>robust-orientation>robust-sum": true,
+      "image-js>robust-point-in-polygon>robust-orientation>two-product": true
+     }
+    },
+    "image-js>robust-point-in-polygon": {
+     "packages": {
+      "image-js>robust-point-in-polygon>robust-orientation": true
+     }
+    },
+    "image-js>robust-point-in-polygon>robust-orientation>robust-scale": {
+     "packages": {
+      "image-js>robust-point-in-polygon>robust-orientation>two-product": true,
+      "image-js>robust-point-in-polygon>robust-orientation>robust-scale>two-sum": true
+     }
+    },
+    "image-js>tiff": {
+     "globals": {
+      "Float32Array": true,
+      "Float64Array": true
+     },
+     "packages": {
+      "image-js>tiff>fflate": true,
+      "image-js>tiff>iobuffer": true
+     }
+    }
+   }
+  },
+  "built": true
+ },
+ "lodash--lavamoat-probe": {
+  "built": true
+ }
+}

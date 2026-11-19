@@ -1,0 +1,317 @@
+{
+ "chrome": "157.0.8103.79",
+ "iterations": 3,
+ "reps": 10,
+ "out": {
+  "luxon|metrics=true": {
+   "median": 242.86999999955296,
+   "vals": [
+    242.09000000059604,
+    242.86999999955296,
+    244.96999999955295
+   ],
+   "crossings": {
+    "host_to_vm_count": 26306,
+    "vm_to_host_count": 2094,
+    "host_to_vm_total_bytes": 1465297,
+    "vm_to_host_total_bytes": 257304,
+    "crossing_size_median_bytes": 16,
+    "crossing_size_p95_bytes": 32,
+    "crossing_size_max_bytes": 2277,
+    "forward_host_to_vm_count": 25926,
+    "forward_vm_to_host_count": 484,
+    "forward_host_to_vm_total_bytes": 1393997,
+    "forward_vm_to_host_total_bytes": 7884,
+    "forward_crossing_size_median_bytes": 16,
+    "forward_crossing_size_p95_bytes": 32,
+    "forward_crossing_size_max_bytes": 2277,
+    "reverse_host_to_vm_count": 380,
+    "reverse_vm_to_host_count": 1610,
+    "reverse_host_to_vm_total_bytes": 71300,
+    "reverse_vm_to_host_total_bytes": 249420,
+    "reverse_crossing_size_median_bytes": 16,
+    "reverse_crossing_size_p95_bytes": 1024,
+    "reverse_crossing_size_max_bytes": 1484
+   }
+  },
+  "lodash|metrics=true": {
+   "median": 81.48000000044703,
+   "vals": [
+    81.3,
+    81.48000000044703,
+    81.86000000014901
+   ],
+   "crossings": {
+    "host_to_vm_count": 420,
+    "vm_to_host_count": 270,
+    "host_to_vm_total_bytes": 1139450,
+    "vm_to_host_total_bytes": 1323630,
+    "crossing_size_median_bytes": 64,
+    "crossing_size_p95_bytes": 16384,
+    "crossing_size_max_bytes": 37838,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 420,
+    "reverse_vm_to_host_count": 270,
+    "reverse_host_to_vm_total_bytes": 1139450,
+    "reverse_vm_to_host_total_bytes": 1323630,
+    "reverse_crossing_size_median_bytes": 64,
+    "reverse_crossing_size_p95_bytes": 16384,
+    "reverse_crossing_size_max_bytes": 37838
+   }
+  },
+  "zod|metrics=true": {
+   "median": 117.95,
+   "vals": [
+    117.40999999940395,
+    117.95,
+    119.22000000029803
+   ],
+   "crossings": {
+    "host_to_vm_count": 700,
+    "vm_to_host_count": 1070,
+    "host_to_vm_total_bytes": 601820,
+    "vm_to_host_total_bytes": 1356940,
+    "crossing_size_median_bytes": 512,
+    "crossing_size_p95_bytes": 8192,
+    "crossing_size_max_bytes": 16777,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 700,
+    "reverse_vm_to_host_count": 1070,
+    "reverse_host_to_vm_total_bytes": 601820,
+    "reverse_vm_to_host_total_bytes": 1356940,
+    "reverse_crossing_size_median_bytes": 512,
+    "reverse_crossing_size_p95_bytes": 8192,
+    "reverse_crossing_size_max_bytes": 16777
+   }
+  },
+  "marked|metrics=true": {
+   "median": 130.979999999702,
+   "vals": [
+    129.56999999955298,
+    130.979999999702,
+    131.020000000298
+   ],
+   "crossings": {
+    "host_to_vm_count": 20,
+    "vm_to_host_count": 20,
+    "host_to_vm_total_bytes": 77440,
+    "vm_to_host_total_bytes": 140830,
+    "crossing_size_median_bytes": 1024,
+    "crossing_size_p95_bytes": 16384,
+    "crossing_size_max_bytes": 13257,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 20,
+    "reverse_vm_to_host_count": 20,
+    "reverse_host_to_vm_total_bytes": 77440,
+    "reverse_vm_to_host_total_bytes": 140830,
+    "reverse_crossing_size_median_bytes": 1024,
+    "reverse_crossing_size_p95_bytes": 16384,
+    "reverse_crossing_size_max_bytes": 13257
+   }
+  },
+  "strip-ansi|metrics=true": {
+   "median": 1.7600000001490117,
+   "vals": [
+    1.6600000001490116,
+    1.7600000001490117,
+    1.8
+   ],
+   "crossings": {
+    "host_to_vm_count": 800,
+    "vm_to_host_count": 800,
+    "host_to_vm_total_bytes": 34310,
+    "vm_to_host_total_bytes": 19910,
+    "crossing_size_median_bytes": 32,
+    "crossing_size_p95_bytes": 64,
+    "crossing_size_max_bytes": 43,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 800,
+    "reverse_vm_to_host_count": 800,
+    "reverse_host_to_vm_total_bytes": 34310,
+    "reverse_vm_to_host_total_bytes": 19910,
+    "reverse_crossing_size_median_bytes": 32,
+    "reverse_crossing_size_p95_bytes": 64,
+    "reverse_crossing_size_max_bytes": 43
+   }
+  },
+  "tweetnacl|metrics=true": {
+   "median": 428.82999999970195,
+   "vals": [
+    428.770000000298,
+    428.82999999970195,
+    430.15
+   ],
+   "crossings": {
+    "host_to_vm_count": 70,
+    "vm_to_host_count": 40,
+    "host_to_vm_total_bytes": 4200,
+    "vm_to_host_total_bytes": 2780,
+    "crossing_size_median_bytes": 64,
+    "crossing_size_p95_bytes": 256,
+    "crossing_size_max_bytes": 146,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 70,
+    "reverse_vm_to_host_count": 40,
+    "reverse_host_to_vm_total_bytes": 4200,
+    "reverse_vm_to_host_total_bytes": 2780,
+    "reverse_crossing_size_median_bytes": 64,
+    "reverse_crossing_size_p95_bytes": 256,
+    "reverse_crossing_size_max_bytes": 146
+   }
+  },
+  "yup|metrics=true": {
+   "median": 76.55,
+   "vals": [
+    76.52000000029803,
+    76.55,
+    77.760000000149
+   ],
+   "crossings": {
+    "host_to_vm_count": 480,
+    "vm_to_host_count": 1570,
+    "host_to_vm_total_bytes": 253170,
+    "vm_to_host_total_bytes": 641350,
+    "crossing_size_median_bytes": 256,
+    "crossing_size_p95_bytes": 2048,
+    "crossing_size_max_bytes": 7803,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 480,
+    "reverse_vm_to_host_count": 1570,
+    "reverse_host_to_vm_total_bytes": 253170,
+    "reverse_vm_to_host_total_bytes": 641350,
+    "reverse_crossing_size_median_bytes": 256,
+    "reverse_crossing_size_p95_bytes": 2048,
+    "reverse_crossing_size_max_bytes": 7803
+   }
+  },
+  "date-fns|metrics=true": {
+   "median": 4.860000000149012,
+   "vals": [
+    4.739999999850989,
+    4.860000000149012,
+    5.059999999403954
+   ],
+   "crossings": {
+    "host_to_vm_count": 760,
+    "vm_to_host_count": 620,
+    "host_to_vm_total_bytes": 12420,
+    "vm_to_host_total_bytes": 8860,
+    "crossing_size_median_bytes": 16,
+    "crossing_size_p95_bytes": 16,
+    "crossing_size_max_bytes": 536,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 760,
+    "reverse_vm_to_host_count": 620,
+    "reverse_host_to_vm_total_bytes": 12420,
+    "reverse_vm_to_host_total_bytes": 8860,
+    "reverse_crossing_size_median_bytes": 16,
+    "reverse_crossing_size_p95_bytes": 16,
+    "reverse_crossing_size_max_bytes": 536
+   }
+  },
+  "image-js|metrics=true": {
+   "median": 24.570000000298023,
+   "vals": [
+    24.539999999850988,
+    24.570000000298023,
+    24.86000000014901
+   ],
+   "crossings": {
+    "host_to_vm_count": 40,
+    "vm_to_host_count": 100,
+    "host_to_vm_total_bytes": 42160,
+    "vm_to_host_total_bytes": 141460,
+    "crossing_size_median_bytes": 64,
+    "crossing_size_p95_bytes": 8192,
+    "crossing_size_max_bytes": 7168,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 40,
+    "reverse_vm_to_host_count": 100,
+    "reverse_host_to_vm_total_bytes": 42160,
+    "reverse_vm_to_host_total_bytes": 141460,
+    "reverse_crossing_size_median_bytes": 64,
+    "reverse_crossing_size_p95_bytes": 8192,
+    "reverse_crossing_size_max_bytes": 7168
+   }
+  },
+  "mime|metrics=true": {
+   "median": 0.4100000001490116,
+   "vals": [
+    0.40999999940395354,
+    0.4100000001490116,
+    0.45
+   ],
+   "crossings": {
+    "host_to_vm_count": 110,
+    "vm_to_host_count": 110,
+    "host_to_vm_total_bytes": 1180,
+    "vm_to_host_total_bytes": 1100,
+    "crossing_size_median_bytes": 16,
+    "crossing_size_p95_bytes": 16,
+    "crossing_size_max_bytes": 16,
+    "forward_host_to_vm_count": 0,
+    "forward_vm_to_host_count": 0,
+    "forward_host_to_vm_total_bytes": 0,
+    "forward_vm_to_host_total_bytes": 0,
+    "forward_crossing_size_median_bytes": 0,
+    "forward_crossing_size_p95_bytes": 0,
+    "forward_crossing_size_max_bytes": 0,
+    "reverse_host_to_vm_count": 110,
+    "reverse_vm_to_host_count": 110,
+    "reverse_host_to_vm_total_bytes": 1180,
+    "reverse_vm_to_host_total_bytes": 1100,
+    "reverse_crossing_size_median_bytes": 16,
+    "reverse_crossing_size_p95_bytes": 16,
+    "reverse_crossing_size_max_bytes": 16
+   }
+  }
+ }
+}

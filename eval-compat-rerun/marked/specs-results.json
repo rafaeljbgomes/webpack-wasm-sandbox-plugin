@@ -1,0 +1,53 @@
+{
+ "commonmark": {
+  "total": 637,
+  "shouldPass": 0,
+  "native": 637,
+  "sandbox": 637,
+  "bothPass": 637,
+  "sandboxOnlyFail": [],
+  "interrupted": 0
+ },
+ "gfm": {
+  "total": 657,
+  "shouldPass": 0,
+  "native": 657,
+  "sandbox": 657,
+  "bothPass": 657,
+  "sandboxOnlyFail": [],
+  "interrupted": 0
+ },
+ "new": {
+  "total": 132,
+  "shouldPass": 0,
+  "native": 132,
+  "sandbox": 132,
+  "bothPass": 132,
+  "sandboxOnlyFail": [],
+  "interrupted": 0
+ },
+ "original": {
+  "total": 21,
+  "shouldPass": 0,
+  "native": 21,
+  "sandbox": 21,
+  "bothPass": 21,
+  "sandboxOnlyFail": [],
+  "interrupted": 0
+ },
+ "redos": {
+  "total": 20,
+  "shouldPass": 0,
+  "native": 20,
+  "sandbox": 15,
+  "bothPass": 15,
+  "sandboxOnlyFail": [
+   "quadratic_em_mask[0] #",
+   "quadratic_em_mask[1] #",
+   "quadratic_em_mask[2] #",
+   "quadratic_em_mask[3] #",
+   "quadratic_emstrong_delim[0] #"
+  ],
+  "interrupted": 5
+ }
+}

@@ -174,6 +174,7 @@ export class WebpackSandboxPlugin {
           integrityFor(manifest?.libraries[libName]),
           sandboxConfig[libName].writable ?? {},
           (sandboxConfig[libName].subpaths ?? []).length > 0,
+          sandboxConfig[libName].limits,
         );
         for (const subpath of sandboxConfig[libName].subpaths ?? []) {
           this.generateProxyForSubpath(libName, subpath, compiler.context);
@@ -329,6 +330,7 @@ export class WebpackSandboxPlugin {
     integrity?: BundleIntegrity,
     writable: Record<string, string[]> = {},
     hasSubpaths = false,
+    limits?: { callTimeMs?: number; memoryBytes?: number },
   ) {
     const proxyPath = path.resolve(
       this.sandboxCacheDir,
@@ -376,7 +378,7 @@ export class WebpackSandboxPlugin {
     const libraryData = parser.parse();
 
     const generator = new ProxyGenerator();
-    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions, integrity, writable, hasSubpaths);
+    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions, integrity, writable, hasSubpaths, limits);
 
     fs.writeFileSync(proxyPath, proxyContent);
     console.log(

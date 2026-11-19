@@ -1,0 +1,1 @@
+{"total": 880, "class identity (instanceof)": 552, "reference identity (Object.is)": 199, "value/representation differs": 84, "internal API not in declarations": 35, "host mocks/spies not seen by VM": 10}

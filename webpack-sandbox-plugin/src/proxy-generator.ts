@@ -37,6 +37,7 @@ export class ProxyGenerator {
     integrity?: BundleIntegrity,
     writable: Record<string, string[]> = {},
     hasSubpaths = false,
+    limits?: { callTimeMs?: number; memoryBytes?: number },
   ): string {
     let content = `// Auto-generated Sandbox Proxy for ${toJsStringLiteral(libraryName)}\n`;
     content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
@@ -50,7 +51,8 @@ export class ProxyGenerator {
     content += `  ${toJsStringLiteral(libraryName)},\n`;
     content += `  libraryCode,\n`;
     const writableOption = Object.keys(writable).length ? `, writable: ${JSON.stringify(writable)}` : "";
-    content += `  { permissions: ${JSON.stringify(permissions)}${writableOption} }\n`;
+    const limitsOption = limits && Object.keys(limits).length ? `, limits: ${JSON.stringify(limits)}` : "";
+    content += `  { permissions: ${JSON.stringify(permissions)}${writableOption}${limitsOption} }\n`;
     content += `);\n\n`;
     content += `// Initialization needs a referenced job pump; steady-state Node.js usage does not.\n`;
     content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;
