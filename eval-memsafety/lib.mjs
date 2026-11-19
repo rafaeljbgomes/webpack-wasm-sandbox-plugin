@@ -57,7 +57,7 @@ export const bundle = (lib) => fs.readFileSync(path.join(root, "dist", `${lib}.b
 
 let sharedInst;
 /** Creates a sandbox and returns it with its own module's memory/imports. */
-export async function sandbox(label, lib, permissions = [], { shared = false } = {}) {
+export async function sandbox(label, lib, permissions = [], { shared = false, code = null } = {}) {
   setLabel(label);
   const before = instances.length;
   let sb;
@@ -65,9 +65,9 @@ export async function sandbox(label, lib, permissions = [], { shared = false } =
     const n = instances.length;
     await SandboxManager.ready();
     if (instances.length > n) sharedInst = instances[instances.length - 1];
-    sb = SandboxManager.createSandboxSync(lib, bundle(lib), { permissions });
+    sb = SandboxManager.createSandboxSync(lib, code ?? bundle(lib), { permissions });
   } else {
-    sb = await SandboxManager.createSandbox(lib, bundle(lib), { permissions });
+    sb = await SandboxManager.createSandbox(lib, code ?? bundle(lib), { permissions });
   }
   const inst = shared ? sharedInst : instances[instances.length - 1];
   if (!shared && instances.length === before) throw new Error("no new module instance");
