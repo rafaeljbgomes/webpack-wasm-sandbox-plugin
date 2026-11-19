@@ -1,0 +1,1335 @@
+{
+  "schemaVersion": 1,
+  "catalogueVersion": 1,
+  "model": "subq-snap-1.1",
+  "threshold": 0.9,
+  "dryRun": true,
+  "offline": false,
+  "buildFingerprint": "737be4749d7921031b4ce3e209c4c33839e4ecaf564fccc6587248e391cfacfc",
+  "policyPath": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/lib-test/security/app/advisor-policy.mjs",
+  "webpackConfigPath": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/eval-lavamoat/advisor/webpack.cjs",
+  "requestResults": [],
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "libraries": [
+    {
+      "name": "image-js",
+      "packages": [
+        {
+          "name": "bresenham-zingl",
+          "version": "0.2.5"
+        },
+        {
+          "name": "colord",
+          "version": "2.9.3"
+        },
+        {
+          "name": "fast-bmp",
+          "version": "4.0.1"
+        },
+        {
+          "name": "fast-jpeg",
+          "version": "3.0.1"
+        },
+        {
+          "name": "fast-png",
+          "version": "8.0.0"
+        },
+        {
+          "name": "fflate",
+          "version": "0.8.3"
+        },
+        {
+          "name": "fft.js",
+          "version": "4.0.4"
+        },
+        {
+          "name": "file-type",
+          "version": "10.11.0"
+        },
+        {
+          "name": "image-js",
+          "version": "1.5.0"
+        },
+        {
+          "name": "image-type",
+          "version": "4.1.0"
+        },
+        {
+          "name": "iobuffer",
+          "version": "6.0.1"
+        },
+        {
+          "name": "is-any-array",
+          "version": "3.0.0"
+        },
+        {
+          "name": "jpeg-js",
+          "version": "0.4.4"
+        },
+        {
+          "name": "js-priority-queue",
+          "version": "0.1.5"
+        },
+        {
+          "name": "median-quickselect",
+          "version": "1.0.1"
+        },
+        {
+          "name": "ml-affine-transform",
+          "version": "1.0.3"
+        },
+        {
+          "name": "ml-array-median",
+          "version": "1.1.6"
+        },
+        {
+          "name": "ml-convolution",
+          "version": "2.0.0"
+        },
+        {
+          "name": "ml-matrix",
+          "version": "6.12.2"
+        },
+        {
+          "name": "ml-random",
+          "version": "0.5.0"
+        },
+        {
+          "name": "ml-ransac",
+          "version": "1.0.0"
+        },
+        {
+          "name": "ml-regression-base",
+          "version": "4.0.1"
+        },
+        {
+          "name": "ml-regression-multivariate-linear",
+          "version": "2.0.4"
+        },
+        {
+          "name": "ml-regression-polynomial-2d",
+          "version": "1.0.0"
+        },
+        {
+          "name": "ml-spectra-processing",
+          "version": "14.29.0"
+        },
+        {
+          "name": "ml-xsadd",
+          "version": "2.0.0"
+        },
+        {
+          "name": "next-power-of-two",
+          "version": "1.0.0"
+        },
+        {
+          "name": "robust-orientation",
+          "version": "1.2.1"
+        },
+        {
+          "name": "robust-point-in-polygon",
+          "version": "1.0.3"
+        },
+        {
+          "name": "robust-scale",
+          "version": "1.0.2"
+        },
+        {
+          "name": "robust-subtract",
+          "version": "1.0.0"
+        },
+        {
+          "name": "robust-sum",
+          "version": "1.0.0"
+        },
+        {
+          "name": "tiff",
+          "version": "7.1.3"
+        },
+        {
+          "name": "ts-pattern",
+          "version": "5.9.0"
+        },
+        {
+          "name": "two-product",
+          "version": "1.0.2"
+        },
+        {
+          "name": "two-sum",
+          "version": "1.0.0"
+        },
+        {
+          "name": "uint8-base64",
+          "version": "1.0.0"
+        }
+      ],
+      "moduleCount": 552,
+      "moduleFingerprint": "01c58702f71bd99567f714c89063a2aac03b81f4dab27e536f16ae1013e0a9c5",
+      "issues": [
+        "local_module_excluded",
+        "dynamic_code_evaluation"
+      ],
+      "workloadsAnalyzed": false,
+      "workloadsPresent": false,
+      "existingUncataloguedPermissions": [],
+      "writableNetworkSinks": [],
+      "capabilities": [
+        {
+          "name": "Intl",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "image-js/lib/utils/validators/checkProcessable.js",
+              "line": 1,
+              "members": [
+                "ListFormat"
+              ],
+              "initialization": true,
+              "feature": "module initialization"
+            }
+          ],
+          "suggested": false,
+          "existing": true,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "TextEncoder",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 1660,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            },
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 1660,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            },
+            {
+              "file": "iobuffer/lib/text.js",
+              "line": 11,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            }
+          ],
+          "suggested": false,
+          "existing": true,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "TextDecoder",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "fast-png/lib/helpers/text.js",
+              "line": 5,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            },
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 1662,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            },
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 1662,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            },
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 1700,
+              "members": [],
+              "initialization": false,
+              "feature": "DecodeUTF8"
+            },
+            {
+              "file": "image-js/lib/save/encodeDataURL.js",
+              "line": 12,
+              "members": [],
+              "initialization": false,
+              "feature": "encodeDataURL"
+            },
+            {
+              "file": "iobuffer/lib/text.js",
+              "line": 8,
+              "members": [],
+              "initialization": false,
+              "feature": "decode"
+            }
+          ],
+          "suggested": false,
+          "existing": true,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "crypto",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "fetch",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "image-js/lib/load/fetchURL.js",
+              "line": 8,
+              "members": [],
+              "initialization": false,
+              "feature": "fetchURL"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "XMLHttpRequest",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "jpeg-js/lib/decoder.js",
+              "line": 552,
+              "members": [],
+              "initialization": false,
+              "feature": "load"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "WebSocket",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "EventSource",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "localStorage",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "image-js/lib/save/encodeDataURL.js",
+              "line": 13,
+              "members": [],
+              "initialization": false,
+              "feature": "encodeDataURL"
+            },
+            {
+              "file": "image-js/lib/save/encodeDataURL.js",
+              "line": 14,
+              "members": [
+                "setItem"
+              ],
+              "initialization": false,
+              "feature": "encodeDataURL"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "sessionStorage",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "indexedDB",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "document",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "image-js/lib/load/readImg.js",
+              "line": 10,
+              "members": [
+                "createElement"
+              ],
+              "initialization": false,
+              "feature": "readImg"
+            },
+            {
+              "file": "jpeg-js/lib/encoder.js",
+              "line": 806,
+              "members": [
+                "getElementById"
+              ],
+              "initialization": false,
+              "feature": "getImageDataFromImage"
+            },
+            {
+              "file": "jpeg-js/lib/encoder.js",
+              "line": 807,
+              "members": [
+                "createElement"
+              ],
+              "initialization": false,
+              "feature": "getImageDataFromImage"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "navigator",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "location",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "URL",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 12,
+              "members": [
+                "createObjectURL"
+              ],
+              "initialization": false,
+              "feature": "anonymous callback"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "URLSearchParams",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "Blob",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 12,
+              "members": [],
+              "initialization": false,
+              "feature": "anonymous callback"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "File",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "FileReader",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "atob",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "btoa",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "console",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 1,
+          "evidence": [
+            {
+              "file": "ml-matrix/matrix.js",
+              "line": 2352,
+              "members": [
+                "warn"
+              ],
+              "initialization": false,
+              "feature": "mmulStrassen"
+            },
+            {
+              "file": "ml-matrix/matrix.js",
+              "line": 4038,
+              "members": [
+                "warn"
+              ],
+              "initialization": false,
+              "feature": "anonymous callback"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "performance",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "setTimeout",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 2556,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            },
+            {
+              "file": "fflate/esm/browser.js",
+              "line": 2556,
+              "members": [],
+              "initialization": true,
+              "feature": "module initialization"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "clearTimeout",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "setInterval",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "clearInterval",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "requestAnimationFrame",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "cancelAnimationFrame",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": false,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        }
+      ]
+    },
+    {
+      "name": "strip-ansi",
+      "packages": [
+        {
+          "name": "ansi-regex",
+          "version": "6.2.2"
+        },
+        {
+          "name": "strip-ansi",
+          "version": "7.2.0"
+        }
+      ],
+      "moduleCount": 2,
+      "moduleFingerprint": "524a467e5edcd35212bd9fb3cab7fe98e38b3d0893c16404a80e7fdcc1389b76",
+      "issues": [],
+      "workloadsAnalyzed": false,
+      "workloadsPresent": false,
+      "existingUncataloguedPermissions": [],
+      "writableNetworkSinks": [],
+      "capabilities": [
+        {
+          "name": "Intl",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "TextEncoder",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "TextDecoder",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "crypto",
+          "exposure": "supported",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "fetch",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "strip-ansi/index.js",
+              "line": 16,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 17,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 17,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 18,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 18,
+              "members": [],
+              "initialization": false,
+              "feature": "anonymous callback"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "XMLHttpRequest",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [
+            {
+              "file": "strip-ansi/index.js",
+              "line": 24,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 25,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 25,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 26,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            },
+            {
+              "file": "strip-ansi/index.js",
+              "line": 26,
+              "members": [],
+              "initialization": false,
+              "feature": "installEvaluationInterceptors"
+            }
+          ],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "WebSocket",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "EventSource",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "localStorage",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "sessionStorage",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "indexedDB",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "document",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "navigator",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "location",
+          "exposure": "sensitive_review",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "URL",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "URLSearchParams",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "Blob",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "File",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "FileReader",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "atob",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "btoa",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "console",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "performance",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "setTimeout",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "clearTimeout",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "setInterval",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "clearInterval",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "requestAnimationFrame",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        },
+        {
+          "name": "cancelAnimationFrame",
+          "exposure": "unvalidated",
+          "classification": "insufficient_evidence",
+          "probability": null,
+          "probabilities": null,
+          "confidence": null,
+          "evidenceComplete": true,
+          "omittedEvidence": 0,
+          "evidence": [],
+          "suggested": false,
+          "existing": false,
+          "reviewReason": "dry_run_not_evaluated",
+          "cached": false
+        }
+      ]
+    }
+  ]
+}
