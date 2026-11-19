@@ -8,7 +8,6 @@
 
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { getQuickJS } from "quickjs-emscripten";
 import { SandboxManager } from "../../core/sandbox-manager.js";
 
 const hookUrl = new URL("./register-runtime-aliases.mjs", import.meta.url).href;
@@ -76,14 +75,15 @@ function ownSandbox(t, sandbox) {
  *
  * @param {import("node:test").TestContext} t Owning test context.
  * @param {string} body Fixture body passed to {@link fixtureBundle}.
- * @param {object} [options] Library name, permissions, and workloads.
+ * @param {object} [options] Library name, permissions, writable paths, and workloads.
  * @returns {Promise<object>} Initialized sandbox runtime.
  */
 export async function createFixtureSandbox(t, body, options = {}) {
-  const { libraryName = "fixture", permissions = [], workloads } = options;
+  const { libraryName = "fixture", permissions = [], workloads, writable } = options;
   const sandbox = await SandboxManager.createSandbox(libraryName, fixtureBundle(body), {
     permissions,
     workloads,
+    writable,
   });
   return ownSandbox(t, sandbox);
 }
@@ -100,7 +100,7 @@ export async function createFixtureSandbox(t, body, options = {}) {
  */
 export async function createFixtureSandboxSync(t, body, options = {}) {
   const { libraryName = "fixture", permissions = [], workloads } = options;
-  await getQuickJS();
+  await SandboxManager.ready();
   const sandbox = SandboxManager.createSandboxSync(libraryName, fixtureBundle(body), {
     permissions,
     workloads,

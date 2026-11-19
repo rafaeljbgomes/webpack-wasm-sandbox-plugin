@@ -126,9 +126,24 @@ function createCryptoCapability(arena) {
  * @param {string[]|undefined} permissions Explicit list or the legacy omission sentinel.
  * @returns {void}
  */
-export function validatePermissions(permissions) {
+export function validatePermissions(permissions, writable) {
   if (permissions !== undefined && (!Array.isArray(permissions) || permissions.some((name) => typeof name !== "string" || !name))) {
     throw new TypeError("Sandbox permissions must be an array of nonempty strings");
+  }
+  if (writable === undefined) return;
+  if (typeof writable !== "object" || writable === null || Array.isArray(writable)) {
+    throw new TypeError("Sandbox writable paths must be an object keyed by granted global");
+  }
+  for (const [apiName, paths] of Object.entries(writable)) {
+    if (!(permissions ?? []).includes(apiName)) {
+      throw new TypeError(`Writable paths name "${apiName}", which is not granted`);
+    }
+    if (apiName === "crypto") {
+      throw new TypeError("The crypto capability has no writable properties");
+    }
+    if (!Array.isArray(paths) || paths.some((p) => typeof p !== "string" || p.split(".").some((part) => !part))) {
+      throw new TypeError(`Writable paths for "${apiName}" must be dotted property paths`);
+    }
   }
 }
 
@@ -143,15 +158,19 @@ export function validatePermissions(permissions) {
  * @param {import("quickjs-emscripten-sync").Arena} arena Target sandbox bridge.
  * @param {string} libraryName Policy key whose permissions are applied.
  * @param {string[]|undefined} permissions Explicit compiler policy; omission retains the direct-call fallback.
- * @param {{makeCallable: Function, bindWebApi: Function}} forwardMembrane Wrapper factory owned by the same sandbox as `arena`.
+ * @param {{makeCallable: Function, bindWebApi: Function, allowWrites: Function}} forwardMembrane Wrapper factory owned by the same sandbox as `arena`.
+ * @param {Record<string, string[]>} [writable] Host properties the library may assign, as dotted paths per grant; grants are read-only otherwise.
  * @returns {void}
  */
-export function exposeWebAPIs(arena, libraryName, permissions, forwardMembrane) {
-  const { bindWebApi, makeCallable } = forwardMembrane;
+export function exposeWebAPIs(arena, libraryName, permissions, forwardMembrane, writable) {
+  const { bindWebApi, makeCallable, allowWrites } = forwardMembrane;
   const selectedPermissions = permissions === undefined
     ? (sandboxConfig[libraryName]?.permissions ?? [])
     : permissions;
-  validatePermissions(selectedPermissions);
+  const selectedWritable = permissions === undefined
+    ? (sandboxConfig[libraryName]?.writable ?? {})
+    : (writable ?? {});
+  validatePermissions(selectedPermissions, selectedWritable);
   const exposedAPIs = {};
   const installers = [];
 
@@ -167,9 +186,15 @@ export function exposeWebAPIs(arena, libraryName, permissions, forwardMembrane) 
 
     if (typeof globalThis[apiName] !== "undefined") {
       let rootAPI = globalThis[apiName];
+      const writablePaths = selectedWritable[apiName] ?? [];
       if (typeof rootAPI === "function") {
+        if (writablePaths.length) {
+          throw new TypeError(`Writable paths need an object grant; "${apiName}" is a function`);
+        }
         rootAPI = makeCallable(rootAPI, globalThis);
       } else {
+        // Resolved before wrapping, so the wrappers see the final write set.
+        if (writablePaths.length) allowWrites(rootAPI, apiName, writablePaths);
         rootAPI = bindWebApi(rootAPI);
       }
       exposedAPIs[apiName] = arena.sync(rootAPI);

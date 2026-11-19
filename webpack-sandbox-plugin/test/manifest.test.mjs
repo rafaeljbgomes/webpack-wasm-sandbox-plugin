@@ -13,7 +13,7 @@ const sri = (bytes) => `sha384-${crypto.createHash("sha384").update(bytes).diges
 const sha256 = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
 
 /** Sets up an application with one sandboxed library and a stage output. */
-function setup(t, { grant = [] } = {}) {
+function setup(t, { grant = [], extra = {} } = {}) {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "sandbox-manifest-test-")));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const lib = path.join(root, "node_modules", "lib-a");
@@ -23,7 +23,7 @@ function setup(t, { grant = [] } = {}) {
   fs.writeFileSync(path.join(lib, "index.js"), "exports.f = () => 'APP_TREE_SOURCE';\n");
   fs.writeFileSync(path.join(lib, "index.d.ts"), "export declare function f(): string;\n");
   fs.writeFileSync(path.join(root, "entry.js"), "import { f } from 'lib-a';\nexport default f;\n");
-  const policyBytes = Buffer.from(`module.exports = ${JSON.stringify({ "lib-a": { permissions: grant } })};\n`);
+  const policyBytes = Buffer.from(`module.exports = ${JSON.stringify({ "lib-a": { permissions: grant, ...extra } })};\n`);
   fs.writeFileSync(path.join(root, "sandbox.config.cjs"), policyBytes);
 
   const stage = path.join(root, "stage");
@@ -98,4 +98,45 @@ test("fails when a stage bundle does not match its pinned digest", async (t) => 
   const { root, stage } = setup(t);
   fs.appendFileSync(path.join(stage, "lib-a.bundle.js"), ";globalThis.x = 1;\n");
   await assert.rejects(compile(root), /Sandbox bundle lib-a\.bundle\.js does not match the manifest/);
+});
+
+test("fails when writable paths differ from the manifest", async (t) => {
+  const { root, manifest, writeManifest } = setup(t, { grant: ["Cfg"], extra: { writable: { Cfg: ["theme"] } } });
+  // The stage recorded no writable paths; the application policy now has one.
+  writeManifest(manifest);
+  await assert.rejects(compile(root), /Writable paths for lib-a in the policy .* differ from the manifest/);
+  manifest.libraries["lib-a"].writable = { Cfg: ["theme"] };
+  writeManifest(manifest);
+  await compile(root);
+});
+
+test("with a pin, only the reviewed manifest is accepted", async (t) => {
+  const { root, stage, manifest, writeManifest } = setup(t);
+  const pin = path.join(root, "sandbox-manifest.sha256");
+  const pinManifest = () => fs.writeFileSync(pin, `# reviewed\n${sha256(fs.readFileSync(path.join(stage, "sandbox-manifest.json")))}\n`);
+  const compileWithPin = () => new Promise((resolve, reject) => {
+    webpack({
+      context: root,
+      entry: path.join(root, "entry.js"),
+      mode: "development",
+      devtool: false,
+      output: { path: path.join(root, "dist"), filename: "main.js" },
+      resolve: { fallback: { fs: false, path: false, url: false } },
+      externals: { "../core/sandbox-manager.js": "commonjs ../core/sandbox-manager.js" },
+      plugins: [new WebpackSandboxPlugin({
+        configPath: "sandbox.config.cjs",
+        proxyDirectory: path.join(root, ".sandbox", "proxys"),
+        sandboxManifest: { path: "stage/sandbox-manifest.json", bundleDir: "stage", pinPath: "sandbox-manifest.sha256" },
+      })],
+    }, (error, stats) => (error ? reject(error) : stats.hasErrors() ? reject(new Error(stats.toString({ all: false, errors: true }))) : resolve(stats)));
+  });
+  await assert.rejects(compileWithPin(), /Manifest pin was not found/);
+  pinManifest();
+  await compileWithPin();
+  // A manifest regenerated outside review (here: a new consistent bundle) is rejected.
+  const bundle = Buffer.from("var __SANDBOXED_LIB__ = { f: () => 'UNREVIEWED' };\n");
+  fs.writeFileSync(path.join(stage, "lib-a.bundle.js"), bundle);
+  manifest.libraries["lib-a"].integrity = sri(bundle);
+  writeManifest(manifest);
+  await assert.rejects(compileWithPin(), /is not the reviewed manifest pinned/);
 });

@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "@jitl/quickjs-wasmfile-release-sync": "^0.32.0",
     "quickjs-emscripten": "^0.32.0",
+    "quickjs-emscripten-core": "^0.32.0",
     "quickjs-emscripten-sync": "^1.8.1",
     "typescript": "^5.9.3"
   },
@@ -23,7 +25,7 @@
     "postinstall": "patch-package",
     "sandbox:suggest": "node capability-advisor/suggest.mjs",
     "test:advisor": "node --test capability-advisor/test/*.test.mjs",
-    "test:unit": "node --import ./.sandbox/test/helpers/register-runtime-aliases.mjs --import tsx --test --test-timeout=30000 \".sandbox/test/*.test.mjs\" \"webpack-sandbox-plugin/test/*.test.mjs\"",
+    "test:unit": "node --import ./.sandbox/test/helpers/register-runtime-aliases.mjs --import tsx --test --test-timeout=30000 \".sandbox/test/*.test.mjs\" \"webpack-sandbox-plugin/test/*.test.mjs\" \"sandbox-stage/test/*.test.mjs\"",
     "test": "npm run test:unit && npm run test:advisor"
   },
   "keywords": [

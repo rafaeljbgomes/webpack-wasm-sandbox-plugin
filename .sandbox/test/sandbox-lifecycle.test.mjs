@@ -24,7 +24,7 @@ test("synchronous creation fails before the shared QuickJS module is loaded", ()
     }
   `);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /rejected:QuickJS not initialized/);
+  assert.match(result.stdout, /rejected:QuickJS module not loaded/);
 });
 
 test("each sandbox owns a separate QuickJS context", async (t) => {

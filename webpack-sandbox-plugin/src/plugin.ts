@@ -9,6 +9,22 @@ import { compileLibrary, loadSandboxPolicy, WorkloadConfig } from "./build-helpe
 import { applyClassification, ClassificationOptions } from "./classification";
 import { integrityFor, loadAndCheckManifest, ManifestOptions, SandboxManifest } from "./manifest";
 import type { BundleIntegrity } from "./proxy-generator";
+import * as ts from "typescript";
+
+/**
+ * Finds the declaration file TypeScript would use for `<library>/<subpath>`,
+ * honouring the package's `exports` and falling back to `@types`.
+ */
+function resolveSubpathDeclaration(libraryName: string, subpath: string, context: string): string | undefined {
+  const containingFile = path.join(context, "__sandbox_subpath_lookup__.ts");
+  const options: ts.CompilerOptions = {
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    allowJs: false,
+  };
+  const resolved = ts.resolveModuleName(`${libraryName}/${subpath}`, containingFile, options, ts.sys).resolvedModule;
+  return resolved && /\.d\.[cm]?ts$/.test(resolved.resolvedFileName) ? resolved.resolvedFileName : undefined;
+}
 
 /** Configuration accepted by {@link WebpackSandboxPlugin}. */
 export interface SandboxPluginOptions {
@@ -48,6 +64,23 @@ interface ConfiguredWorkload extends WorkloadConfig {
  */
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Name prefix shared by the child compilers that build sandbox bundles. */
+const SANDBOX_COMPILER_PREFIX = "Sandbox";
+
+/**
+ * Reports whether a module request was issued by a sandbox child compiler
+ * (`SandboxCompiler-*` or `SandboxWorkloadCompiler-*`).
+ */
+function isSandboxCompilerRequest(resource: any): boolean {
+  const compilerName: unknown = resource?.contextInfo?.compiler;
+  return typeof compilerName === "string" && compilerName.startsWith(SANDBOX_COMPILER_PREFIX);
+}
+
+/** File name of the generated proxy for one declared subpath. */
+export function subpathProxyFileName(libraryName: string, subpath: string): string {
+  return `${libraryName}--${subpath.replace(/[^A-Za-z0-9_.-]/g, "_")}-proxy.js`;
 }
 
 /**
@@ -139,7 +172,12 @@ export class WebpackSandboxPlugin {
             (workload) => workload.libraryName === libName,
           ),
           integrityFor(manifest?.libraries[libName]),
+          sandboxConfig[libName].writable ?? {},
+          (sandboxConfig[libName].subpaths ?? []).length > 0,
         );
+        for (const subpath of sandboxConfig[libName].subpaths ?? []) {
+          this.generateProxyForSubpath(libName, subpath, compiler.context);
+        }
       });
       configuredWorkloads.forEach((workload) => {
         this.generateProxyForWorkload(workload, compiler.context);
@@ -147,20 +185,29 @@ export class WebpackSandboxPlugin {
     });
 
     configuredLibraries.forEach((libName) => {
-      const proxyPath = path.resolve(
-        this.sandboxCacheDir,
-        `${libName}-proxy.js`,
-      );
-
-      new NormalModuleReplacementPlugin(
-        new RegExp(`^${libName}$`),
-        (resource: any) => {
-          console.log(
-            `[SandboxPlugin] Intercepted import for ${libName}, redirecting to proxy.`,
-          );
-          resource.request = proxyPath;
-        },
-      ).apply(compiler);
+      const redirects: Array<[string, string]> = [
+        [libName, path.resolve(this.sandboxCacheDir, `${libName}-proxy.js`)],
+        ...(sandboxConfig[libName].subpaths ?? []).map((subpath): [string, string] => [
+          `${libName}/${subpath}`,
+          path.resolve(this.sandboxCacheDir, subpathProxyFileName(libName, subpath)),
+        ]),
+      ];
+      for (const [request, proxyPath] of redirects) {
+        new NormalModuleReplacementPlugin(
+          // Escaped: a name such as `lodash.get` must not match `lodashXget`.
+          new RegExp(`^${escapeRegExp(request)}$`),
+          (resource: any) => {
+            // Child compilers inherit this hook. Requests issued while building
+            // a sandbox bundle are the library's own code and must resolve to
+            // the real package, never to a host-side proxy.
+            if (isSandboxCompilerRequest(resource)) return;
+            console.log(
+              `[SandboxPlugin] Intercepted import for ${request}, redirecting to proxy.`,
+            );
+            resource.request = proxyPath;
+          },
+        ).apply(compiler);
+      }
     });
 
     configuredWorkloads.forEach((workload) => {
@@ -189,7 +236,7 @@ export class WebpackSandboxPlugin {
         // With a manifest, library code is never compiled in this build.
         if (manifest) return callback();
         const libraryBundlePromises = configuredLibraries.map((libName) =>
-          compileLibrary(compiler, compilation, libName),
+          compileLibrary(compiler, compilation, libName, sandboxConfig[libName].subpaths, this.sandboxCacheDir),
         );
         const workloadBundlePromises = configuredWorkloads.map((workload) => {
           return new Promise<void>((resolve, reject) => {
@@ -280,6 +327,8 @@ export class WebpackSandboxPlugin {
     permissions: string[],
     workloads: ConfiguredWorkload[] = [],
     integrity?: BundleIntegrity,
+    writable: Record<string, string[]> = {},
+    hasSubpaths = false,
   ) {
     const proxyPath = path.resolve(
       this.sandboxCacheDir,
@@ -327,12 +376,40 @@ export class WebpackSandboxPlugin {
     const libraryData = parser.parse();
 
     const generator = new ProxyGenerator();
-    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions, integrity);
+    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions, integrity, writable, hasSubpaths);
 
     fs.writeFileSync(proxyPath, proxyContent);
     console.log(
       `[SandboxPlugin] Generated Sandbox Proxy for ${libraryName} at ${proxyPath}`,
     );
+  }
+
+  /**
+   * Writes the proxy for one declared subpath. It reads the subpath's exports
+   * from the owning library's sandbox (same QuickJS context, same bundle) and
+   * takes its export names from the subpath's own declarations.
+   *
+   * @param libraryName Owning package.
+   * @param subpath Declared subpath, e.g. `locale` for `date-fns/locale`.
+   * @param context Webpack project context used for declaration lookup.
+   */
+  private generateProxyForSubpath(libraryName: string, subpath: string, context: string) {
+    const proxyPath = path.resolve(this.sandboxCacheDir, subpathProxyFileName(libraryName, subpath));
+    const declaration = resolveSubpathDeclaration(libraryName, subpath, context);
+    const libraryData = declaration ? new Parser([declaration]).parse() : { exportedNames: [] };
+    if (!declaration) {
+      console.warn(
+        `[SandboxPlugin] No declarations found for ${libraryName}/${subpath}; its proxy exposes only the default export.`,
+      );
+    }
+    const content = new ProxyGenerator().generateSubpath(libraryData, libraryName, subpath, `./${path.basename(this.proxyPathFor(libraryName))}`);
+    fs.writeFileSync(proxyPath, content);
+    console.log(`[SandboxPlugin] Generated Sandbox Proxy for ${libraryName}/${subpath} at ${proxyPath}`);
+  }
+
+  /** Path of the generated root proxy of a library. */
+  private proxyPathFor(libraryName: string): string {
+    return path.resolve(this.sandboxCacheDir, `${libraryName}-proxy.js`);
   }
 
   /**

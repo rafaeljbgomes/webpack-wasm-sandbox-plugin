@@ -23,6 +23,10 @@ export interface ManifestLibrary {
   /** Subresource-Integrity digest of the bundle (`sha384-<base64>`). */
   integrity: string;
   grant: string[];
+  /** Host properties the library may assign (see `LibraryPolicy.writable`). */
+  writable?: Record<string, string[]>;
+  /** Declared subpaths served by the same bundle. */
+  subpaths?: string[];
   packageVersion?: string;
   /** The lockfile's integrity for the package tarball the bundle was built from. */
   lockfileIntegrity?: string;
@@ -35,6 +39,20 @@ export interface ManifestOptions {
   path: string;
   /** Directory holding the bundles the sandbox stage emitted. */
   bundleDir: string;
+  /**
+   * File holding the expected SHA-256 (hex) of the manifest, kept next to the
+   * protected policy and reviewed like a lockfile. When set, a manifest with
+   * any other digest is rejected.
+   */
+  pinPath?: string;
+}
+
+/** Reads a pin file: the first 64-hex-digit token, ignoring comments. */
+export function readManifestPin(file: string): string {
+  const text = fs.readFileSync(file, "utf8");
+  const match = text.replace(/#.*$/gm, "").match(/\b[0-9a-f]{64}\b/i);
+  if (!match) throw new Error(`[SandboxPlugin] Manifest pin ${file} holds no SHA-256 digest`);
+  return match[0].toLowerCase();
 }
 
 /** Computes an SRI digest (`sha384-<base64>`). */
@@ -68,7 +86,21 @@ export function loadAndCheckManifest(
   if (!fs.existsSync(manifestPath)) {
     throw new Error(`[SandboxPlugin] Sandbox manifest was not found at ${manifestPath}`);
   }
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as SandboxManifest;
+  const manifestBytes = fs.readFileSync(manifestPath);
+  if (options.pinPath) {
+    const pinPath = path.resolve(context, options.pinPath);
+    if (!fs.existsSync(pinPath)) {
+      throw new Error(`[SandboxPlugin] Manifest pin was not found at ${pinPath}`);
+    }
+    const expected = readManifestPin(pinPath);
+    const actual = crypto.createHash("sha256").update(manifestBytes).digest("hex");
+    if (actual !== expected) {
+      throw new Error(
+        `[SandboxPlugin] Sandbox manifest ${manifestPath} (sha256 ${actual}) is not the reviewed manifest pinned in ${pinPath} (sha256 ${expected}).`,
+      );
+    }
+  }
+  const manifest = JSON.parse(manifestBytes.toString("utf8")) as SandboxManifest;
   if (manifest.manifestVersion !== 1 || typeof manifest.libraries !== "object") {
     throw new Error(`[SandboxPlugin] Unsupported sandbox manifest at ${manifestPath}`);
   }
@@ -105,6 +137,22 @@ export function loadAndCheckManifest(
       throw new Error(
         `[SandboxPlugin] Grant for ${name} in the policy (${policy[name].permissions.join(", ") || "none"}) differs from the ` +
           `manifest (${entry.grant.join(", ") || "none"}).`,
+      );
+    }
+    const canonical = (value: unknown) => JSON.stringify(value, (_key, v) =>
+      v && typeof v === "object" && !Array.isArray(v) ? Object.fromEntries(Object.entries(v).sort()) : v);
+    const policyWritable = policy[name].writable ?? {};
+    if (canonical(entry.writable ?? {}) !== canonical(policyWritable)) {
+      throw new Error(
+        `[SandboxPlugin] Writable paths for ${name} in the policy (${canonical(policyWritable)}) differ from the manifest ` +
+          `(${canonical(entry.writable ?? {})}).`,
+      );
+    }
+    const policySubpaths = [...(policy[name].subpaths ?? [])].sort();
+    if (canonical(policySubpaths) !== canonical([...(entry.subpaths ?? [])].sort())) {
+      throw new Error(
+        `[SandboxPlugin] Subpaths for ${name} in the policy (${policySubpaths.join(", ") || "none"}) differ from the manifest ` +
+          `(${(entry.subpaths ?? []).join(", ") || "none"}).`,
       );
     }
     check(entry.bundle, entry.integrity);

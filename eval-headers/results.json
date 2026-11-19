@@ -1,0 +1,26 @@
+{
+ "chrome": "Google Chrome 157.0.8103.79",
+ "wasmFilesShipped": 1,
+ "headers": {
+  "document": {
+   "Content-Security-Policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; base-uri 'none'",
+   "X-Content-Type-Options": "nosniff"
+  },
+  "paths": {
+   "/dist/strip-ansi.bundle.js": {
+    "Content-Type": "text/plain; charset=utf-8",
+    "X-Content-Type-Options": "nosniff"
+   }
+  }
+ },
+ "withoutHeaders": {
+  "app": "sandboxed-ok",
+  "inject": "RAN-NATIVELY",
+  "eval": "2"
+ },
+ "withHeaders": {
+  "app": "sandboxed-ok",
+  "inject": "blocked",
+  "eval": "blocked:EvalError"
+ }
+}

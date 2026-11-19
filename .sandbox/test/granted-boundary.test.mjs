@@ -26,7 +26,7 @@ const LIBRARY_BODY = `
   };
 `;
 
-test("writes to granted built-in APIs stay inside the sandbox; custom objects accept primitive writes", async (t) => {
+test("writes to granted APIs stay inside the sandbox or fail; the host is unchanged", async (t) => {
   const capability = { secret: "kept", run: () => "host" };
   defineHostGlobal(t, "Capability", capability);
   const originalDateTimeFormat = Intl.DateTimeFormat;
@@ -37,42 +37,78 @@ test("writes to granted built-in APIs stay inside the sandbox; custom objects ac
   });
 
   const inside = exports.patchGranted();
-  // The writes succeed against the sandbox's view of the capability...
-  assert.deepEqual(inside, { assign: "ok", add: "ok", remove: "ok", prototype: "ok", custom: "ok" });
+  // Writes to built-ins succeed against the sandbox's view of the capability;
+  // the primitive write to the custom object fails (grants are read-only)...
+  assert.deepEqual(inside, { assign: "ok", add: "ok", remove: "ok", prototype: "ok", custom: "threw" });
   // ...but the host objects behind the grant are untouched.
   assert.equal(Intl.DateTimeFormat, originalDateTimeFormat);
   assert.equal(Intl.NumberFormat, originalNumberFormat);
   assert.equal(Object.hasOwn(Intl, "__injected"), false);
   assert.equal(TextEncoder.prototype.encode, originalEncode);
-  // Function replacement does not write through.
+  // Neither the function replacement nor the primitive write reaches the host.
   assert.equal(capability.run(), "host");
-  // Primitive writes to existing data properties DO write through by design
-  // (forward-membrane.js: assertInertHostValue). A grant therefore conveys
-  // read access plus primitive write access to the granted object's state.
-  assert.equal(capability.secret, "stolen");
+  assert.equal(capability.secret, "kept");
 });
 
-test("only primitive writes to existing properties of a granted object reach the host", async (t) => {
-  const capability = { flag: false, nested: { v: "orig" }, list: ["orig"], fn: () => "host" };
+const CFG_PROBES = `
+  function attempt(fn) { try { fn(); return "ok"; } catch (error) { return "threw"; } }
+  return { run: () => ({
+    flag: attempt(() => { Cfg.flag = true; }),
+    nested: attempt(() => { Cfg.nested.v = "x"; }),
+    list: attempt(() => { Cfg.list[0] = "x"; }),
+    added: attempt(() => { Cfg.added = "x"; }),
+    object: attempt(() => { Cfg.nested = { v: "evil" }; }),
+    fn: attempt(() => { Cfg.fn = () => "pwned"; }),
+    del: attempt(() => { delete Cfg.flag; }),
+  }) };
+`;
+const makeCfg = () => ({ flag: false, nested: { v: "orig" }, list: ["orig"], fn: () => "host" });
+const hostState = (cfg) => ({ flag: cfg.flag, nested: cfg.nested.v, list: cfg.list[0], added: cfg.added, fn: cfg.fn() });
+
+test("a granted object is read-only: no write from the sandbox reaches the host", async (t) => {
+  const capability = makeCfg();
   defineHostGlobal(t, "Cfg", capability);
+  const { exports } = await createFixtureSandbox(t, CFG_PROBES, { permissions: ["Cfg"] });
+  // Additions and function replacements change only the sandbox's wrapper.
+  assert.deepEqual(exports.run(), { flag: "threw", nested: "threw", list: "threw", added: "ok", object: "threw", fn: "ok", del: "threw" });
+  assert.deepEqual(hostState(capability), { flag: false, nested: "orig", list: "orig", added: undefined, fn: "host" });
+});
+
+test("only the primitive writes the policy lists reach the host", async (t) => {
+  const capability = makeCfg();
+  defineHostGlobal(t, "Cfg", capability);
+  const { exports } = await createFixtureSandbox(t, CFG_PROBES, {
+    permissions: ["Cfg"],
+    writable: { Cfg: ["flag", "nested.v", "nested"] },
+  });
+  // `nested` is writable but only with primitives; `list.0` is not listed.
+  assert.deepEqual(exports.run(), { flag: "ok", nested: "ok", list: "threw", added: "ok", object: "threw", fn: "ok", del: "threw" });
+  assert.deepEqual(hostState(capability), { flag: true, nested: "x", list: "orig", added: undefined, fn: "host" });
+});
+
+test("objects returned by a granted function are copied or read-only; writes never reach the host", async (t) => {
+  // A DOM-like element: a class instance is wrapped, not copied.
+  class HostImage { constructor() { this.src = ""; } }
+  const made = [];
+  defineHostGlobal(t, "makeImage", () => { const img = new HostImage(); made.push(img); return img; });
+  defineHostGlobal(t, "makePlain", () => { const o = { src: "" }; made.push(o); return o; });
   const { exports } = await createFixtureSandbox(t, `
-    function attempt(fn) { try { fn(); return "ok"; } catch (error) { return "threw"; } }
-    return { run: () => ({
-      flag: attempt(() => { Cfg.flag = true; }),
-      nested: attempt(() => { Cfg.nested.v = "x"; }),
-      list: attempt(() => { Cfg.list[0] = "x"; }),
-      added: attempt(() => { Cfg.added = "x"; }),
-      object: attempt(() => { Cfg.nested = { v: "evil" }; }),
-      fn: attempt(() => { Cfg.fn = () => "pwned"; }),
-      del: attempt(() => { delete Cfg.flag; }),
-    }) };
-  `, { permissions: ["Cfg"] });
-  const inside = exports.run();
-  assert.deepEqual(inside, { flag: "ok", nested: "ok", list: "ok", added: "ok", object: "threw", fn: "ok", del: "threw" });
-  assert.deepEqual(
-    { flag: capability.flag, nested: capability.nested.v, list: capability.list[0], added: capability.added, fn: capability.fn() },
-    { flag: true, nested: "x", list: "x", added: undefined, fn: "host" },
-  );
+    const write = (o) => { try { o.src = "https://attacker.example/x"; return "ok:" + o.src; } catch (e) { return e.name; } };
+    return { wrapped: () => write(makeImage()), plain: () => write(makePlain()) };
+  `, { permissions: ["makeImage", "makePlain"] });
+  assert.equal(exports.wrapped(), "TypeError");
+  // Plain-data results are copied by value, so the write changes the sandbox's copy.
+  assert.equal(exports.plain(), "ok:https://attacker.example/x");
+  assert.deepEqual(made.map((o) => o.src), ["", ""]);
+});
+
+test("writable paths are validated when the sandbox is created", async (t) => {
+  defineHostGlobal(t, "Cfg", makeCfg());
+  defineHostGlobal(t, "cfgFactory", () => ({}));
+  await assert.rejects(createFixtureSandbox(t, "return {};", { permissions: [], writable: { Cfg: ["flag"] } }), /not granted/);
+  await assert.rejects(createFixtureSandbox(t, "return {};", { permissions: ["Cfg"], writable: { Cfg: ["missing"] } }), /does not name an existing property/);
+  await assert.rejects(createFixtureSandbox(t, "return {};", { permissions: ["cfgFactory"], writable: { cfgFactory: ["x"] } }), /need an object grant/);
+  await assert.rejects(createFixtureSandbox(t, "return {};", { permissions: ["crypto"], writable: { crypto: ["x"] } }), /no writable properties/);
 });
 
 test("mutations of arguments inside the sandbox are not reflected on host objects", async (t) => {
@@ -88,4 +124,26 @@ test("properties set on a host callback inside the sandbox do not reach the host
   function hostCallback() { return 7; }
   assert.equal(exports.tagCallback(hostCallback), 7);
   assert.equal(Object.hasOwn(hostCallback, "injected"), false);
+});
+
+test("known limit: methods of a granted object keep their authority under read-only grants", async (t) => {
+  // Read-only grants close the property-write channel only. A granted method
+  // that changes state (setAttribute on a DOM element) still does, so DOM
+  // grants need method-level narrowing; see the paper's limitations.
+  class HostElement {
+    constructor() { this.attributes = {}; }
+    setAttribute(name, value) { this.attributes[name] = String(value); }
+  }
+  const element = new HostElement();
+  defineHostGlobal(t, "el", element);
+  const { exports } = await createFixtureSandbox(t, `
+    return { run: () => {
+      let direct;
+      try { el.attributes = {}; direct = "ok"; } catch (e) { direct = e.name; }
+      el.setAttribute("src", "https://attacker.example/x");
+      return direct;
+    } };
+  `, { permissions: ["el"] });
+  assert.equal(exports.run(), "TypeError");
+  assert.equal(element.attributes.src, "https://attacker.example/x");
 });

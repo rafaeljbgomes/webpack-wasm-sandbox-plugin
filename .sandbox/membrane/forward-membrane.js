@@ -35,13 +35,43 @@ function assertInertHostValue(value, key) {
  * @param {(result: object) => void} [options.offerJsonTransfer] Marks a fresh
  *   plain-data call result for by-value transfer by the same sandbox's Arena.
  *   Without it, every object result is wrapped.
- * @returns {{makeCallable: Function, bindWebApi: Function, dispose: () => void}}
+ * @returns {{makeCallable: Function, bindWebApi: Function, allowWrites: Function, dispose: () => void}}
  *   Membrane operations and the disposer that releases its wrapper cache.
  */
 export function createForwardMembrane({ offerJsonTransfer } = {}) {
   // Dropped on disposal so the sandbox stops retaining wrappers for host
   // objects that outlive it.
   let wrapperCache = new WeakMap();
+  // Host properties this sandbox may assign, per host object. Grants are
+  // read-only unless the policy lists a property under `writable`; the set is
+  // resolved once, from the granted root, when the grant is installed. Objects
+  // reached later (call results, replaced sub-objects) are never writable.
+  const writableKeys = new WeakMap();
+
+  /**
+   * Marks the properties named by dotted paths from a granted root writable.
+   *
+   * @param {object} root Granted host object.
+   * @param {string} apiName Name of the grant, for error messages.
+   * @param {string[]} paths Dotted property paths from the root.
+   * @returns {void}
+   * @throws {TypeError} When a path does not name an existing property of a host object.
+   */
+  function allowWrites(root, apiName, paths) {
+    for (const dotted of paths) {
+      const parts = dotted.split(".");
+      let target = root;
+      for (const part of parts.slice(0, -1)) {
+        target = target?.[part];
+      }
+      const key = parts[parts.length - 1];
+      if (target === null || typeof target !== "object" || !(key in target)) {
+        throw new TypeError(`Writable path ${apiName}.${dotted} does not name an existing property of a host object`);
+      }
+      if (!writableKeys.has(target)) writableKeys.set(target, new Set());
+      writableKeys.get(target).add(key);
+    }
+  }
 
   /**
    * Returns the live wrapper cache or rejects use after disposal.
@@ -137,9 +167,15 @@ export function createForwardMembrane({ offerJsonTransfer } = {}) {
           Object.defineProperty(boundObject, key, {
             /** Reads and recursively wraps the current host property value. */
             get: () => bindWebApi(apiObject[key]),
-            /** Writes a primitive through to the host object; rejects anything else. */
+            /**
+             * Writes a primitive through to the host object when the policy
+             * made this property writable; every other assignment fails.
+             */
             set: (val) => {
               liveCache();
+              if (!writableKeys.get(apiObject)?.has(key)) {
+                throw new TypeError(`Sandboxed code may not assign host property "${key}": the grant is read-only`);
+              }
               assertInertHostValue(val, key);
               apiObject[key] = val;
             },
@@ -154,6 +190,7 @@ export function createForwardMembrane({ offerJsonTransfer } = {}) {
   return {
     makeCallable,
     bindWebApi,
+    allowWrites,
     /** Releases the wrapper cache; later membrane use throws. */
     dispose: () => {
       wrapperCache = null;

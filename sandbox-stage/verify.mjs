@@ -1,34 +1,53 @@
 #!/usr/bin/env node
 // Deploy gate (prototype). Checks a built application against the manifest
 // produced by the sandbox stage before it is deployed:
+//   0. the manifest is the reviewed one: its SHA-256 equals the pin kept next
+//      to the protected policy (--pin);
 //   1. every sandbox bundle in the deploy directory matches its pinned digest;
 //   2. every pinned digest appears in the application's own scripts, i.e. the
 //      proxies that load the bundles verify them;
 //   3. the classify-or-fail report exists and passed;
 //   4. no sandbox bundle is present that the manifest does not pin.
+// When every check passes and --headers-out is given, it writes the response
+// headers the deployment must serve (see sandbox-stage/headers.mjs).
 //
-// Usage: node sandbox-stage/verify.mjs --manifest <file> --dist <dir> [--report <file>]
+// Run it in its own job, with the pin and the gate itself taken from the
+// protected branch: code that runs inside the application build can rewrite
+// anything in that build's workspace, including a pin file checked out there.
+//
+// Usage: node sandbox-stage/verify.mjs --manifest <file> --dist <dir>
+//          [--pin <file>] [--report <file>] [--headers-out <file>] [--base-path /dist/]
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { deploymentHeaders, toHeadersFile } from "./headers.mjs";
 
 const args = {};
 for (let i = 2; i < process.argv.length; i += 2) args[process.argv[i].slice(2)] = process.argv[i + 1];
 if (!args.manifest || !args.dist) {
-  console.error("Usage: verify.mjs --manifest <file> --dist <dir> [--report <file>]");
+  console.error("Usage: verify.mjs --manifest <file> --dist <dir> [--pin <file>] [--report <file>] [--headers-out <file>] [--base-path /dist/]");
   process.exit(2);
 }
 
 const sri = (bytes) => `sha384-${crypto.createHash("sha384").update(bytes).digest("base64")}`;
-const manifest = JSON.parse(fs.readFileSync(args.manifest, "utf8"));
+const manifestBytes = fs.readFileSync(args.manifest);
+const manifest = JSON.parse(manifestBytes.toString("utf8"));
 const dist = path.resolve(args.dist);
 const failures = [];
 const pinned = new Map();
 
-for (const [name, entry] of Object.entries(manifest.libraries)) {
+// 0. Reviewed manifest.
+if (args.pin) {
+  const pinText = fs.existsSync(args.pin) ? fs.readFileSync(args.pin, "utf8") : "";
+  const expected = pinText.replace(/#.*$/gm, "").match(/\b[0-9a-f]{64}\b/i)?.[0]?.toLowerCase();
+  const actual = crypto.createHash("sha256").update(manifestBytes).digest("hex");
+  if (!expected) failures.push(`manifest pin ${args.pin} missing or holds no SHA-256 digest`);
+  else if (actual !== expected) failures.push(`manifest sha256 ${actual} != reviewed pin ${expected}`);
+}
+
+for (const entry of Object.values(manifest.libraries)) {
   pinned.set(entry.bundle, entry.integrity);
   for (const workload of Object.values(entry.workloads ?? {})) pinned.set(workload.bundle, workload.integrity);
-  void name;
 }
 
 // 1. Bundle digests.
@@ -74,5 +93,11 @@ for (const file of fs.readdirSync(dist).filter((f) => f.endsWith(".js"))) {
   }
 }
 
-console.log(JSON.stringify({ passed: failures.length === 0, checkedBundles: pinned.size, failures }, null, 1));
-process.exit(failures.length === 0 ? 0 : 1);
+const passed = failures.length === 0;
+if (passed && args["headers-out"]) {
+  const headers = deploymentHeaders({ bundles: [...pinned.keys()], basePath: args["base-path"] ?? "/dist/" });
+  fs.writeFileSync(args["headers-out"], JSON.stringify(headers, null, 2) + "\n");
+  fs.writeFileSync(`${args["headers-out"]}.txt`, toHeadersFile(headers));
+}
+console.log(JSON.stringify({ passed, checkedBundles: pinned.size, failures }, null, 1));
+process.exit(passed ? 0 : 1);

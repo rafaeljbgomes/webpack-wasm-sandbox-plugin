@@ -163,6 +163,8 @@ async function main() {
       bundle,
       integrity: sri(bytes),
       grant: [...(entry.permissions ?? [])],
+      ...(entry.writable && Object.keys(entry.writable).length ? { writable: entry.writable } : {}),
+      ...(entry.subpaths?.length ? { subpaths: entry.subpaths.map((s) => s.replace(/^\.\//, "")) } : {}),
       packageVersion: lockEntry.version,
       lockfileIntegrity: lockEntry.integrity,
     };
@@ -179,9 +181,16 @@ async function main() {
     manifest.libraries[name] = library;
   }
   manifest.stage = { patchesApplied: applied, timings };
-  fs.writeFileSync(path.join(outDir, "sandbox-manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+  const manifestBytes = Buffer.from(JSON.stringify(manifest, null, 2) + "\n");
+  fs.writeFileSync(path.join(outDir, "sandbox-manifest.json"), manifestBytes);
+  // The pin to review and commit next to the protected policy (like a lockfile).
+  const manifestSha256 = sha256(manifestBytes);
+  fs.writeFileSync(
+    path.join(outDir, "sandbox-manifest.sha256"),
+    `# SHA-256 of sandbox-manifest.json. Commit next to the sandbox policy after review.\n${manifestSha256}\n`,
+  );
   fs.rmSync(work, { recursive: true, force: true });
-  console.log(JSON.stringify({ out: outDir, libraries: Object.keys(manifest.libraries), timings }, null, 1));
+  console.log(JSON.stringify({ out: outDir, libraries: Object.keys(manifest.libraries), manifestSha256, timings }, null, 1));
 }
 
 function pathToFileUrl(file) {

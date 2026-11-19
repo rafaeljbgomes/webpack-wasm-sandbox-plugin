@@ -1,0 +1,140 @@
+{
+ "environment": {
+  "node": "v25.8.1",
+  "date": "2026-11-19T15:54:51.986Z"
+ },
+ "policy": {
+  "date-fns": {
+   "permissions": [
+    "Intl"
+   ],
+   "subpaths": [
+    "locale"
+   ]
+  },
+  "lodash": {
+   "permissions": [],
+   "subpaths": [
+    "get.js"
+   ]
+  },
+  "zod": {
+   "permissions": [],
+   "subpaths": [
+    "mini"
+   ]
+  },
+  "mime": {
+   "permissions": [],
+   "subpaths": [
+    "lite"
+   ]
+  }
+ },
+ "build": {
+  "withSubpaths": {
+   "ok": true,
+   "ms": 3731,
+   "nativeModulesInHost": {
+    "date-fns": 0,
+    "lodash": 0,
+    "zod": 0,
+    "mime": 0
+   },
+   "sandboxBundleModules": {
+    "SandboxCompiler-date-fns": 827,
+    "SandboxCompiler-lodash": 55,
+    "SandboxCompiler-mime": 7,
+    "SandboxCompiler-zod": 84
+   },
+   "bundleBytes": {
+    "date-fns": 2135555,
+    "lodash": 598029,
+    "zod": 730228,
+    "mime": 56869
+   },
+   "firstError": ""
+  },
+  "withoutSubpaths": {
+   "ok": false,
+   "ms": 1640,
+   "nativeModulesInHost": {
+    "date-fns": 0,
+    "lodash": 0,
+    "zod": 0,
+    "mime": 0
+   },
+   "sandboxBundleModules": {
+    "SandboxCompiler-date-fns": 304,
+    "SandboxCompiler-lodash": 2,
+    "SandboxCompiler-mime": 5,
+    "SandboxCompiler-zod": 76
+   },
+   "bundleBytes": {
+    "date-fns": 759704,
+    "lodash": 548361,
+    "zod": 673799,
+    "mime": 54334
+   },
+   "firstError": "Module not found: Error: Can't resolve 'date-fns/locale' in '/private/var/folders/w9/gkn8h6513pb7nz8_n8rh1hyh0000gn/T/eval-subpaths-0eAEsY'"
+  }
+ },
+ "runtime": {
+  "date-fns + date-fns/locale": {
+   "sandboxResult": "quinta-feira, 19 de novembro de 2026",
+   "nativeResult": "quinta-feira, 19 de novembro de 2026",
+   "equal": true,
+   "error": null,
+   "hostFunctionsFirstCall": 0,
+   "hostFunctionsOverTimedCalls": 0,
+   "sandboxMicrosPerCall": 83.15,
+   "nativeMicrosPerCall": 2.39
+  },
+  "lodash/get.js": {
+   "sandboxResult": 3,
+   "nativeResult": 3,
+   "equal": true,
+   "error": null,
+   "hostFunctionsFirstCall": 0,
+   "hostFunctionsOverTimedCalls": 0,
+   "sandboxMicrosPerCall": 77.54,
+   "nativeMicrosPerCall": 0.17
+  },
+  "zod/mini": {
+   "sandboxResult": [
+    true,
+    false
+   ],
+   "nativeResult": [
+    true,
+    false
+   ],
+   "equal": true,
+   "error": null,
+   "hostFunctionsFirstCall": 0,
+   "hostFunctionsOverTimedCalls": 0,
+   "sandboxMicrosPerCall": 1708.51,
+   "nativeMicrosPerCall": 9.87
+  },
+  "mime/lite": {
+   "sandboxResult": [
+    "text/plain",
+    "json"
+   ],
+   "nativeResult": [
+    "text/plain",
+    "json"
+   ],
+   "equal": true,
+   "error": null,
+   "hostFunctionsFirstCall": 0,
+   "hostFunctionsOverTimedCalls": 0,
+   "sandboxMicrosPerCall": 8.17,
+   "nativeMicrosPerCall": 0.21
+  }
+ },
+ "comparison_hostLocalePassedIn": {
+  "result": "quinta-feira, 19 de novembro de 2026",
+  "hostFunctionsRegistered": 17
+ }
+}

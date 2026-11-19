@@ -35,6 +35,8 @@ export class ProxyGenerator {
     workloads: ProxyWorkload[] = [],
     permissions: string[] = [],
     integrity?: BundleIntegrity,
+    writable: Record<string, string[]> = {},
+    hasSubpaths = false,
   ): string {
     let content = `// Auto-generated Sandbox Proxy for ${toJsStringLiteral(libraryName)}\n`;
     content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
@@ -47,25 +49,97 @@ export class ProxyGenerator {
     content += `const librarySandbox = await SandboxManager.createSandbox(\n`;
     content += `  ${toJsStringLiteral(libraryName)},\n`;
     content += `  libraryCode,\n`;
-    content += `  { permissions: ${JSON.stringify(permissions)} }\n`;
+    const writableOption = Object.keys(writable).length ? `, writable: ${JSON.stringify(writable)}` : "";
+    content += `  { permissions: ${JSON.stringify(permissions)}${writableOption} }\n`;
     content += `);\n\n`;
     content += `// Initialization needs a referenced job pump; steady-state Node.js usage does not.\n`;
     content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;
     content += `  librarySandbox.unrefPump();\n`;
     content += `}\n\n`;
-    content += `const proxyExports = librarySandbox.exports;\n\n`;
+    content += `const proxyExports = librarySandbox.exports;\n`;
+    content += `/** Creates an instance of a root export inside QuickJS. */\n`;
+    content += `const __createInstance = (ctorKey, args) => librarySandbox.createInstance(ctorKey, args);\n`;
+    content += `let _callFn;\n`;
+    content += `/** Calls the root export when the package exports one callable value. */\n`;
+    content += `const __callSingleton = (args) => {\n`;
+    content += `  _callFn ??= librarySandbox.arena.evalCode(\`(...args) => __SANDBOXED_LIB__(...args)\`);\n`;
+    content += `  return librarySandbox.wrapResult(_callFn(...args));\n`;
+    content += `};\n\n`;
+    if (hasSubpaths) {
+      content += `/** Host view of a declared subpath, served by this library's sandbox. */\n`;
+      content += `export function __getSandboxSubpath(subpath) {\n`;
+      content += `  return librarySandbox.loadSubpath(subpath);\n`;
+      content += `}\n\n`;
+    }
     content += this.generateWorkloadAccessHelpers(libraryName, workloads, integrity);
+    content += this.generateExports(libraryData);
+    content += `/** Disposes the QuickJS context and its boundary resources. */\n`;
+    content += `export function disposeLibrary() {\n`;
+    content += `  if (librarySandbox) {\n`;
+    content += `    librarySandbox.dispose();\n`;
+    content += `  }\n`;
+    content += `}\n`;
+    return content;
+  }
 
+  /**
+   * Generates the proxy module of a declared subpath (`<library>/<subpath>`).
+   * It creates no sandbox: it reads the subpath from the owning library's
+   * sandbox, so both share one QuickJS context and one module registry.
+   *
+   * @param libraryData Export information parsed from the subpath's declarations.
+   * @param libraryName Owning package.
+   * @param subpath Declared subpath.
+   * @param rootProxyRequest Relative request of the library's root proxy.
+   * @returns JavaScript source for the subpath proxy module.
+   */
+  public generateSubpath(
+    libraryData: LibraryData,
+    libraryName: string,
+    subpath: string,
+    rootProxyRequest: string,
+  ): string {
+    let content = `// Auto-generated Sandbox Proxy for ${toJsStringLiteral(`${libraryName}/${subpath}`)}\n`;
+    content += `import { __getSandboxSubpath } from ${toJsStringLiteral(rootProxyRequest)};\n\n`;
+    content += `const __subpath = __getSandboxSubpath(${toJsStringLiteral(subpath)});\n`;
+    content += `const proxyExports = __subpath.exports;\n`;
+    content += `const __createInstance = (ctorKey, args) => __subpath.createInstance(ctorKey, args);\n`;
+    content += `const __callSingleton = (args) => __subpath.callSingleton(args);\n\n`;
+    if (!libraryData.callableSingletonExport && libraryData.exportedNames.length === 0) {
+      // Without declarations only the module value itself can be offered.
+      content += `export default (typeof proxyExports === "function"\n`;
+      content += `  ? new Proxy(function _subpath_target() {}, {\n`;
+      content += `      apply(_t, _thisArg, args) { return __callSingleton(args); },\n`;
+      content += `      get(_t, key, receiver) {\n`;
+      content += `        if (typeof key === "symbol" || key === "prototype") return Reflect.get(_t, key, receiver);\n`;
+      content += `        return proxyExports[key];\n`;
+      content += `      },\n`;
+      content += `    })\n`;
+      content += `  : proxyExports);\n`;
+      return content;
+    }
+    content += this.generateExports(libraryData);
+    return content;
+  }
+
+  /**
+   * Generates the export bindings of a proxy. The surrounding module defines
+   * `proxyExports`, `__createInstance(ctorKey, args)` and
+   * `__callSingleton(args)`.
+   *
+   * @param libraryData Runtime export information parsed from declarations.
+   * @returns JavaScript source for the export bindings.
+   */
+  private generateExports(libraryData: LibraryData): string {
+    let content = "";
     // An `export =` declaration represents one callable value whose properties
     // must remain accessible through the same default export.
     if (libraryData.callableSingletonExport) {
       content += `// Preserve both calls and property access on the callable singleton export.\n`;
-      content += `let _callFn;\n`;
       content += `function _callable_target() {}\n`;
       content += `export default new Proxy(_callable_target, {\n`;
       content += `  apply(_t, _thisArg, args) {\n`;
-      content += `    _callFn ??= librarySandbox.arena.evalCode(\`(...args) => __SANDBOXED_LIB__(...args)\`);\n`;
-      content += `    return librarySandbox.wrapResult(_callFn(...args));\n`;
+      content += `    return __callSingleton(args);\n`;
       content += `  },\n`;
       content += `  get(_t, key, receiver) {\n`;
       content += `    if (typeof key === "symbol") return Reflect.get(proxyExports, key, receiver);\n`;
@@ -73,17 +147,9 @@ export class ProxyGenerator {
       content += `    return proxyExports[key];\n`;
       content += `  },\n`;
       content += `  construct(_t, args) {\n`;
-      content += `    _callFn ??= librarySandbox.arena.evalCode(\`(...args) => __SANDBOXED_LIB__(...args)\`);\n`;
-      content += `    return librarySandbox.wrapResult(_callFn(...args));\n`;
+      content += `    return __callSingleton(args);\n`;
       content += `  },\n`;
       content += `});\n\n`;
-
-      content += `/** Disposes the QuickJS context and its boundary resources. */\n`;
-      content += `export function disposeLibrary() {\n`;
-      content += `  if (librarySandbox) {\n`;
-      content += `    librarySandbox.dispose();\n`;
-      content += `  }\n`;
-      content += `}\n`;
       return content;
     }
 
@@ -127,7 +193,7 @@ export class ProxyGenerator {
         content += `      },\n`;
         content += `      construct(_target, args) {\n`;
         content += `        const ctorKey = typeof proxyExports.default === "function" ? "default" : ${fallbackCtorKey};\n`;
-        content += `        return librarySandbox.createInstance(ctorKey, args);\n`;
+        content += `        return __createInstance(ctorKey, args);\n`;
         content += `      },\n`;
         content += `      get(_target, key, receiver) {\n`;
         content += `        if (typeof key === "symbol") return Reflect.get(_target, key, receiver);\n`;
@@ -153,7 +219,7 @@ export class ProxyGenerator {
         content += `        return ${exportAccess}(...args);\n`;
         content += `      },\n`;
         content += `      construct(_target, args) {\n`;
-        content += `        return librarySandbox.createInstance(${nameLiteral}, args);\n`;
+        content += `        return __createInstance(${nameLiteral}, args);\n`;
         content += `      },\n`;
         content += `      get(_target, key, receiver) {\n`;
         content += `        if (typeof key === "symbol") return Reflect.get(${exportAccess}, key, receiver);\n`;
@@ -167,15 +233,9 @@ export class ProxyGenerator {
       }
     });
 
-    content += `/** Disposes the QuickJS context and its boundary resources. */\n`;
-    content += `export function disposeLibrary() {\n`;
-    content += `  if (librarySandbox) {\n`;
-    content += `    librarySandbox.dispose();\n`;
-    content += `  }\n`;
-    content += `}\n`;
-
     return content;
   }
+
 
   /**
    * Generates the lazy loader shared by configured workload proxy modules.

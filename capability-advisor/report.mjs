@@ -1,5 +1,27 @@
 import { CATALOGUE, CATALOGUE_VERSION, MODEL, THRESHOLD } from "./catalogue.mjs";
 
+/**
+ * Host properties whose assignment can make the browser issue a request:
+ * resource URLs of DOM elements, navigation, and form targets. Policies are
+ * read-only by default; a writable path ending in one of these needs review.
+ */
+export const NETWORK_SINK_PROPERTIES = Object.freeze([
+  "src", "srcset", "href", "action", "formAction", "location", "srcdoc", "data",
+  "poster", "background", "codebase", "ping", "cite", "baseURI", "url",
+]);
+
+/** Lists writable paths of a library policy that end in a network sink. */
+export function networkWriteWarnings(entry) {
+  const warnings = [];
+  for (const [grant, paths] of Object.entries(entry?.writable ?? {})) {
+    for (const dotted of paths) {
+      const property = dotted.split(".").pop();
+      if (NETWORK_SINK_PROPERTIES.includes(property)) warnings.push({ grant, path: dotted, property });
+    }
+  }
+  return warnings;
+}
+
 /** Applies deterministic draft rules to model classifications; developer decisions are retained. */
 export function createReport(policy, libraries, requests, results, metadata = {}) {
   const draft = Object.create(null);
@@ -39,7 +61,8 @@ export function createReport(policy, libraries, requests, results, metadata = {}
     report.libraries.push({ name: library.name, packages: library.packages, moduleCount: library.moduleCount,
       moduleFingerprint: library.moduleFingerprint, issues: library.issues,
       workloadsAnalyzed: false, workloadsPresent: Boolean(Object.keys(policy[library.name].workloads ?? {}).length),
-      existingUncataloguedPermissions: policy[library.name].permissions.filter((name) => !CATALOGUE.some((capability) => capability.name === name)), capabilities });
+      existingUncataloguedPermissions: policy[library.name].permissions.filter((name) => !CATALOGUE.some((capability) => capability.name === name)),
+      writableNetworkSinks: networkWriteWarnings(policy[library.name]), capabilities });
   }
   return { report, draft };
 }
@@ -66,6 +89,9 @@ export function renderMarkdown(report) {
   for (const library of report.libraries) {
     lines.push(`## ${cell(library.name)}`, "", `Packages: ${library.packages.map((entry) => cell(`${entry.name}@${entry.version}`)).join(", ")}`, "",
       `Analysis issues: ${library.issues.map(cell).join(", ") || "none detected"}. Workloads analyzed: no.`, "");
+    for (const sink of library.writableNetworkSinks ?? []) {
+      lines.push(`Warning: writable path ${cell(`${sink.grant}.${sink.path}`)} assigns \`${cell(sink.property)}\`, which can make the browser issue a request. Review whether the library needs it.`, "");
+    }
     if (library.existingUncataloguedPermissions.length) lines.push(`Existing uncatalogued permissions retained: ${library.existingUncataloguedPermissions.map(cell).join(", ")}. Exposure coverage requires review.`, "");
     lines.push("| Capability | Classification | Probability | Draft / review | Code evidence |", "|---|---|---|---|---|");
     for (const capability of library.capabilities) {

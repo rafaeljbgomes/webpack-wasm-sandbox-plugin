@@ -78,9 +78,9 @@ function createSharedHostObject() {
  * @param {object} shared Host object exposed as `TestShared`.
  * @returns {(libraryName: string) => Promise<object>} Sandbox factory.
  */
-function grantShared(t, shared) {
+function grantShared(t, shared, writable) {
   const permission = defineHostGlobal(t, "TestShared", shared);
-  return (libraryName) => createFixtureSandbox(t, SHARED_BODY, { libraryName, permissions: [permission] });
+  return (libraryName) => createFixtureSandbox(t, SHARED_BODY, { libraryName, permissions: [permission], writable });
 }
 
 test("a method one sandbox replaces on a shared host object is never run by a later sibling", async (t) => {
@@ -128,11 +128,21 @@ test("a shared capability keeps working in a sandbox after its sibling is dispos
   assert.equal(second.exports.describe(), "host:a");
 });
 
-test("writes to existing data properties of a shared host object still reach the host", async (t) => {
-  // Separate wrappers do not copy host state: a granted mutable host object is
-  // still one object, so its data properties are visible to every grantee.
+test("a shared host object is read-only by default for every grantee", async (t) => {
   const shared = createSharedHostObject();
   const create = grantShared(t, shared);
+  const first = await create("first");
+  const second = await create("second");
+  assert.throws(() => first.exports.setMode("b"), /read-only/);
+  assert.equal(shared.mode, "a");
+  assert.equal(second.exports.readMode(), "a");
+});
+
+test("writes to a writable data property of a shared host object reach the host", async (t) => {
+  // Separate wrappers do not copy host state: a granted mutable host object is
+  // still one object, so its writable data properties are visible to every grantee.
+  const shared = createSharedHostObject();
+  const create = grantShared(t, shared, { TestShared: ["mode"] });
   const first = await create("first");
   const second = await create("second");
   first.exports.setMode("b");
@@ -153,7 +163,8 @@ for (const [kind, description] of [
 ]) {
   test(`${description} one sandbox writes into a shared host property never reaches a sibling`, async (t) => {
     const shared = createSharedHostObject();
-    const create = grantShared(t, shared);
+    // Writable, so the inert-value check (not read-only) is what rejects it.
+    const create = grantShared(t, shared, { TestShared: ["mode"] });
     const first = await create("first");
     const second = await create("second");
     assert.equal(first.exports.plant(kind, "planted-by-first"), "TypeError");

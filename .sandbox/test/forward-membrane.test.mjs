@@ -5,7 +5,7 @@ import { REQUIRES_NEW_RE } from "../core/sb-utils.js";
 import { createFixtureSandbox, defineHostGlobal } from "./helpers/fixture-sandbox.mjs";
 
 // Unit cases share one membrane, as the forward membrane of a single sandbox.
-const { bindWebApi, makeCallable } = createForwardMembrane();
+const { bindWebApi, makeCallable, allowWrites } = createForwardMembrane();
 
 /** Host class whose methods only work on the real receiver. */
 class HostCounter {
@@ -94,18 +94,47 @@ test("bindWebApi exposes prototype methods bound to the native owner", () => {
   assert.equal(wrapper.format(1234.5), "1,234.5");
 });
 
-test("bindWebApi assignments of primitives write through to the host object", () => {
-  const target = { mode: "a" };
+test("bindWebApi grants are read-only: assignments fail and leave the host unchanged", () => {
+  const target = { mode: "a", nested: { v: 1 } };
   const wrapper = bindWebApi(target);
+  for (const value of ["b", 2, true, null, undefined]) {
+    assert.throws(() => { wrapper.mode = value; }, {
+      name: "TypeError",
+      message: /may not assign host property "mode": the grant is read-only/,
+    });
+  }
+  assert.throws(() => { wrapper.nested.v = 2; }, { name: "TypeError" });
+  assert.deepEqual(target, { mode: "a", nested: { v: 1 } });
+});
+
+test("bindWebApi writes primitives through only to properties made writable", () => {
+  const target = { mode: "a", other: "x", nested: { v: 1, w: 1 } };
+  const { bindWebApi: bind, allowWrites: allow } = createForwardMembrane();
+  allow(target, "Target", ["mode", "nested.v"]);
+  const wrapper = bind(target);
   for (const value of ["b", 2, true, 3n, Symbol.iterator, null, undefined]) {
     wrapper.mode = value;
     assert.equal(target.mode, value);
   }
+  wrapper.nested.v = 2;
+  assert.equal(target.nested.v, 2);
+  assert.throws(() => { wrapper.other = "y"; }, { name: "TypeError" });
+  assert.throws(() => { wrapper.nested.w = 2; }, { name: "TypeError" });
+  assert.deepEqual([target.other, target.nested.w], ["x", 1]);
 });
 
-test("bindWebApi rejects function and object assignments and leaves the host unchanged", () => {
+test("allowWrites rejects paths that do not name an existing host property", () => {
+  const target = { mode: "a", nested: { v: 1 }, n: 3 };
+  assert.throws(() => allowWrites(target, "Target", ["missing"]), /Target\.missing does not name an existing property/);
+  assert.throws(() => allowWrites(target, "Target", ["n.v"]), /Target\.n\.v does not name/);
+  assert.throws(() => allowWrites(target, "Target", ["nested.missing.v"]), /does not name/);
+});
+
+test("bindWebApi rejects function and object assignments to writable properties and leaves the host unchanged", () => {
   const target = { mode: "a" };
-  const wrapper = bindWebApi(target);
+  const { bindWebApi: bind, allowWrites: allow } = createForwardMembrane();
+  allow(target, "Target", ["mode"]);
+  const wrapper = bind(target);
   for (const value of [() => "planted", { value: 1 }, [1], new Uint8Array(1), wrapper]) {
     assert.throws(() => { wrapper.mode = value; }, {
       name: "TypeError",
@@ -141,13 +170,21 @@ test("unrelated host TypeErrors reach QuickJS with their name and message", asyn
   assert.deepEqual(sandbox.exports.call(), ["TypeError", "bad input"]);
 });
 
-test("QuickJS writes to an exposed host object reach the host", async (t) => {
-  const settings = { mode: "a" };
-  const sandbox = await createFixtureSandbox(t, "return { set: () => { TestSettings.mode = 'b'; return TestSettings.mode; } };", {
-    permissions: [defineHostGlobal(t, "TestSettings", settings)],
-  });
-  assert.equal(sandbox.exports.set(), "b");
+test("QuickJS writes to an exposed host object fail unless the property is writable", async (t) => {
+  const settings = { mode: "a", theme: "light" };
+  const body = `return {
+    set: (key, value) => { try { TestSettings[key] = value; return TestSettings[key]; } catch (e) { return e.name; } },
+  };`;
+  const permission = defineHostGlobal(t, "TestSettings", settings);
+  const readOnly = await createFixtureSandbox(t, body, { permissions: [permission] });
+  assert.equal(readOnly.exports.set("mode", "b"), "TypeError");
+  assert.equal(settings.mode, "a");
+
+  const writable = await createFixtureSandbox(t, body, { permissions: [permission], writable: { TestSettings: ["mode"] } });
+  assert.equal(writable.exports.set("mode", "b"), "b");
   assert.equal(settings.mode, "b");
+  assert.equal(writable.exports.set("theme", "dark"), "TypeError");
+  assert.equal(settings.theme, "light");
 });
 
 test("QuickJS can catch a rejected function write to an exposed host object", async (t) => {
@@ -158,7 +195,7 @@ test("QuickJS can catch a rejected function write to an exposed host object", as
         try { TestSettings.onChange = () => "planted"; return null; } catch (e) { return [e.name, TestSettings.onChange]; }
       },
     };
-  `, { permissions: [defineHostGlobal(t, "TestSettings", settings)] });
+  `, { permissions: [defineHostGlobal(t, "TestSettings", settings)], writable: { TestSettings: ["onChange"] } });
   assert.deepEqual(sandbox.exports.set(), ["TypeError", null]);
   assert.equal(settings.onChange, null);
 });

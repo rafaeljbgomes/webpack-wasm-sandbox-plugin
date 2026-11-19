@@ -201,3 +201,18 @@ test("CLI rejects contradictory or incomplete options", () => {
   assert.throws(() => parseArgs(["--unknown"]));
   assert.deepEqual(parseArgs(["--env", "mode=sandbox"]).env, { mode: "sandbox" });
 });
+
+test("writable paths ending in a network sink are flagged for review", async () => {
+  const { networkWriteWarnings, renderMarkdown } = await import("../report.mjs");
+  const entry = { permissions: ["document", "Cfg"], writable: { document: ["body.background", "title"], Cfg: ["image.src", "theme"] } };
+  assert.deepEqual(networkWriteWarnings(entry), [
+    { grant: "document", path: "body.background", property: "background" },
+    { grant: "Cfg", path: "image.src", property: "src" },
+  ]);
+  assert.deepEqual(networkWriteWarnings({ permissions: [] }), []);
+  const markdown = renderMarkdown({ model: "m", threshold: 0.9, usage: { input_tokens: 0, output_tokens: 0 }, libraries: [{
+    name: "lib", packages: [], issues: [], existingUncataloguedPermissions: [], capabilities: [],
+    writableNetworkSinks: networkWriteWarnings(entry),
+  }] });
+  assert.match(markdown, /Warning: writable path Cfg\.image\.src assigns `src`/);
+});

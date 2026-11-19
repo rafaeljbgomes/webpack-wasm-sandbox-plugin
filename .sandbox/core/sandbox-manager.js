@@ -1,4 +1,8 @@
-import { getQuickJSSync, newQuickJSWASMModule } from "quickjs-emscripten";
+// Import the one QuickJS build the runtime uses. The `quickjs-emscripten`
+// entry point references all four builds (release/debug x sync/asyncify), so
+// importing it makes bundlers ship every .wasm file.
+import { newQuickJSWASMModuleFromVariant } from "quickjs-emscripten-core";
+import RELEASE_SYNC from "@jitl/quickjs-wasmfile-release-sync";
 import { Arena } from "quickjs-emscripten-sync";
 import { createArenaConfig } from "../marshallers/index.js";
 import { exposeWebAPIs, validatePermissions } from "./webapi-exposure.js";
@@ -153,7 +157,7 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   const { arenaOptions, dispose: disposeMarshallers } = createArenaConfig(vm, jsonTransfer.take);
   arena = new Arena(vm, arenaOptions);
 
-  exposeWebAPIs(arena, libraryName, options.permissions, forwardMembrane);
+  exposeWebAPIs(arena, libraryName, options.permissions, forwardMembrane, options.writable);
 
   // The child bundle publishes its exports through this agreed global.
   const libExports = arena.evalCode(`${libraryCode}; __SANDBOXED_LIB__;`);
@@ -177,6 +181,10 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     /** Constructs and stores an instance before it crosses the boundary. */
     tempCreate: arena.evalCode(
       "(ctorKey, id, ...args) => { const inst = new __SANDBOXED_LIB__[ctorKey](...args); globalThis.__SANDBOX_TEMP__.set(id, inst); return inst; }",
+    ),
+    /** Same as tempCreate for a constructor exported by a declared subpath. */
+    tempCreateInSubpath: arena.evalCode(
+      "(subpath, ctorKey, id, ...args) => { const inst = new globalThis.__SANDBOXED_SUBPATHS__[subpath][ctorKey](...args); globalThis.__SANDBOX_TEMP__.set(id, inst); return inst; }",
     ),
   };
   const reverseMembrane = createReverseMembrane(arena, sbHelpers);
@@ -210,6 +218,43 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     loadWorkload(workload);
   }
 
+  const subpathViews = new Map();
+
+  /**
+   * Returns the host view of a declared subpath. Its exports live in this
+   * sandbox's context, published by the bundle under `__SANDBOXED_SUBPATHS__`,
+   * so values passed between the root and its subpaths stay in QuickJS.
+   *
+   * @param {string} subpath Declared subpath, e.g. `locale`.
+   * @returns {{exports: unknown, createInstance: Function, callSingleton: Function}} Bound view.
+   */
+  function loadSubpath(subpath) {
+    if (subpathViews.has(subpath)) return subpathViews.get(subpath);
+    const accessPath = `globalThis.__SANDBOXED_SUBPATHS__[${JSON.stringify(subpath)}]`;
+    const present = arena.evalCode(
+      `typeof globalThis.__SANDBOXED_SUBPATHS__ === "object" && globalThis.__SANDBOXED_SUBPATHS__ !== null && Object.prototype.hasOwnProperty.call(globalThis.__SANDBOXED_SUBPATHS__, ${JSON.stringify(subpath)})`,
+    );
+    if (present !== true) {
+      throw new Error(`Sandbox subpath not found in the ${libraryName} bundle: ${subpath}`);
+    }
+    const raw = arena.evalCode(accessPath);
+    let callFn;
+    const view = {
+      exports: reverseMembrane.bindSandboxExport(raw, accessPath, 0),
+      createInstance: (ctorKey, constructorArgs) => {
+        const id = reverseMembrane.nextTempId();
+        const result = sbHelpers.tempCreateInSubpath(subpath, ctorKey, id, ...constructorArgs);
+        return reverseMembrane.wrapReturned(result, id);
+      },
+      callSingleton: (args) => {
+        callFn ??= arena.evalCode(`(...args) => ${accessPath}(...args)`);
+        return reverseMembrane.maybeWrapResult(callFn(...args));
+      },
+    };
+    subpathViews.set(subpath, view);
+    return view;
+  }
+
   // Binding keeps method receivers and identity anchored in QuickJS.
   const boundExports = reverseMembrane.bindSandboxExport(
     libExports,
@@ -227,6 +272,7 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
     exports: boundExports,
     workloads: workloadExports,
     loadWorkload,
+    loadSubpath,
     /** Calls a root export and applies reverse-membrane result handling. */
     callRootExport: (callExpression, args) => {
       const result = callExpression(...args);
@@ -271,8 +317,25 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   };
 }
 
+/** Shared module for synchronous sandbox creation, loaded by `ready()`. */
+let sharedModule;
+let sharedModulePromise;
+
 /** Creates and owns per-library QuickJS sandbox contexts. */
 export class SandboxManager {
+  /**
+   * Loads the shared QuickJS module used by {@link createSandboxSync}.
+   *
+   * @returns {Promise<import("quickjs-emscripten-core").QuickJSWASMModule>} Shared module.
+   */
+  static async ready() {
+    sharedModulePromise ??= newQuickJSWASMModuleFromVariant(RELEASE_SYNC).then((module) => {
+      sharedModule = module;
+      return module;
+    });
+    return sharedModulePromise;
+  }
+
   /**
    * Creates a sandbox using the already initialized synchronous QuickJS module.
    *
@@ -282,8 +345,11 @@ export class SandboxManager {
    * @returns {object} Initialized sandbox runtime.
    */
   static createSandboxSync(libraryName, libraryCode, options = {}) {
-    validatePermissions(options.permissions);
-    const qjs = getQuickJSSync();
+    validatePermissions(options.permissions, options.writable);
+    if (!sharedModule) {
+      throw new Error("QuickJS module not loaded: await SandboxManager.ready() before createSandboxSync()");
+    }
+    const qjs = sharedModule;
     const sandbox = buildSandbox(
       qjs.newContext(),
       libraryName,
@@ -307,8 +373,8 @@ export class SandboxManager {
    * @returns {Promise<object>} Initialized sandbox runtime.
    */
   static async createSandbox(libraryName, libraryCode, options = {}) {
-    validatePermissions(options.permissions);
-    const qjs = await newQuickJSWASMModule();
+    validatePermissions(options.permissions, options.writable);
+    const qjs = await newQuickJSWASMModuleFromVariant(RELEASE_SYNC);
     const sandbox = buildSandbox(
       qjs.newContext(),
       libraryName,

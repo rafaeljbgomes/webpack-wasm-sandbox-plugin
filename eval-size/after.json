@@ -1,0 +1,38 @@
+[
+ {
+  "scenario": "strip-ansi",
+  "wasmFiles": 1,
+  "wasmBytes": 503134,
+  "wasmSizes": [
+   503134
+  ],
+  "jsFiles": 9,
+  "jsBytes": 277224,
+  "sandboxBundleBytes": 7747,
+  "totalBytes": 781625
+ },
+ {
+  "scenario": "lodash",
+  "wasmFiles": 1,
+  "wasmBytes": 503134,
+  "wasmSizes": [
+   503134
+  ],
+  "jsFiles": 9,
+  "jsBytes": 830484,
+  "sandboxBundleBytes": 565066,
+  "totalBytes": 1334881
+ },
+ {
+  "scenario": "image-js",
+  "wasmFiles": 1,
+  "wasmBytes": 503134,
+  "wasmSizes": [
+   503134
+  ],
+  "jsFiles": 9,
+  "jsBytes": 2722752,
+  "sandboxBundleBytes": 2045388,
+  "totalBytes": 3227151
+ }
+]
