@@ -50,6 +50,7 @@ module.exports = (env = {}) => {
     plugins.unshift(
       new WebpackSandboxPlugin({
         configPath: `./sandbox-configs/${scenario}.js`,
+        classification: { mode: env.classify ?? "error" },
       }),
       new webpack.NormalModuleReplacementPlugin(
         /sandbox\.config\.js$/,

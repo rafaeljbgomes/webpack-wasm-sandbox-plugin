@@ -6,6 +6,7 @@ import { Parser } from "./core/parser";
 import { findAllDtsFiles } from "./utils/file-utils";
 import { toJsStringLiteral } from "./utils/source-literals";
 import { compileLibrary, loadSandboxPolicy, WorkloadConfig } from "./build-helpers";
+import { applyClassification, ClassificationOptions } from "./classification";
 
 /** Configuration accepted by {@link WebpackSandboxPlugin}. */
 export interface SandboxPluginOptions {
@@ -16,6 +17,12 @@ export interface SandboxPluginOptions {
    * under the process working directory; tests pass a temporary directory.
    */
   proxyDirectory?: string;
+  /**
+   * Classify-or-fail enforcement for the host bundle. Defaults to
+   * `{ mode: "error" }`: every npm package in the host bundle must be
+   * explicitly trusted, and no sandboxed package may appear there.
+   */
+  classification?: ClassificationOptions;
 }
 
 /** Workload definition enriched with its owning library and policy key. */
@@ -83,6 +90,12 @@ export class WebpackSandboxPlugin {
         }),
       );
     });
+    applyClassification(
+      compiler,
+      new Set(configuredLibraries),
+      this.options.classification,
+    );
+
     console.log(
       `[SandboxPlugin] Loaded configuration for ${configuredLibraries.length} libraries: ${configuredLibraries.join(", ")}`,
     );

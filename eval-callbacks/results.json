@@ -1,0 +1,166 @@
+{
+  "wasmImports": {
+    "total": 20,
+    "functions": 19,
+    "memory": 1
+  },
+  "baseline": {
+    "atInit": 1,
+    "names": {
+      "proxyFuncs": 1
+    }
+  },
+  "libraries": {
+    "strip-ansi": {
+      "grant": [],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 1,
+      "grantDriven": 0,
+      "afterRepresentativeCall": 1,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1
+      }
+    },
+    "marked": {
+      "grant": [],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 1,
+      "grantDriven": 0,
+      "afterRepresentativeCall": 1,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1
+      }
+    },
+    "image-js": {
+      "grant": [
+        "Intl",
+        "TextEncoder",
+        "TextDecoder"
+      ],
+      "emptyGrantAtInit": null,
+      "emptyGrantInitError": "ReferenceError: 'Intl' is not defined",
+      "grantedAtInit": 45,
+      "grantDriven": null,
+      "afterRepresentativeCall": 45,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1,
+        "<anonymous>": 28,
+        "get": 8,
+        "set": 8
+      }
+    },
+    "luxon": {
+      "grant": [
+        "Intl"
+      ],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 13,
+      "grantDriven": 12,
+      "afterRepresentativeCall": 25,
+      "callError": null,
+      "lazyCreated": {
+        "<anonymous>": 12
+      },
+      "initNames": {
+        "proxyFuncs": 1,
+        "<anonymous>": 12
+      }
+    },
+    "mime": {
+      "grant": [],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 1,
+      "grantDriven": 0,
+      "afterRepresentativeCall": 1,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1
+      }
+    },
+    "tweetnacl": {
+      "grant": [
+        "crypto"
+      ],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 3,
+      "grantDriven": 2,
+      "afterRepresentativeCall": 3,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1,
+        "getRandomBytes": 1,
+        "<anonymous>": 1
+      }
+    },
+    "lodash": {
+      "grant": [],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 1,
+      "grantDriven": 0,
+      "afterRepresentativeCall": 2,
+      "callError": null,
+      "lazyCreated": {
+        "floor": 1
+      },
+      "initNames": {
+        "proxyFuncs": 1
+      }
+    },
+    "zod": {
+      "grant": [],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 1,
+      "grantDriven": 0,
+      "afterRepresentativeCall": 1,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1
+      }
+    },
+    "date-fns": {
+      "grant": [
+        "Intl"
+      ],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 13,
+      "grantDriven": 12,
+      "afterRepresentativeCall": 13,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1,
+        "<anonymous>": 12
+      }
+    },
+    "yup": {
+      "grant": [],
+      "emptyGrantAtInit": 1,
+      "emptyGrantInitError": null,
+      "grantedAtInit": 1,
+      "grantDriven": 0,
+      "afterRepresentativeCall": 1,
+      "callError": null,
+      "lazyCreated": {},
+      "initNames": {
+        "proxyFuncs": 1
+      }
+    }
+  }
+}

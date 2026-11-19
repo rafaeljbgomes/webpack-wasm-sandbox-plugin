@@ -118,6 +118,8 @@ function compileProject(root) {
         new WebpackSandboxPlugin({
           configPath: "sandbox.config.cjs",
           proxyDirectory: path.join(root, ".sandbox", "proxys"),
+          // Classify-or-fail: the unconfigured dependency must be trusted explicitly.
+          classification: { trusted: ["other-lib"] },
         }),
       ],
     }, (error, stats) => {
