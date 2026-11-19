@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -54,7 +55,7 @@ export const SandboxManager = {
  * @param {string} [options.shim] Source for `.sandbox/core/sandbox-manager.js`.
  * @returns {Promise<object>} The imported proxy module namespace.
  */
-async function importGeneratedProxy(t, { libraryData, body, permissions = [], workloads = [], shim = reexportShim }) {
+async function importGeneratedProxy(t, { libraryData, body, permissions = [], workloads = [], shim = reexportShim, integrity, servedBody }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "sandbox-generated-proxy-test-"));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   fs.mkdirSync(path.join(root, ".sandbox", "core"), { recursive: true });
@@ -62,12 +63,13 @@ async function importGeneratedProxy(t, { libraryData, body, permissions = [], wo
   fs.mkdirSync(path.join(root, "dist"), { recursive: true });
   fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ type: "module" }));
   fs.writeFileSync(path.join(root, ".sandbox", "core", "sandbox-manager.js"), shim);
-  fs.writeFileSync(path.join(root, "dist", "fixture.bundle.js"), fixtureBundle(body));
+  // `servedBody` simulates a bundle modified after the digest was pinned.
+  fs.writeFileSync(path.join(root, "dist", "fixture.bundle.js"), fixtureBundle(servedBody ?? body));
   for (const workload of workloads) {
     fs.writeFileSync(path.join(root, "dist", `fixture.${workload.workloadName}.workload.bundle.js`), workload.code);
   }
 
-  const source = new ProxyGenerator().generate(libraryData, "fixture", workloads, permissions);
+  const source = new ProxyGenerator().generate(libraryData, "fixture", workloads, permissions, integrity);
   const proxyPath = path.join(root, ".sandbox", "proxys", "fixture-proxy.js");
   fs.writeFileSync(proxyPath, source);
 
@@ -294,4 +296,31 @@ test("disposeLibrary() releases the sandbox and later calls fail", async (t) => 
 
   // The membrane rejects the call before it reaches the released context.
   assert.throws(() => proxy.add(1, 1), { message: /sandbox has been disposed/ });
+});
+
+const sri = (text) => `sha384-${crypto.createHash("sha384").update(text).digest("base64")}`;
+const pinnedBody = `return { answer: () => 42 };`;
+
+test("a proxy with a pinned digest loads the matching bundle", async (t) => {
+  const proxy = await importGeneratedProxy(t, {
+    libraryData: { exportedNames: ["answer"] },
+    body: pinnedBody,
+    integrity: { library: sri(fixtureBundle(pinnedBody)) },
+  });
+  assert.equal(proxy.answer(), 42);
+});
+
+test("a proxy with a pinned digest refuses a modified bundle before evaluating it", async (t) => {
+  globalThis.__tamperedBundleRan = false;
+  await assert.rejects(
+    importGeneratedProxy(t, {
+      libraryData: { exportedNames: ["answer"] },
+      body: pinnedBody,
+      servedBody: `globalThis.__tamperedBundleRan = true; return { answer: () => 0 };`,
+      integrity: { library: sri(fixtureBundle(pinnedBody)) },
+    }),
+    /Sandbox bundle integrity check failed for fixture\.bundle\.js/,
+  );
+  assert.equal(globalThis.__tamperedBundleRan, false);
+  delete globalThis.__tamperedBundleRan;
 });

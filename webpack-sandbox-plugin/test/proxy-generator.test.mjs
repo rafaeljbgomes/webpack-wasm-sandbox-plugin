@@ -117,9 +117,9 @@ test("escapes policy-supplied library and workload names", () => {
     [{ workloadName: 'w"x', exports: ["total"] }],
   );
 
-  assert.ok(source.includes(`'dist', "evil'lib.bundle.js"`));
+  assert.ok(source.includes(`__loadSandboxBundle("evil'lib.bundle.js", "")`));
   assert.ok(source.includes(`"w\\"x": {`));
-  assert.ok(source.includes(`const bundleName = "evil'lib." + workloadName + ".workload.bundle.js";`));
+  assert.ok(source.includes(`__loadSandboxBundle("evil'lib." + workloadName + ".workload.bundle.js", manifest.integrity)`));
 });
 
 test("emits only a callable default for export =", () => {

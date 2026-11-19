@@ -51,6 +51,9 @@ module.exports = (env = {}) => {
       new WebpackSandboxPlugin({
         configPath: `./sandbox-configs/${scenario}.js`,
         classification: { mode: env.classify ?? "error" },
+        ...(env.manifestDir
+          ? { sandboxManifest: { path: path.join(env.manifestDir, "sandbox-manifest.json"), bundleDir: env.manifestDir } }
+          : {}),
       }),
       new webpack.NormalModuleReplacementPlugin(
         /sandbox\.config\.js$/,

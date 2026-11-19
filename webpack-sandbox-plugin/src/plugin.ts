@@ -7,6 +7,8 @@ import { findAllDtsFiles } from "./utils/file-utils";
 import { toJsStringLiteral } from "./utils/source-literals";
 import { compileLibrary, loadSandboxPolicy, WorkloadConfig } from "./build-helpers";
 import { applyClassification, ClassificationOptions } from "./classification";
+import { integrityFor, loadAndCheckManifest, ManifestOptions, SandboxManifest } from "./manifest";
+import type { BundleIntegrity } from "./proxy-generator";
 
 /** Configuration accepted by {@link WebpackSandboxPlugin}. */
 export interface SandboxPluginOptions {
@@ -23,6 +25,13 @@ export interface SandboxPluginOptions {
    * explicitly trusted, and no sandboxed package may appear there.
    */
   classification?: ClassificationOptions;
+  /**
+   * Manifest produced by the separate sandbox stage. When set, the plugin
+   * does not compile library code: it checks the policy and grants against
+   * the manifest, emits the stage's bundles after verifying their digests,
+   * and pins those digests in the generated proxies.
+   */
+  sandboxManifest?: ManifestOptions;
 }
 
 /** Workload definition enriched with its owning library and policy key. */
@@ -90,6 +99,22 @@ export class WebpackSandboxPlugin {
         }),
       );
     });
+    let manifest: SandboxManifest | undefined;
+    if (this.options.sandboxManifest) {
+      const loaded = loadAndCheckManifest(this.options.sandboxManifest, compiler.context, configPath, sandboxConfig);
+      manifest = loaded.manifest;
+      compiler.hooks.thisCompilation.tap("WebpackSandboxPlugin/manifest", (compilation) => {
+        compilation.hooks.processAssets.tap(
+          { name: "WebpackSandboxPlugin/manifest", stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL },
+          () => {
+            for (const [file, bytes] of loaded.bundles) {
+              compilation.emitAsset(file, new compiler.webpack.sources.RawSource(bytes));
+            }
+          },
+        );
+      });
+    }
+
     applyClassification(
       compiler,
       new Set(configuredLibraries),
@@ -113,6 +138,7 @@ export class WebpackSandboxPlugin {
           configuredWorkloads.filter(
             (workload) => workload.libraryName === libName,
           ),
+          integrityFor(manifest?.libraries[libName]),
         );
       });
       configuredWorkloads.forEach((workload) => {
@@ -160,6 +186,8 @@ export class WebpackSandboxPlugin {
     compiler.hooks.make.tapAsync(
       "WebpackSandboxPlugin",
       (compilation, callback) => {
+        // With a manifest, library code is never compiled in this build.
+        if (manifest) return callback();
         const libraryBundlePromises = configuredLibraries.map((libName) =>
           compileLibrary(compiler, compilation, libName),
         );
@@ -251,6 +279,7 @@ export class WebpackSandboxPlugin {
     context: string,
     permissions: string[],
     workloads: ConfiguredWorkload[] = [],
+    integrity?: BundleIntegrity,
   ) {
     const proxyPath = path.resolve(
       this.sandboxCacheDir,
@@ -298,7 +327,7 @@ export class WebpackSandboxPlugin {
     const libraryData = parser.parse();
 
     const generator = new ProxyGenerator();
-    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions);
+    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions, integrity);
 
     fs.writeFileSync(proxyPath, proxyContent);
     console.log(

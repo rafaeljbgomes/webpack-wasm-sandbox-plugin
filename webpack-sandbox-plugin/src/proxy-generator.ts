@@ -9,6 +9,15 @@ export interface ProxyWorkload {
   exports: string[];
 }
 
+/**
+ * Expected digests of the bundles a proxy loads, in Subresource Integrity
+ * form (`sha384-<base64>`). Produced by the separate sandbox stage.
+ */
+export interface BundleIntegrity {
+  library?: string;
+  workloads?: Record<string, string>;
+}
+
 /** Produces ESM proxy modules backed by a per-library QuickJS sandbox. */
 export class ProxyGenerator {
   /**
@@ -25,23 +34,14 @@ export class ProxyGenerator {
     libraryName: string,
     workloads: ProxyWorkload[] = [],
     permissions: string[] = [],
+    integrity?: BundleIntegrity,
   ): string {
     let content = `// Auto-generated Sandbox Proxy for ${toJsStringLiteral(libraryName)}\n`;
     content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
 
+    content += this.generateBundleLoader(integrity);
     content += `// Load the isolated bundle from the active runtime.\n`;
-    content += `let libraryCode;\n`;
-    content += `if (typeof process !== 'undefined' && process.versions?.node) {\n`;
-    content += `  const { readFileSync } = await import('fs');\n`;
-    content += `  const { resolve, dirname } = await import('path');\n`;
-    content += `  const { fileURLToPath } = await import('url');\n`;
-    content += `  const __proxyDir = dirname(fileURLToPath(import.meta.url));\n`;
-    content += `  const __projectRoot = resolve(__proxyDir, '..', '..');\n`;
-    content += `  libraryCode = readFileSync(resolve(__projectRoot, 'dist', ${toJsStringLiteral(`${libraryName}.bundle.js`)}), 'utf-8');\n`;
-    content += `} else {\n`;
-    content += `  libraryCode = await fetch(${toJsStringLiteral(`/dist/${libraryName}.bundle.js`)}).then(r => r.text());\n`;
-    content += `}\n`;
-    content += `\n`;
+    content += `const libraryCode = await __loadSandboxBundle(${toJsStringLiteral(`${libraryName}.bundle.js`)}, ${toJsStringLiteral(integrity?.library ?? "")});\n\n`;
 
     content += `// Initialize the per-library QuickJS context before exposing exports.\n`;
     content += `const librarySandbox = await SandboxManager.createSandbox(\n`;
@@ -54,7 +54,7 @@ export class ProxyGenerator {
     content += `  librarySandbox.unrefPump();\n`;
     content += `}\n\n`;
     content += `const proxyExports = librarySandbox.exports;\n\n`;
-    content += this.generateWorkloadAccessHelpers(libraryName, workloads);
+    content += this.generateWorkloadAccessHelpers(libraryName, workloads, integrity);
 
     // An `export =` declaration represents one callable value whose properties
     // must remain accessible through the same default export.
@@ -187,6 +187,7 @@ export class ProxyGenerator {
   private generateWorkloadAccessHelpers(
     libraryName: string,
     workloads: ProxyWorkload[],
+    integrity?: BundleIntegrity,
   ): string {
     if (workloads.length === 0) {
       return "";
@@ -195,25 +196,12 @@ export class ProxyGenerator {
     let content = `const workloadManifest = {\n`;
     for (const workload of workloads) {
       content += `  ${toJsStringLiteral(workload.workloadName)}: {\n`;
-      content += `    globalName: "__SANDBOXED_WORKLOAD_${this.toSafeGlobalName(workload.workloadName)}__"\n`;
+      content += `    globalName: "__SANDBOXED_WORKLOAD_${this.toSafeGlobalName(workload.workloadName)}__",\n`;
+      content += `    integrity: ${toJsStringLiteral(integrity?.workloads?.[workload.workloadName] ?? "")}\n`;
       content += `  },\n`;
     }
     content += `};\n\n`;
 
-    content += `/** Loads a workload bundle in Node.js or the browser. */\n`;
-    content += `async function loadWorkloadBundle(workloadName) {\n`;
-    content += `  const bundleName = ${toJsStringLiteral(`${libraryName}.`)} + workloadName + ".workload.bundle.js";\n`;
-    content += `  if (typeof process !== 'undefined' && process.versions?.node) {\n`;
-    content += `    const { readFileSync } = await import('fs');\n`;
-    content += `    const { resolve, dirname } = await import('path');\n`;
-    content += `    const { fileURLToPath } = await import('url');\n`;
-    content += `    const __proxyDir = dirname(fileURLToPath(import.meta.url));\n`;
-    content += `    const __projectRoot = resolve(__proxyDir, '..', '..');\n`;
-    content += `    return readFileSync(resolve(__projectRoot, 'dist', bundleName), 'utf-8');\n`;
-    content += `  }\n`;
-    content += `  return fetch(\`/dist/\${bundleName}\`).then(r => r.text());\n`;
-    content += `}\n`;
-    content += `\n`;
     content += `/** Loads a workload once and returns one of its sandbox-bound exports. */\n`;
     content += `export async function __getSandboxWorkloadExport(workloadName, exportName) {\n`;
     content += `  const manifest = workloadManifest[workloadName];\n`;
@@ -224,7 +212,7 @@ export class ProxyGenerator {
     content += `    librarySandbox.loadWorkload({\n`;
     content += `      name: workloadName,\n`;
     content += `      globalName: manifest.globalName,\n`;
-    content += `      code: await loadWorkloadBundle(workloadName)\n`;
+    content += `      code: await __loadSandboxBundle(${toJsStringLiteral(`${libraryName}.`)} + workloadName + ".workload.bundle.js", manifest.integrity)\n`;
     content += `    });\n`;
     content += `  }\n`;
     content += `  const workload = librarySandbox.workloads[workloadName];\n`;
@@ -236,6 +224,43 @@ export class ProxyGenerator {
     content += `    throw new Error(\`Sandbox workload export not found: \${workloadName}.\${exportName}\`);\n`;
     content += `  }\n`;
     content += `  return exportedValue;\n`;
+    content += `}\n\n`;
+    return content;
+  }
+
+  /**
+   * Generates the bundle loader. When an expected digest is given, the raw
+   * bytes are hashed before decoding and a mismatch fails closed: no code is
+   * evaluated in QuickJS unless it is exactly the bundle the sandbox stage
+   * produced.
+   *
+   * @param integrity Expected digests; when absent, bundles are not verified.
+   * @returns JavaScript source defining `__loadSandboxBundle`.
+   */
+  private generateBundleLoader(integrity?: BundleIntegrity): string {
+    let content = `/** Loads a sandbox bundle and verifies its digest when one is pinned. */\n`;
+    content += `async function __loadSandboxBundle(bundleName, expected) {\n`;
+    content += `  let bytes;\n`;
+    content += `  if (typeof process !== 'undefined' && process.versions?.node) {\n`;
+    content += `    const { readFileSync } = await import('fs');\n`;
+    content += `    const { resolve, dirname } = await import('path');\n`;
+    content += `    const { fileURLToPath } = await import('url');\n`;
+    content += `    const __proxyDir = dirname(fileURLToPath(import.meta.url));\n`;
+    content += `    const __projectRoot = resolve(__proxyDir, '..', '..');\n`;
+    content += `    bytes = new Uint8Array(readFileSync(resolve(__projectRoot, 'dist', bundleName)));\n`;
+    content += `  } else {\n`;
+    content += `    bytes = new Uint8Array(await fetch(\`/dist/\${bundleName}\`).then(r => r.arrayBuffer()));\n`;
+    content += `  }\n`;
+    content += `  if (expected) {\n`;
+    content += `    const digest = new Uint8Array(await globalThis.crypto.subtle.digest('SHA-384', bytes));\n`;
+    content += `    let binary = '';\n`;
+    content += `    for (const byte of digest) binary += String.fromCharCode(byte);\n`;
+    content += `    const actual = 'sha384-' + btoa(binary);\n`;
+    content += `    if (actual !== expected) {\n`;
+    content += `      throw new Error(\`Sandbox bundle integrity check failed for \${bundleName}: expected \${expected}, got \${actual}\`);\n`;
+    content += `    }\n`;
+    content += `  }\n`;
+    content += `  return new TextDecoder().decode(bytes);\n`;
     content += `}\n\n`;
     return content;
   }
