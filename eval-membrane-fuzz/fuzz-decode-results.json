@@ -1,0 +1,19 @@
+{
+ "seed": 388817,
+ "iterations": 500000,
+ "node": "v25.8.1",
+ "v8": "14.1.146.11-node.21",
+ "decoded": 417302,
+ "threw": 82698,
+ "functionLeaked": 0,
+ "hostRefLeaked": 0,
+ "globalPollution": 0,
+ "errorKinds": {
+  "TypeError": 82698
+ },
+ "protoKeysStable": true,
+ "pollutionPayloadsTried": 4,
+ "pollutionAfterTargeted": false,
+ "decodeStackOverflowDepth": 10000,
+ "pass": true
+}
