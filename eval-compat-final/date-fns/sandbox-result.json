@@ -1,0 +1,751 @@
+{
+  "library": "date-fns",
+  "mode": "sandbox",
+  "runner": "vitest",
+  "strategy": "batch",
+  "batchSize": 10,
+  "fallback": "per-file",
+  "testFilePattern": "src/**/test.ts",
+  "testSetFingerprint": "aec3b7f2d6b52d7fbff12d685f8e6db037a1ab67e9c9f239cef94287c3046303",
+  "expectedFiles": 250,
+  "completedFiles": 250,
+  "failedUnits": 41,
+  "startedAt": "2026-11-20T15:19:39.476Z",
+  "finishedAt": "2026-11-20T15:20:54.586Z",
+  "status": "crashed",
+  "executed": 3158,
+  "passed": 2278,
+  "failed": 880,
+  "skipped": 0,
+  "exitCode": 1,
+  "durationMs": 75060,
+  "sandboxEntries": 3260000,
+  "completeFileSet": false,
+  "log": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/run.log",
+  "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/result.json",
+  "units": [
+    {
+      "id": "0001-3da61cb9d7",
+      "kind": "batch",
+      "files": [
+        "src/_lib/addLeadingZeros/test.ts",
+        "src/_lib/getRoundingMethod/test.ts",
+        "src/_lib/getTimezoneOffsetInMilliseconds/test.ts",
+        "src/add/test.ts",
+        "src/addBusinessDays/test.ts",
+        "src/addDays/test.ts",
+        "src/addHours/test.ts",
+        "src/addISOWeekYears/test.ts",
+        "src/addMilliseconds/test.ts",
+        "src/addMinutes/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0001-3da61cb9d7/result.json"
+    },
+    {
+      "id": "0002-8986adf913",
+      "kind": "batch",
+      "files": [
+        "src/addMonths/test.ts",
+        "src/addQuarters/test.ts",
+        "src/addSeconds/test.ts",
+        "src/addWeeks/test.ts",
+        "src/addYears/test.ts",
+        "src/areIntervalsOverlapping/test.ts",
+        "src/clamp/test.ts",
+        "src/closestIndexTo/test.ts",
+        "src/closestTo/test.ts",
+        "src/compareAsc/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0002-8986adf913/result.json"
+    },
+    {
+      "id": "0003-2529841f75",
+      "kind": "batch",
+      "files": [
+        "src/compareDesc/test.ts",
+        "src/constructFrom/test.ts",
+        "src/constructNow/test.ts",
+        "src/daysToWeeks/test.ts",
+        "src/differenceInBusinessDays/test.ts",
+        "src/differenceInCalendarDays/test.ts",
+        "src/differenceInCalendarISOWeeks/test.ts",
+        "src/differenceInCalendarISOWeekYears/test.ts",
+        "src/differenceInCalendarMonths/test.ts",
+        "src/differenceInCalendarQuarters/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0003-2529841f75/result.json"
+    },
+    {
+      "id": "0004-4b3670e5f1",
+      "kind": "batch",
+      "files": [
+        "src/differenceInCalendarWeeks/test.ts",
+        "src/differenceInCalendarYears/test.ts",
+        "src/differenceInDays/test.ts",
+        "src/differenceInHours/test.ts",
+        "src/differenceInISOWeekYears/test.ts",
+        "src/differenceInMilliseconds/test.ts",
+        "src/differenceInMinutes/test.ts",
+        "src/differenceInMonths/test.ts",
+        "src/differenceInQuarters/test.ts",
+        "src/differenceInSeconds/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0004-4b3670e5f1/result.json"
+    },
+    {
+      "id": "0005-cc84b16685",
+      "kind": "batch",
+      "files": [
+        "src/differenceInWeeks/test.ts",
+        "src/differenceInYears/test.ts",
+        "src/eachDayOfInterval/test.ts",
+        "src/eachHourOfInterval/test.ts",
+        "src/eachMinuteOfInterval/test.ts",
+        "src/eachMonthOfInterval/test.ts",
+        "src/eachQuarterOfInterval/test.ts",
+        "src/eachWeekendOfInterval/test.ts",
+        "src/eachWeekendOfMonth/test.ts",
+        "src/eachWeekendOfYear/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0005-cc84b16685/result.json"
+    },
+    {
+      "id": "0006-a74143b8a4",
+      "kind": "batch",
+      "files": [
+        "src/eachWeekOfInterval/test.ts",
+        "src/eachYearOfInterval/test.ts",
+        "src/endOfDay/test.ts",
+        "src/endOfDecade/test.ts",
+        "src/endOfHour/test.ts",
+        "src/endOfISOWeek/test.ts",
+        "src/endOfISOWeekYear/test.ts",
+        "src/endOfMinute/test.ts",
+        "src/endOfMonth/test.ts",
+        "src/endOfQuarter/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0006-a74143b8a4/result.json"
+    },
+    {
+      "id": "0007-4b047b4edc",
+      "kind": "batch",
+      "files": [
+        "src/endOfSecond/test.ts",
+        "src/endOfToday/test.ts",
+        "src/endOfTomorrow/test.ts",
+        "src/endOfWeek/test.ts",
+        "src/endOfYear/test.ts",
+        "src/endOfYesterday/test.ts",
+        "src/format/test.ts",
+        "src/formatDistance/test.ts",
+        "src/formatDistanceStrict/test.ts",
+        "src/formatDistanceToNow/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0007-4b047b4edc/result.json"
+    },
+    {
+      "id": "0008-5459dab620",
+      "kind": "batch",
+      "files": [
+        "src/formatDistanceToNowStrict/test.ts",
+        "src/formatDuration/test.ts",
+        "src/formatISO/test.ts",
+        "src/formatISO9075/test.ts",
+        "src/formatISODuration/test.ts",
+        "src/formatRelative/test.ts",
+        "src/formatRFC3339/test.ts",
+        "src/formatRFC7231/test.ts",
+        "src/fp/_lib/convertToFP/test.ts",
+        "src/fromUnixTime/test.ts"
+      ],
+      "included": false,
+      "fallbackFor": null,
+      "status": "crashed",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0008-5459dab620/result.json"
+    },
+    {
+      "id": "0009-ff307cea24",
+      "kind": "file",
+      "files": [
+        "src/formatDistanceToNowStrict/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0009-ff307cea24/result.json"
+    },
+    {
+      "id": "0010-f974a9cc53",
+      "kind": "file",
+      "files": [
+        "src/formatDuration/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "completed",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0010-f974a9cc53/result.json"
+    },
+    {
+      "id": "0011-88635d613d",
+      "kind": "file",
+      "files": [
+        "src/formatISO/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0011-88635d613d/result.json"
+    },
+    {
+      "id": "0012-72d23c0b8b",
+      "kind": "file",
+      "files": [
+        "src/formatISO9075/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "crashed",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0012-72d23c0b8b/result.json"
+    },
+    {
+      "id": "0013-8b76e403fa",
+      "kind": "file",
+      "files": [
+        "src/formatISODuration/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "completed",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0013-8b76e403fa/result.json"
+    },
+    {
+      "id": "0014-1e7a60e134",
+      "kind": "file",
+      "files": [
+        "src/formatRelative/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0014-1e7a60e134/result.json"
+    },
+    {
+      "id": "0015-77f52136cb",
+      "kind": "file",
+      "files": [
+        "src/formatRFC3339/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0015-77f52136cb/result.json"
+    },
+    {
+      "id": "0016-bd21b42df5",
+      "kind": "file",
+      "files": [
+        "src/formatRFC7231/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0016-bd21b42df5/result.json"
+    },
+    {
+      "id": "0017-95cd8b1e0d",
+      "kind": "file",
+      "files": [
+        "src/fp/_lib/convertToFP/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0017-95cd8b1e0d/result.json"
+    },
+    {
+      "id": "0018-fc8f31213c",
+      "kind": "file",
+      "files": [
+        "src/fromUnixTime/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0008-5459dab620",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0018-fc8f31213c/result.json"
+    },
+    {
+      "id": "0019-13d456f703",
+      "kind": "batch",
+      "files": [
+        "src/getDate/test.ts",
+        "src/getDay/test.ts",
+        "src/getDayOfYear/test.ts",
+        "src/getDaysInMonth/test.ts",
+        "src/getDaysInYear/test.ts",
+        "src/getDecade/test.ts",
+        "src/getDefaultOptions/test.ts",
+        "src/getHours/test.ts",
+        "src/getISODay/test.ts",
+        "src/getISOWeek/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0019-13d456f703/result.json"
+    },
+    {
+      "id": "0020-800f885eb8",
+      "kind": "batch",
+      "files": [
+        "src/getISOWeeksInYear/test.ts",
+        "src/getISOWeekYear/test.ts",
+        "src/getMilliseconds/test.ts",
+        "src/getMinutes/test.ts",
+        "src/getMonth/test.ts",
+        "src/getOverlappingDaysInIntervals/test.ts",
+        "src/getQuarter/test.ts",
+        "src/getSeconds/test.ts",
+        "src/getTime/test.ts",
+        "src/getUnixTime/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0020-800f885eb8/result.json"
+    },
+    {
+      "id": "0021-9fad0cd569",
+      "kind": "batch",
+      "files": [
+        "src/getWeek/test.ts",
+        "src/getWeekOfMonth/test.ts",
+        "src/getWeeksInMonth/test.ts",
+        "src/getWeekYear/test.ts",
+        "src/getYear/test.ts",
+        "src/hoursToMilliseconds/test.ts",
+        "src/hoursToMinutes/test.ts",
+        "src/hoursToSeconds/test.ts",
+        "src/interval/test.ts",
+        "src/intervalToDuration/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0021-9fad0cd569/result.json"
+    },
+    {
+      "id": "0022-8e194e7b28",
+      "kind": "batch",
+      "files": [
+        "src/intlFormat/test.ts",
+        "src/intlFormatDistance/test.ts",
+        "src/isAfter/test.ts",
+        "src/isBefore/test.ts",
+        "src/isDate/test.ts",
+        "src/isEqual/test.ts",
+        "src/isExists/test.ts",
+        "src/isFirstDayOfMonth/test.ts",
+        "src/isFriday/test.ts",
+        "src/isFuture/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0022-8e194e7b28/result.json"
+    },
+    {
+      "id": "0023-0827b16ff2",
+      "kind": "batch",
+      "files": [
+        "src/isLastDayOfMonth/test.ts",
+        "src/isLeapYear/test.ts",
+        "src/isMatch/test.ts",
+        "src/isMonday/test.ts",
+        "src/isPast/test.ts",
+        "src/isSameDay/test.ts",
+        "src/isSameHour/test.ts",
+        "src/isSameISOWeek/test.ts",
+        "src/isSameISOWeekYear/test.ts",
+        "src/isSameMinute/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0023-0827b16ff2/result.json"
+    },
+    {
+      "id": "0024-63f1ad64bd",
+      "kind": "batch",
+      "files": [
+        "src/isSameMonth/test.ts",
+        "src/isSameQuarter/test.ts",
+        "src/isSameSecond/test.ts",
+        "src/isSameWeek/test.ts",
+        "src/isSameYear/test.ts",
+        "src/isSaturday/test.ts",
+        "src/isSunday/test.ts",
+        "src/isThisHour/test.ts",
+        "src/isThisISOWeek/test.ts",
+        "src/isThisMinute/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0024-63f1ad64bd/result.json"
+    },
+    {
+      "id": "0025-d653393562",
+      "kind": "batch",
+      "files": [
+        "src/isThisMonth/test.ts",
+        "src/isThisQuarter/test.ts",
+        "src/isThisSecond/test.ts",
+        "src/isThisWeek/test.ts",
+        "src/isThisYear/test.ts",
+        "src/isThursday/test.ts",
+        "src/isToday/test.ts",
+        "src/isTomorrow/test.ts",
+        "src/isTuesday/test.ts",
+        "src/isValid/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0025-d653393562/result.json"
+    },
+    {
+      "id": "0026-78e7f4a757",
+      "kind": "batch",
+      "files": [
+        "src/isWednesday/test.ts",
+        "src/isWeekend/test.ts",
+        "src/isWithinInterval/test.ts",
+        "src/isYesterday/test.ts",
+        "src/lastDayOfDecade/test.ts",
+        "src/lastDayOfISOWeek/test.ts",
+        "src/lastDayOfISOWeekYear/test.ts",
+        "src/lastDayOfMonth/test.ts",
+        "src/lastDayOfQuarter/test.ts",
+        "src/lastDayOfWeek/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0026-78e7f4a757/result.json"
+    },
+    {
+      "id": "0027-d1bf05ee05",
+      "kind": "batch",
+      "files": [
+        "src/lastDayOfYear/test.ts",
+        "src/lightFormat/test.ts",
+        "src/locale/fr/test.ts",
+        "src/max/test.ts",
+        "src/milliseconds/test.ts",
+        "src/millisecondsToHours/test.ts",
+        "src/millisecondsToMinutes/test.ts",
+        "src/millisecondsToSeconds/test.ts",
+        "src/min/test.ts",
+        "src/minutesToHours/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0027-d1bf05ee05/result.json"
+    },
+    {
+      "id": "0028-4e19246045",
+      "kind": "batch",
+      "files": [
+        "src/minutesToMilliseconds/test.ts",
+        "src/minutesToSeconds/test.ts",
+        "src/monthsToQuarters/test.ts",
+        "src/monthsToYears/test.ts",
+        "src/nextDay/test.ts",
+        "src/nextFriday/test.ts",
+        "src/nextMonday/test.ts",
+        "src/nextSaturday/test.ts",
+        "src/nextSunday/test.ts",
+        "src/nextThursday/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0028-4e19246045/result.json"
+    },
+    {
+      "id": "0029-e22bf2ad11",
+      "kind": "batch",
+      "files": [
+        "src/nextTuesday/test.ts",
+        "src/nextWednesday/test.ts",
+        "src/parse/test.ts",
+        "src/parseISO/test.ts",
+        "src/parseJSON/test.ts",
+        "src/previousDay/test.ts",
+        "src/previousFriday/test.ts",
+        "src/previousMonday/test.ts",
+        "src/previousSaturday/test.ts",
+        "src/previousSunday/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0029-e22bf2ad11/result.json"
+    },
+    {
+      "id": "0030-689eb95712",
+      "kind": "batch",
+      "files": [
+        "src/previousThursday/test.ts",
+        "src/previousTuesday/test.ts",
+        "src/previousWednesday/test.ts",
+        "src/quartersToMonths/test.ts",
+        "src/quartersToYears/test.ts",
+        "src/roundToNearestHours/test.ts",
+        "src/roundToNearestMinutes/test.ts",
+        "src/secondsToHours/test.ts",
+        "src/secondsToMilliseconds/test.ts",
+        "src/secondsToMinutes/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0030-689eb95712/result.json"
+    },
+    {
+      "id": "0031-f87cd0a096",
+      "kind": "batch",
+      "files": [
+        "src/set/test.ts",
+        "src/setDate/test.ts",
+        "src/setDay/test.ts",
+        "src/setDayOfYear/test.ts",
+        "src/setDefaultOptions/test.ts",
+        "src/setHours/test.ts",
+        "src/setISODay/test.ts",
+        "src/setISOWeek/test.ts",
+        "src/setISOWeekYear/test.ts",
+        "src/setMilliseconds/test.ts"
+      ],
+      "included": false,
+      "fallbackFor": null,
+      "status": "crashed",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0031-f87cd0a096/result.json"
+    },
+    {
+      "id": "0032-fcc349ae1a",
+      "kind": "file",
+      "files": [
+        "src/set/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0032-fcc349ae1a/result.json"
+    },
+    {
+      "id": "0033-0a8d7aa527",
+      "kind": "file",
+      "files": [
+        "src/setDate/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0033-0a8d7aa527/result.json"
+    },
+    {
+      "id": "0034-9a360e5ca5",
+      "kind": "file",
+      "files": [
+        "src/setDay/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0034-9a360e5ca5/result.json"
+    },
+    {
+      "id": "0035-d997008d58",
+      "kind": "file",
+      "files": [
+        "src/setDayOfYear/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0035-d997008d58/result.json"
+    },
+    {
+      "id": "0036-0ba41c7bb7",
+      "kind": "file",
+      "files": [
+        "src/setDefaultOptions/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0036-0ba41c7bb7/result.json"
+    },
+    {
+      "id": "0037-f22ff85b67",
+      "kind": "file",
+      "files": [
+        "src/setHours/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0037-f22ff85b67/result.json"
+    },
+    {
+      "id": "0038-30c950ce9b",
+      "kind": "file",
+      "files": [
+        "src/setISODay/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0038-30c950ce9b/result.json"
+    },
+    {
+      "id": "0039-b602c17492",
+      "kind": "file",
+      "files": [
+        "src/setISOWeek/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0039-b602c17492/result.json"
+    },
+    {
+      "id": "0040-e9beef7fb0",
+      "kind": "file",
+      "files": [
+        "src/setISOWeekYear/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0040-e9beef7fb0/result.json"
+    },
+    {
+      "id": "0041-1ccffa91ea",
+      "kind": "file",
+      "files": [
+        "src/setMilliseconds/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": "0031-f87cd0a096",
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0041-1ccffa91ea/result.json"
+    },
+    {
+      "id": "0042-ec970f2dd3",
+      "kind": "batch",
+      "files": [
+        "src/setMinutes/test.ts",
+        "src/setMonth/test.ts",
+        "src/setQuarter/test.ts",
+        "src/setSeconds/test.ts",
+        "src/setWeek/test.ts",
+        "src/setWeekYear/test.ts",
+        "src/setYear/test.ts",
+        "src/startOfDay/test.ts",
+        "src/startOfDecade/test.ts",
+        "src/startOfHour/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0042-ec970f2dd3/result.json"
+    },
+    {
+      "id": "0043-e99a52bd65",
+      "kind": "batch",
+      "files": [
+        "src/startOfISOWeek/test.ts",
+        "src/startOfISOWeekYear/test.ts",
+        "src/startOfMinute/test.ts",
+        "src/startOfMonth/test.ts",
+        "src/startOfQuarter/test.ts",
+        "src/startOfSecond/test.ts",
+        "src/startOfToday/test.ts",
+        "src/startOfTomorrow/test.ts",
+        "src/startOfWeek/test.ts",
+        "src/startOfWeekYear/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0043-e99a52bd65/result.json"
+    },
+    {
+      "id": "0044-73aa53dd5b",
+      "kind": "batch",
+      "files": [
+        "src/startOfYear/test.ts",
+        "src/startOfYesterday/test.ts",
+        "src/sub/test.ts",
+        "src/subBusinessDays/test.ts",
+        "src/subDays/test.ts",
+        "src/subHours/test.ts",
+        "src/subISOWeekYears/test.ts",
+        "src/subMilliseconds/test.ts",
+        "src/subMinutes/test.ts",
+        "src/subMonths/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0044-73aa53dd5b/result.json"
+    },
+    {
+      "id": "0045-ebade1384d",
+      "kind": "batch",
+      "files": [
+        "src/subQuarters/test.ts",
+        "src/subSeconds/test.ts",
+        "src/subWeeks/test.ts",
+        "src/subYears/test.ts",
+        "src/toDate/test.ts",
+        "src/transpose/test.ts",
+        "src/weeksToDays/test.ts",
+        "src/yearsToDays/test.ts",
+        "src/yearsToMonths/test.ts",
+        "src/yearsToQuarters/test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/date-fns/2026-11-20T15-19-37-020Z/sandbox/units/0045-ebade1384d/result.json"
+    }
+  ],
+  "comparable": false,
+  "compatibilityRatio": null,
+  "comparisonNote": "Comparison unavailable because native is completed and sandbox is crashed."
+}

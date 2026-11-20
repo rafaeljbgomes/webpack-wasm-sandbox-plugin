@@ -1,0 +1,3 @@
+library,mode,status,executed,passed,failed,skipped,expected_files,completed_files,failed_units,exit_code,duration_ms,compatibility_ratio,comparable,comparison_note,log
+yup,native,completed,779,777,0,2,13,13,0,0,2335,0.8764478764478765,true,,compatibility-results-final/yup/2026-11-20T15-23-02-443Z/native/run.log
+yup,sandbox,failed_tests,779,681,96,2,13,13,3,1,6391,0.8764478764478765,true,,compatibility-results-final/yup/2026-11-20T15-23-02-443Z/sandbox/run.log

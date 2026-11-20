@@ -1,0 +1,3 @@
+library,mode,status,executed,passed,failed,skipped,expected_files,completed_files,failed_units,exit_code,duration_ms,compatibility_ratio,comparable,comparison_note,log
+image-js,native,completed,851,851,0,0,,,0,0,13104,,false,Native and sandbox executed different test totals.,compatibility-results-final/image-js/2026-11-20T15-17-01-840Z/native/run.log
+image-js,sandbox,failed_tests,841,629,212,0,,,1,1,97949,,false,Native and sandbox executed different test totals.,compatibility-results-final/image-js/2026-11-20T15-17-01-840Z/sandbox/run.log

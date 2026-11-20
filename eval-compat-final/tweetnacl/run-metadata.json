@@ -1,0 +1,46 @@
+{
+  "startedAt": "2026-11-20T15:07:50.699Z",
+  "finishedAt": "2026-11-20T15:13:08.158Z",
+  "node": "v25.8.1",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "timestamp": "2026-11-20T15-07-50-697Z",
+  "library": "tweetnacl",
+  "modes": [
+    "native",
+    "sandbox"
+  ],
+  "options": {
+    "mode": null,
+    "build": false,
+    "strategy": null,
+    "batchSize": null,
+    "testFiles": []
+  },
+  "plan": {
+    "byMode": {
+      "native": {
+        "strategy": "suite",
+        "batchSize": null,
+        "fallback": null,
+        "expectedFiles": null,
+        "testSetFingerprint": "0e8516d2018d86b6430a0337f2c1633538ccf8e478de5bd09cb36aa02aa7b51b",
+        "files": []
+      },
+      "sandbox": {
+        "strategy": "suite",
+        "batchSize": null,
+        "fallback": null,
+        "expectedFiles": null,
+        "testSetFingerprint": "0e8516d2018d86b6430a0337f2c1633538ccf8e478de5bd09cb36aa02aa7b51b",
+        "files": []
+      }
+    }
+  },
+  "comparison": {
+    "comparable": true,
+    "compatibilityRatio": 0.9948395781916087,
+    "comparisonNote": ""
+  },
+  "build": null
+}

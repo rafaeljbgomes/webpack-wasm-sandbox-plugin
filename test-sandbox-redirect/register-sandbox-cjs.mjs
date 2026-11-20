@@ -110,6 +110,7 @@ for (const [lib, data] of libData) {
     // Use the default export as CJS exports: it is the raw sandbox library object
     // (e.g. the full nacl namespace), matching what the original library exports.
     const cjsExports = createExtensibleBridge(ns.default ?? ns);
+    data.cacheEntries = new Map();
 
     require.cache[data.proxyPath] = {
       id: data.proxyPath,
@@ -123,6 +124,7 @@ for (const [lib, data] of libData) {
     // Store the namespace and create per-named-export virtual cache entries so
     // that modular requires like require('../bi-map.js') can be routed to the
     // correct named export instead of the entire namespace (ns.default ?? ns).
+    data.cacheEntries.set(data.proxyPath, require.cache[data.proxyPath]);
     data.ns = ns;
     for (const key of Object.keys(ns)) {
       if (key === 'default') continue;
@@ -136,6 +138,7 @@ for (const [lib, data] of libData) {
         children: [],
         paths: [],
       };
+      data.cacheEntries.set(virtualPath, require.cache[virtualPath]);
     }
     console.log(`[sandbox-cjs] Ready: ${lib}`);
   } catch (err) {
@@ -152,8 +155,21 @@ function stemToExportName(stem) {
 
 // Patch Module._resolveFilename to redirect sandboxed library requires to the
 // pre-populated cache entries.
+// A suite that clears require.cache (lodash does, to reload itself) must get
+// the same pre-loaded sandbox again rather than a require() of the async proxy.
+function restoreCached(resolved) {
+  for (const [, data] of libData) {
+    const entry = data.cacheEntries?.get(resolved);
+    if (entry && require.cache[resolved] !== entry) require.cache[resolved] = entry;
+  }
+  return resolved;
+}
+
 const original = Module._resolveFilename;
 Module._resolveFilename = function (request, parent, isMain, options) {
+  return restoreCached(resolveSandboxed.call(this, request, parent, isMain, options));
+};
+function resolveSandboxed(request, parent, isMain, options) {
   // Case 1: bare specifier matching a sandboxed library name
   if (libData.has(request)) {
     return libData.get(request).proxyPath;
@@ -216,4 +232,4 @@ Module._resolveFilename = function (request, parent, isMain, options) {
     }
     throw err;
   }
-};
+}

@@ -1,0 +1,801 @@
+{
+  "library": "zod",
+  "mode": "sandbox",
+  "runner": "vitest",
+  "strategy": "per-file",
+  "batchSize": null,
+  "fallback": null,
+  "testFilePattern": "packages/zod/src/v4/classic/tests/**/*.test.ts",
+  "testSetFingerprint": "d64b9b6d632c5153dfffc2fbaf9be6275cb26a51aa784df083008cd4b8a892aa",
+  "expectedFiles": 70,
+  "completedFiles": 70,
+  "failedUnits": 30,
+  "startedAt": "2026-11-20T15:14:44.953Z",
+  "finishedAt": "2026-11-20T15:16:07.443Z",
+  "status": "failed_tests",
+  "executed": 984,
+  "passed": 830,
+  "failed": 154,
+  "skipped": 0,
+  "exitCode": 1,
+  "durationMs": 82411,
+  "sandboxEntries": 1710202,
+  "completeFileSet": true,
+  "log": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/run.log",
+  "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/result.json",
+  "units": [
+    {
+      "id": "0001-79c01afd9b",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/anyunknown.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0001-79c01afd9b/result.json"
+    },
+    {
+      "id": "0002-145aa7ce95",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/apply.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0002-145aa7ce95/result.json"
+    },
+    {
+      "id": "0003-7c4ba97398",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/array.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0003-7c4ba97398/result.json"
+    },
+    {
+      "id": "0004-de4455e5cd",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/assignability.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0004-de4455e5cd/result.json"
+    },
+    {
+      "id": "0005-c802632fab",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/async-parsing.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0005-c802632fab/result.json"
+    },
+    {
+      "id": "0006-08bc3a018e",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/async-refinements.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0006-08bc3a018e/result.json"
+    },
+    {
+      "id": "0007-37ea866e24",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/base.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0007-37ea866e24/result.json"
+    },
+    {
+      "id": "0008-8f08e8676b",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/bigint.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0008-8f08e8676b/result.json"
+    },
+    {
+      "id": "0009-3467995271",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/brand.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0009-3467995271/result.json"
+    },
+    {
+      "id": "0010-dcef2af29d",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/catch.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0010-dcef2af29d/result.json"
+    },
+    {
+      "id": "0011-432e719139",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/codec-examples.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0011-432e719139/result.json"
+    },
+    {
+      "id": "0012-9956547e80",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/codec.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0012-9956547e80/result.json"
+    },
+    {
+      "id": "0013-aa384cffc6",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/coerce.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0013-aa384cffc6/result.json"
+    },
+    {
+      "id": "0014-815e1f167c",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/continuability.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0014-815e1f167c/result.json"
+    },
+    {
+      "id": "0015-2a355d89b0",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/custom.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0015-2a355d89b0/result.json"
+    },
+    {
+      "id": "0016-b25db3edea",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/date.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0016-b25db3edea/result.json"
+    },
+    {
+      "id": "0017-742e087780",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/datetime.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0017-742e087780/result.json"
+    },
+    {
+      "id": "0018-b3684857a4",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/default.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0018-b3684857a4/result.json"
+    },
+    {
+      "id": "0019-8a900504a2",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/describe-meta-checks.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0019-8a900504a2/result.json"
+    },
+    {
+      "id": "0020-d5b4896126",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/description.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0020-d5b4896126/result.json"
+    },
+    {
+      "id": "0021-d3cfcb2e6d",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/discriminated-unions.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0021-d3cfcb2e6d/result.json"
+    },
+    {
+      "id": "0022-c6389504bb",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/enum.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0022-c6389504bb/result.json"
+    },
+    {
+      "id": "0023-e1b4ae286d",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/error-utils.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0023-e1b4ae286d/result.json"
+    },
+    {
+      "id": "0024-fca07579e8",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/error.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0024-fca07579e8/result.json"
+    },
+    {
+      "id": "0025-17e660de14",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/file.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0025-17e660de14/result.json"
+    },
+    {
+      "id": "0026-b43a25b8d9",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/firstparty.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0026-b43a25b8d9/result.json"
+    },
+    {
+      "id": "0027-7009861fb4",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/from-json-schema.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0027-7009861fb4/result.json"
+    },
+    {
+      "id": "0028-46bc6b14a2",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/function.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0028-46bc6b14a2/result.json"
+    },
+    {
+      "id": "0029-4648c203a9",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/generics.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0029-4648c203a9/result.json"
+    },
+    {
+      "id": "0030-f48f3c781a",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/hash.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0030-f48f3c781a/result.json"
+    },
+    {
+      "id": "0031-065d40fbed",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/index.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0031-065d40fbed/result.json"
+    },
+    {
+      "id": "0032-8f9db9b9f8",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/instanceof.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0032-8f9db9b9f8/result.json"
+    },
+    {
+      "id": "0033-ab75e72f1d",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/intersection.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0033-ab75e72f1d/result.json"
+    },
+    {
+      "id": "0034-a7e5a4b8f3",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/lazy.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0034-a7e5a4b8f3/result.json"
+    },
+    {
+      "id": "0035-1e04204bc9",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/literal.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0035-1e04204bc9/result.json"
+    },
+    {
+      "id": "0036-17253f2942",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/map.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0036-17253f2942/result.json"
+    },
+    {
+      "id": "0037-7421ffd455",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/nan.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0037-7421ffd455/result.json"
+    },
+    {
+      "id": "0038-eb29c55c82",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/nested-refine.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0038-eb29c55c82/result.json"
+    },
+    {
+      "id": "0039-3e2c2660c7",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/nonoptional.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0039-3e2c2660c7/result.json"
+    },
+    {
+      "id": "0040-974f681879",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/nullable.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0040-974f681879/result.json"
+    },
+    {
+      "id": "0041-787fdabb6d",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/number.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0041-787fdabb6d/result.json"
+    },
+    {
+      "id": "0042-34b9f1d621",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/object.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0042-34b9f1d621/result.json"
+    },
+    {
+      "id": "0043-7fd0e45d07",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/optional.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0043-7fd0e45d07/result.json"
+    },
+    {
+      "id": "0044-9f2fa89ab8",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/partial.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0044-9f2fa89ab8/result.json"
+    },
+    {
+      "id": "0045-dc35c9bc87",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/pickomit.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0045-dc35c9bc87/result.json"
+    },
+    {
+      "id": "0046-9d55a95e88",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/pipe.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0046-9d55a95e88/result.json"
+    },
+    {
+      "id": "0047-9ac68b53e2",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/prefault.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0047-9ac68b53e2/result.json"
+    },
+    {
+      "id": "0048-b1069e53b1",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/preprocess.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0048-b1069e53b1/result.json"
+    },
+    {
+      "id": "0049-e15a29f57b",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/primitive.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0049-e15a29f57b/result.json"
+    },
+    {
+      "id": "0050-5ccdec44f9",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/promise.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0050-5ccdec44f9/result.json"
+    },
+    {
+      "id": "0051-8b0c923cbd",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/prototypes.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0051-8b0c923cbd/result.json"
+    },
+    {
+      "id": "0052-562bde3125",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/readonly.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0052-562bde3125/result.json"
+    },
+    {
+      "id": "0053-0ca69261cb",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/record.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0053-0ca69261cb/result.json"
+    },
+    {
+      "id": "0054-8d4af9108b",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/recursive-types.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0054-8d4af9108b/result.json"
+    },
+    {
+      "id": "0055-6eb589f42d",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/refine.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0055-6eb589f42d/result.json"
+    },
+    {
+      "id": "0056-7b3f452178",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/registries.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0056-7b3f452178/result.json"
+    },
+    {
+      "id": "0057-c46b6d5829",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/set.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0057-c46b6d5829/result.json"
+    },
+    {
+      "id": "0058-a4f346c48e",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/standard-schema.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0058-a4f346c48e/result.json"
+    },
+    {
+      "id": "0059-bba9e5c659",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/string-formats.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0059-bba9e5c659/result.json"
+    },
+    {
+      "id": "0060-b86eae01bf",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/string.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0060-b86eae01bf/result.json"
+    },
+    {
+      "id": "0061-e589cd6866",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/stringbool.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0061-e589cd6866/result.json"
+    },
+    {
+      "id": "0062-a34cbd32f2",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/template-literal.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0062-a34cbd32f2/result.json"
+    },
+    {
+      "id": "0063-0e83b86d44",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0063-0e83b86d44/result.json"
+    },
+    {
+      "id": "0064-b7a93522d7",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/to-json-schema.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0064-b7a93522d7/result.json"
+    },
+    {
+      "id": "0065-7d55602a0f",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/transform.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0065-7d55602a0f/result.json"
+    },
+    {
+      "id": "0066-2760f81931",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/tuple.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0066-2760f81931/result.json"
+    },
+    {
+      "id": "0067-f0313c815e",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/union.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0067-f0313c815e/result.json"
+    },
+    {
+      "id": "0068-e1bb0072db",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/url.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0068-e1bb0072db/result.json"
+    },
+    {
+      "id": "0069-c3c5c432f5",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/validations.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0069-c3c5c432f5/result.json"
+    },
+    {
+      "id": "0070-57cfd22d05",
+      "kind": "file",
+      "files": [
+        "packages/zod/src/v4/classic/tests/void.test.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/zod/2026-11-20T15-14-10-374Z/sandbox/units/0070-57cfd22d05/result.json"
+    }
+  ],
+  "comparable": true,
+  "compatibilityRatio": 0.8434959349593496,
+  "comparisonNote": ""
+}

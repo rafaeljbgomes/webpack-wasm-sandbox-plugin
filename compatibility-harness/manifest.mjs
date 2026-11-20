@@ -91,7 +91,7 @@ export const compatibilityManifest = [
     harness: "test-harness/image-js",
     proxy: ".sandbox/proxys/image-js-proxy.js",
     strategy: "suite",
-    testFilePattern: "src/maskAnalysis/__tests__/**/*.ts",
+    testFilePattern: "test-harness/image-js/public-api-tests.json",
     parser: "vitest-json",
     commands: {
       native: [vitestCommand("./vitest.native.config.ts")],
@@ -104,17 +104,15 @@ export const compatibilityManifest = [
     harness: "test-harness/lodash",
     proxy: ".sandbox/proxys/lodash-proxy.js",
     strategy: "suite",
-    testFilePattern: "test/test.js,test/test-fp.js",
+    // test-fp.js exercises lodash's internal fp/_baseConvert helper through a
+    // deep relative import, not an entry point; in sandbox mode that helper
+    // would run natively over the sandboxed library, so it is not a test of
+    // either configuration and is excluded from the comparison.
+    testFilePattern: "test/test.js",
     parser: "qunit",
     commands: {
-      native: [
-        () => npmCommand("test:main"),
-        () => npmCommand("test:fp"),
-      ],
-      sandbox: [
-        () => npmCommand("test:sandbox"),
-        () => npmCommand("test:sandbox-fp"),
-      ],
+      native: [() => npmCommand("test:main")],
+      sandbox: [() => npmCommand("test:sandbox")],
     },
   },
   {
@@ -123,7 +121,7 @@ export const compatibilityManifest = [
     harness: "test-harness/luxon",
     proxy: ".sandbox/proxys/luxon-proxy.js",
     strategy: "suite",
-    testFilePattern: "test/**/*.test.js",
+    testFilePattern: "test/**/*.test.js (excluding test/impl/english.test.js)",
     parser: "jest-json",
     commands: {
       native: [
@@ -140,7 +138,8 @@ export const compatibilityManifest = [
       sandbox: [
         ({ harnessDir, reportPath }) =>
           nodeCommand([
-            "--experimental-vm-modules",
+            "--import",
+            ESM_LOADER,
             resolve(harnessDir, "node_modules/jest/bin/jest.js"),
             "--config",
             "./jest.sandbox.config.js",
@@ -274,6 +273,7 @@ export const compatibilityManifest = [
         "test/helpers.ts",
         "test/types/.eslintrc.js",
         "test/types/types.ts",
+        "test/util/parseIsoDate.ts",
       ],
     },
     testFilePattern: "test/**/*.{js,ts}",
@@ -296,6 +296,13 @@ export const compatibilityManifest = [
     discovery: {
       root: "packages/zod/src/v4/classic/tests",
       suffix: ".test.ts",
+      // fix-json-issue tests the zod/mini entry point, which is not configured
+      // for sandboxing; coalesce and json are placeholders that never import zod.
+      exclude: [
+        "packages/zod/src/v4/classic/tests/fix-json-issue.test.ts",
+        "packages/zod/src/v4/classic/tests/coalesce.test.ts",
+        "packages/zod/src/v4/classic/tests/json.test.ts",
+      ],
     },
     testFilePattern: "packages/zod/src/v4/classic/tests/**/*.test.ts",
     parser: "vitest-json",

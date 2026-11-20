@@ -1,0 +1,40 @@
+{
+  "library": "image-js",
+  "mode": "sandbox",
+  "runner": "vitest",
+  "strategy": "suite",
+  "batchSize": null,
+  "fallback": null,
+  "testFilePattern": "test-harness/image-js/public-api-tests.json",
+  "testSetFingerprint": "8b5ff7de5e46b547f0776dad5890c8d105b153848ffad623289ee399548d8022",
+  "expectedFiles": null,
+  "completedFiles": null,
+  "failedUnits": 1,
+  "startedAt": "2026-11-20T15:17:14.950Z",
+  "finishedAt": "2026-11-20T15:18:52.921Z",
+  "status": "failed_tests",
+  "executed": 841,
+  "passed": 629,
+  "failed": 212,
+  "skipped": 0,
+  "exitCode": 1,
+  "durationMs": 97949,
+  "sandboxEntries": 1309553,
+  "completeFileSet": true,
+  "log": "compatibility-results-final/image-js/2026-11-20T15-17-01-840Z/sandbox/run.log",
+  "resultFile": "compatibility-results-final/image-js/2026-11-20T15-17-01-840Z/sandbox/result.json",
+  "units": [
+    {
+      "id": "0001-707a3f762f",
+      "kind": "suite",
+      "files": [],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/image-js/2026-11-20T15-17-01-840Z/sandbox/units/0001-707a3f762f/result.json"
+    }
+  ],
+  "comparable": false,
+  "compatibilityRatio": null,
+  "comparisonNote": "Native and sandbox executed different test totals."
+}

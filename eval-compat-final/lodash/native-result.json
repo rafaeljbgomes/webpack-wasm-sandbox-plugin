@@ -1,0 +1,40 @@
+{
+  "library": "lodash",
+  "mode": "native",
+  "runner": "qunit",
+  "strategy": "suite",
+  "batchSize": null,
+  "fallback": null,
+  "testFilePattern": "test/test.js",
+  "testSetFingerprint": "10e585af83ab2e2525cbda94ca6e8389c42ef6501f85415c046062790f255d0c",
+  "expectedFiles": null,
+  "completedFiles": null,
+  "failedUnits": 0,
+  "startedAt": "2026-11-20T15:13:08.528Z",
+  "finishedAt": "2026-11-20T15:13:18.654Z",
+  "status": "completed",
+  "executed": 6825,
+  "passed": 6825,
+  "failed": 0,
+  "skipped": 0,
+  "exitCode": 0,
+  "durationMs": 10125,
+  "sandboxEntries": 0,
+  "completeFileSet": true,
+  "log": "compatibility-results-final/lodash/2026-11-20T15-13-08-524Z/native/run.log",
+  "resultFile": "compatibility-results-final/lodash/2026-11-20T15-13-08-524Z/native/result.json",
+  "units": [
+    {
+      "id": "0001-707a3f762f",
+      "kind": "suite",
+      "files": [],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/lodash/2026-11-20T15-13-08-524Z/native/units/0001-707a3f762f/result.json"
+    }
+  ],
+  "comparable": false,
+  "compatibilityRatio": null,
+  "comparisonNote": "Native and sandbox executed different test totals."
+}

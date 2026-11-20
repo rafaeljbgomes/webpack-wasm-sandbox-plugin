@@ -1,0 +1,2 @@
+library,mode,status,executed,passed,failed,skipped,expected_files,completed_files,failed_units,exit_code,duration_ms,compatibility_ratio,comparable,comparison_note,log
+mime,sandbox,guard_failed,3,1,2,0,,,1,1,228,,false,Both native and sandbox results are required.,compatibility-results-final-poison/mime/2026-11-20T15-07-50-384Z/sandbox/run.log

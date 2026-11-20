@@ -5,7 +5,17 @@ const harnessRoot = path.resolve(import.meta.dirname, "../../test-harness/yup");
 export default {
   root: harnessRoot,
   resolve: {
+    // Tests import the library as "../src" and, in a few files, public
+    // members by internal path; all resolve to the sandboxed library's public
+    // exports. Any other import of library source fails, so no test can run
+    // native library code in sandbox mode. "../src/types" is type-only.
     alias: [
+      { find: /^(\.\.\/)+src\/util\/printValue$/, replacement: path.resolve(import.meta.dirname, "yup-shims/printValue.js") },
+      { find: /^(\.\.\/)+src\/locale$/, replacement: path.resolve(import.meta.dirname, "yup-shims/locale.js") },
+      { find: /^(\.\.\/)+src\/ValidationError$/, replacement: path.resolve(import.meta.dirname, "yup-shims/ValidationError.js") },
+      { find: /^(\.\.\/)+src\/util\/reach$/, replacement: path.resolve(import.meta.dirname, "yup-shims/reach.js") },
+      { find: /^(\.\.\/)+src\/object$/, replacement: path.resolve(import.meta.dirname, "yup-shims/object.js") },
+      { find: /^(\.\.\/)+src\/(?!types$).+$/, replacement: path.resolve(import.meta.dirname, "yup-shims/tripwire.js") },
       {
         find: /^\.\.\/src$/,
         replacement: path.resolve(
@@ -31,6 +41,8 @@ export default {
       "test/.eslintrc.js",
       "test/**/.eslintrc.js",
       "test/types/types.ts",
+      // Tests an internal helper the package does not export.
+      "test/util/parseIsoDate.ts",
     ],
     globals: false,
     projects: [

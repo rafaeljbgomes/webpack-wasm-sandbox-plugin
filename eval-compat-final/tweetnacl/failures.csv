@@ -1,0 +1,2 @@
+library,mode,unit,test,file,message,log
+tweetnacl,sandbox,0001-707a3f762f,,,"{ [TypeError: unexpected type, use Uint8Array] cause: { name: 'TypeError', message: 'unexpected type, use Uint8Array', stack: '    at checkArrayTypes (<input>:2165:26)\n    at <anonymous> (<input>:2180:18)\n    at <anonymous> (eval.js:1:44)\n' }, name: 'TypeError', message: 'unexpected type, use Uint8Array' }",compatibility-results-final/tweetnacl/2026-11-20T15-07-50-697Z/sandbox/units/0001-707a3f762f/run.log

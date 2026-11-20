@@ -1,0 +1,48 @@
+library,mode,unit,test,file,message,log
+marked,sandbox,0001-707a3f762f,should process tokens before walkTokens,,should process tokens before walkTokens,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,should process tokens async before walkTokens,,should process tokens async before walkTokens,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,should process all hooks in reverse,,should process all hooks in reverse,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,Hooks,,Hooks,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,escape,,escape,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,escaped punctuation inside emphasis,,escaped punctuation inside emphasis,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,html,,html,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,link,,link,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,link title,,link title,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,image,,image,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,image title,,image title,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,reflink,,reflink,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,nolink,,nolink,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,no def,,no def,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,reflink,,reflink,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,strong,,strong,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,em,,em,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,code,,code,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,only spaces not stripped,,only spaces not stripped,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,beginning space only not stripped,,beginning space only not stripped,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,end space only not stripped,,end space only not stripped,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,begin and end spaces are stripped,,begin and end spaces are stripped,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,begin and end newlines are stripped,,begin and end newlines are stripped,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,begin and end tabs are not stripped,,begin and end tabs are not stripped,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,begin and end newlines,,begin and end newlines,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,begin and end multiple spaces only one stripped,,begin and end multiple spaces only one stripped,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,newline to space,,newline to space,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,codespan,,codespan,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,br,,br,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,del,,del,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,autolink,,autolink,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,autolink email,,autolink email,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,url,,url,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,url email,,url email,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,url,,url,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,text,,text,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,inlineTokens,,inlineTokens,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,inline,,inline,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,Lexer,,Lexer,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,test/unit/bin.test.js,,test/unit/bin.test.js,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,should change global defaults,,should change global defaults,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,changeDefaults,,changeDefaults,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,should send html to renderer.html,,should send html to renderer.html,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,inlineLexer,,inlineLexer,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,should allow deleting/editing tokens,,should allow deleting/editing tokens,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,use extension,,use extension,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log
+marked,sandbox,0001-707a3f762f,marked unit,,marked unit,compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/run.log

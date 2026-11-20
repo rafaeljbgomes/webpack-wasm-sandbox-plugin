@@ -1,0 +1,74 @@
+{
+  "library": "yup",
+  "mode": "sandbox",
+  "runner": "vitest",
+  "strategy": "batch",
+  "batchSize": 5,
+  "fallback": "per-file",
+  "testFilePattern": "test/**/*.{js,ts}",
+  "testSetFingerprint": "1cda73bd1590127ea397d9c66aa37f1860a26a74141b17cf569af795599bdbc3",
+  "expectedFiles": 13,
+  "completedFiles": 13,
+  "failedUnits": 3,
+  "startedAt": "2026-11-20T15:23:04.796Z",
+  "finishedAt": "2026-11-20T15:23:11.193Z",
+  "status": "failed_tests",
+  "executed": 779,
+  "passed": 681,
+  "failed": 96,
+  "skipped": 2,
+  "exitCode": 1,
+  "durationMs": 6391,
+  "sandboxEntries": 526400,
+  "completeFileSet": true,
+  "log": "compatibility-results-final/yup/2026-11-20T15-23-02-443Z/sandbox/run.log",
+  "resultFile": "compatibility-results-final/yup/2026-11-20T15-23-02-443Z/sandbox/result.json",
+  "units": [
+    {
+      "id": "0001-5a3bc23bd4",
+      "kind": "batch",
+      "files": [
+        "test/array.ts",
+        "test/bool.ts",
+        "test/date.ts",
+        "test/lazy.ts",
+        "test/mixed.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/yup/2026-11-20T15-23-02-443Z/sandbox/units/0001-5a3bc23bd4/result.json"
+    },
+    {
+      "id": "0002-37c8f1ef85",
+      "kind": "batch",
+      "files": [
+        "test/number.ts",
+        "test/object.ts",
+        "test/setLocale.ts",
+        "test/standardSchema.ts",
+        "test/string.ts"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/yup/2026-11-20T15-23-02-443Z/sandbox/units/0002-37c8f1ef85/result.json"
+    },
+    {
+      "id": "0003-aea1902e8e",
+      "kind": "batch",
+      "files": [
+        "test/tuple.ts",
+        "test/ValidationError.ts",
+        "test/yup.js"
+      ],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/yup/2026-11-20T15-23-02-443Z/sandbox/units/0003-aea1902e8e/result.json"
+    }
+  ],
+  "comparable": true,
+  "compatibilityRatio": 0.8764478764478765,
+  "comparisonNote": ""
+}

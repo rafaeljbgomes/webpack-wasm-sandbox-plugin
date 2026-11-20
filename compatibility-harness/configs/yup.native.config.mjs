@@ -24,6 +24,8 @@ export default {
       "test/.eslintrc.js",
       "test/**/.eslintrc.js",
       "test/types/types.ts",
+      // Tests an internal helper the package does not export.
+      "test/util/parseIsoDate.ts",
     ],
     globals: false,
     projects: [

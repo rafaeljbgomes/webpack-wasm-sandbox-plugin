@@ -1,0 +1,2 @@
+library,mode,status,executed,passed,failed,skipped,expected_files,completed_files,failed_units,exit_code,duration_ms,compatibility_ratio,comparable,comparison_note,log
+tweetnacl,sandbox,guard_failed,,,,,,,1,1,174,,false,Both native and sandbox results are required.,compatibility-results-final-poison/tweetnacl/2026-11-20T15-13-08-258Z/sandbox/run.log

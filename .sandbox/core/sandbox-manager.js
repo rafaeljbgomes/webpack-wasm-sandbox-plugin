@@ -200,8 +200,65 @@ function applyLimits(vm, limits) {
   }
 }
 
+/**
+ * Opt-in execution guard for the compatibility harness.
+ *
+ * When SANDBOX_GUARD_DIR is set (Node.js only), counts the boundary entries
+ * made into this context after initialization and records them in a file per
+ * process, thread, and library. The harness rejects a sandbox-mode run whose
+ * guard files show no entries, which would mean the tests exercised the native
+ * library instead of the proxy. Writes happen at 1, 10, 100, ... entries and
+ * at exit, so the recorded count is a lower bound.
+ *
+ * @param {import("quickjs-emscripten").QuickJSContext} vm Context to observe.
+ * @param {string} libraryName Library recorded in the guard file.
+ * @returns {{arm: () => void}} Starts counting once initialization is done.
+ */
+function installExecutionGuard(vm, libraryName) {
+  const proc = globalThis.process;
+  const dir = proc?.env?.SANDBOX_GUARD_DIR;
+  if (!dir || !proc.versions?.node) return { arm: () => {} };
+  const load = (name) => proc.getBuiltinModule?.(name);
+  const fs = load("fs");
+  const path = load("path");
+  if (!fs || !path) return { arm: () => {} };
+  const threadId = load("worker_threads")?.threadId ?? 0;
+  const file = path.join(dir, `guard-${proc.pid}-${threadId}-${libraryName.replace(/[^a-z0-9._-]/gi, "_")}-${Math.random().toString(36).slice(2, 8)}.json`);
+  let armed = false;
+  let entries = 0;
+  let next = 1;
+  const write = () => {
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+      // Write then rename, so a worker killed mid-write leaves the last
+      // complete record rather than an empty file.
+      fs.writeFileSync(`${file}.tmp`, JSON.stringify({ library: libraryName, pid: proc.pid, threadId, entries }));
+      fs.renameSync(`${file}.tmp`, file);
+    } catch { /* best effort */ }
+  };
+  for (const name of VM_ENTRY_POINTS) {
+    const original = vm[name];
+    if (typeof original !== "function") continue;
+    vm[name] = function guardedVmEntry(...args) {
+      if (armed && ++entries >= next) {
+        next *= 10;
+        write();
+      }
+      return original.apply(this, args);
+    };
+  }
+  proc.on?.("exit", write);
+  return { arm: () => { armed = true; write(); } };
+}
+
 function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   let arena;
+  // Negative control for the compatibility harness: a run in which the
+  // library's sandbox cannot be created must not pass the library's tests.
+  if (globalThis.process?.env?.SANDBOX_POISON_LIBRARY === libraryName) {
+    throw new Error(`Sandbox for ${libraryName} disabled by SANDBOX_POISON_LIBRARY`);
+  }
+  const guard = installExecutionGuard(vm, libraryName);
   applyLimits(vm, options.limits);
   memoizeHandleTypes(vm);
   detachUnwrapErrorContext(vm);
@@ -323,6 +380,7 @@ function buildSandbox(vm, libraryName, libraryCode, options = {}) {
   // initialization; the generated proxy releases that reference once ready.
   jobPump.start();
 
+  guard.arm();
   return {
     vm,
     arena,

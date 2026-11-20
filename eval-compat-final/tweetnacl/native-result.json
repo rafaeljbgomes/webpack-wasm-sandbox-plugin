@@ -1,0 +1,40 @@
+{
+  "library": "tweetnacl",
+  "mode": "native",
+  "runner": "tape",
+  "strategy": "suite",
+  "batchSize": null,
+  "fallback": null,
+  "testFilePattern": "test/*.js",
+  "testSetFingerprint": "0e8516d2018d86b6430a0337f2c1633538ccf8e478de5bd09cb36aa02aa7b51b",
+  "expectedFiles": null,
+  "completedFiles": null,
+  "failedUnits": 0,
+  "startedAt": "2026-11-20T15:07:50.700Z",
+  "finishedAt": "2026-11-20T15:08:00.561Z",
+  "status": "completed",
+  "executed": 8914,
+  "passed": 8914,
+  "failed": 0,
+  "skipped": 0,
+  "exitCode": 0,
+  "durationMs": 9858,
+  "sandboxEntries": 0,
+  "completeFileSet": true,
+  "log": "compatibility-results-final/tweetnacl/2026-11-20T15-07-50-697Z/native/run.log",
+  "resultFile": "compatibility-results-final/tweetnacl/2026-11-20T15-07-50-697Z/native/result.json",
+  "units": [
+    {
+      "id": "0001-707a3f762f",
+      "kind": "suite",
+      "files": [],
+      "included": true,
+      "fallbackFor": null,
+      "status": "completed",
+      "resultFile": "compatibility-results-final/tweetnacl/2026-11-20T15-07-50-697Z/native/units/0001-707a3f762f/result.json"
+    }
+  ],
+  "comparable": true,
+  "compatibilityRatio": 0.9948395781916087,
+  "comparisonNote": ""
+}

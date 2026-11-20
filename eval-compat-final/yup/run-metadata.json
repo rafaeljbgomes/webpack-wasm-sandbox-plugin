@@ -1,0 +1,74 @@
+{
+  "startedAt": "2026-11-20T15:23:02.456Z",
+  "finishedAt": "2026-11-20T15:23:11.195Z",
+  "node": "v25.8.1",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "timestamp": "2026-11-20T15-23-02-443Z",
+  "library": "yup",
+  "modes": [
+    "native",
+    "sandbox"
+  ],
+  "options": {
+    "mode": null,
+    "build": false,
+    "strategy": null,
+    "batchSize": null,
+    "testFiles": []
+  },
+  "plan": {
+    "byMode": {
+      "native": {
+        "strategy": "suite",
+        "batchSize": null,
+        "fallback": null,
+        "expectedFiles": 13,
+        "testSetFingerprint": "1cda73bd1590127ea397d9c66aa37f1860a26a74141b17cf569af795599bdbc3",
+        "files": [
+          "test/array.ts",
+          "test/bool.ts",
+          "test/date.ts",
+          "test/lazy.ts",
+          "test/mixed.ts",
+          "test/number.ts",
+          "test/object.ts",
+          "test/setLocale.ts",
+          "test/standardSchema.ts",
+          "test/string.ts",
+          "test/tuple.ts",
+          "test/ValidationError.ts",
+          "test/yup.js"
+        ]
+      },
+      "sandbox": {
+        "strategy": "batch",
+        "batchSize": 5,
+        "fallback": "per-file",
+        "expectedFiles": 13,
+        "testSetFingerprint": "1cda73bd1590127ea397d9c66aa37f1860a26a74141b17cf569af795599bdbc3",
+        "files": [
+          "test/array.ts",
+          "test/bool.ts",
+          "test/date.ts",
+          "test/lazy.ts",
+          "test/mixed.ts",
+          "test/number.ts",
+          "test/object.ts",
+          "test/setLocale.ts",
+          "test/standardSchema.ts",
+          "test/string.ts",
+          "test/tuple.ts",
+          "test/ValidationError.ts",
+          "test/yup.js"
+        ]
+      }
+    }
+  },
+  "comparison": {
+    "comparable": true,
+    "compatibilityRatio": 0.8764478764478765,
+    "comparisonNote": ""
+  },
+  "build": null
+}

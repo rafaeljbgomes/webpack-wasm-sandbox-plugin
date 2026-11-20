@@ -1,0 +1,16 @@
+{
+  "name": "lodash",
+  "private": true,
+  "version": "4.18.1",
+  "scripts": {
+    "test:main": "node test/test.js",
+    "test:fp": "node test/test-fp.js",
+    "test:sandbox": "node --import ../../test-sandbox-redirect/register-sandbox-cjs.mjs test/test.js",
+    "test:sandbox-fp": "node --import ../../test-sandbox-redirect/register-sandbox-cjs.mjs --require ./fp-helpers-native.cjs test/test-fp.js"
+  },
+  "dependencies": {
+    "lodash": "^4.17.20",
+    "qunit-extras": "^3.0.0",
+    "qunitjs": "^2.4.0"
+  }
+}

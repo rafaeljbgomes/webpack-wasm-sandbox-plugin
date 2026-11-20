@@ -1,0 +1,2 @@
+library,mode,status,executed,passed,failed,skipped,expected_files,completed_files,failed_units,exit_code,duration_ms,compatibility_ratio,comparable,comparison_note,log
+zod,sandbox,guard_failed,,,,,70,0,70,1,54125,,false,Both native and sandbox results are required.,compatibility-results-final-poison/zod/2026-11-20T15-16-07-530Z/sandbox/run.log

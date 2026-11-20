@@ -1,0 +1,46 @@
+{
+  "startedAt": "2026-11-20T15:07:47.980Z",
+  "finishedAt": "2026-11-20T15:07:48.998Z",
+  "node": "v25.8.1",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "timestamp": "2026-11-20T15-07-47-978Z",
+  "library": "strip-ansi",
+  "modes": [
+    "native",
+    "sandbox"
+  ],
+  "options": {
+    "mode": null,
+    "build": false,
+    "strategy": null,
+    "batchSize": null,
+    "testFiles": []
+  },
+  "plan": {
+    "byMode": {
+      "native": {
+        "strategy": "suite",
+        "batchSize": null,
+        "fallback": null,
+        "expectedFiles": null,
+        "testSetFingerprint": "d950c2608828893ec76f990fc8af6836135402f3488482a11f937b842465f1c3",
+        "files": []
+      },
+      "sandbox": {
+        "strategy": "suite",
+        "batchSize": null,
+        "fallback": null,
+        "expectedFiles": null,
+        "testSetFingerprint": "d950c2608828893ec76f990fc8af6836135402f3488482a11f937b842465f1c3",
+        "files": []
+      }
+    }
+  },
+  "comparison": {
+    "comparable": true,
+    "compatibilityRatio": 1,
+    "comparisonNote": ""
+  },
+  "build": null
+}

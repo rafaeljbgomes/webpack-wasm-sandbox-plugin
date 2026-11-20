@@ -1,0 +1,3 @@
+{"total": {"lines":{"total":187,"covered":156,"skipped":0,"pct":83.42},"statements":{"total":187,"covered":156,"skipped":0,"pct":83.42},"functions":{"total":4,"covered":1,"skipped":0,"pct":25},"branches":{"total":15,"covered":15,"skipped":0,"pct":100},"branchesTrue":{"total":0,"covered":0,"skipped":0,"pct":"Unknown"}}
+,"/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/.sandbox/marshallers/value-transfer.js": {"lines":{"total":187,"covered":156,"skipped":0,"pct":83.42},"functions":{"total":4,"covered":1,"skipped":0,"pct":25},"statements":{"total":187,"covered":156,"skipped":0,"pct":83.42},"branches":{"total":15,"covered":15,"skipped":0,"pct":100}}
+}

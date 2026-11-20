@@ -1,0 +1,2 @@
+library,mode,status,executed,passed,failed,skipped,expected_files,completed_files,failed_units,exit_code,duration_ms,compatibility_ratio,comparable,comparison_note,log
+strip-ansi,sandbox,guard_failed,,,,,,,1,1,229,,false,Both native and sandbox results are required.,compatibility-results-final-poison/strip-ansi/2026-11-20T15-07-49-078Z/sandbox/run.log

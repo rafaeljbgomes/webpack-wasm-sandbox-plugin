@@ -1,0 +1,40 @@
+{
+  "library": "luxon",
+  "mode": "sandbox",
+  "runner": "jest",
+  "strategy": "suite",
+  "batchSize": null,
+  "fallback": null,
+  "testFilePattern": "test/**/*.test.js (excluding test/impl/english.test.js)",
+  "testSetFingerprint": "9a22e00f111fcb73e0770f8cf372d72c4d672f01812069befaf54228afb3382c",
+  "expectedFiles": null,
+  "completedFiles": null,
+  "failedUnits": 1,
+  "startedAt": "2026-11-20T15:14:04.858Z",
+  "finishedAt": "2026-11-20T15:14:09.432Z",
+  "status": "failed_tests",
+  "executed": 1136,
+  "passed": 953,
+  "failed": 183,
+  "skipped": 0,
+  "exitCode": 1,
+  "durationMs": 4568,
+  "sandboxEntries": 404024,
+  "completeFileSet": true,
+  "log": "compatibility-results-final/luxon/2026-11-20T15-14-02-324Z/sandbox/run.log",
+  "resultFile": "compatibility-results-final/luxon/2026-11-20T15-14-02-324Z/sandbox/result.json",
+  "units": [
+    {
+      "id": "0001-707a3f762f",
+      "kind": "suite",
+      "files": [],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/luxon/2026-11-20T15-14-02-324Z/sandbox/units/0001-707a3f762f/result.json"
+    }
+  ],
+  "comparable": true,
+  "compatibilityRatio": 0.8516532618409294,
+  "comparisonNote": ""
+}

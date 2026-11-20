@@ -1,0 +1,46 @@
+{
+  "startedAt": "2026-11-20T15:13:08.526Z",
+  "finishedAt": "2026-11-20T15:14:01.753Z",
+  "node": "v25.8.1",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "timestamp": "2026-11-20T15-13-08-524Z",
+  "library": "lodash",
+  "modes": [
+    "native",
+    "sandbox"
+  ],
+  "options": {
+    "mode": null,
+    "build": false,
+    "strategy": null,
+    "batchSize": null,
+    "testFiles": []
+  },
+  "plan": {
+    "byMode": {
+      "native": {
+        "strategy": "suite",
+        "batchSize": null,
+        "fallback": null,
+        "expectedFiles": null,
+        "testSetFingerprint": "10e585af83ab2e2525cbda94ca6e8389c42ef6501f85415c046062790f255d0c",
+        "files": []
+      },
+      "sandbox": {
+        "strategy": "suite",
+        "batchSize": null,
+        "fallback": null,
+        "expectedFiles": null,
+        "testSetFingerprint": "10e585af83ab2e2525cbda94ca6e8389c42ef6501f85415c046062790f255d0c",
+        "files": []
+      }
+    }
+  },
+  "comparison": {
+    "comparable": false,
+    "compatibilityRatio": null,
+    "comparisonNote": "Native and sandbox executed different test totals."
+  },
+  "build": null
+}

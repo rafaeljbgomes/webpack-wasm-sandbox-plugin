@@ -1,0 +1,40 @@
+{
+  "library": "marked",
+  "mode": "sandbox",
+  "runner": "node:test",
+  "strategy": "suite",
+  "batchSize": null,
+  "fallback": null,
+  "testFilePattern": "test/unit/*.test.js",
+  "testSetFingerprint": "4a27f0e31e100785918e05f7c414acc0fb87791a830b5a089e496be543d0d4ec",
+  "expectedFiles": null,
+  "completedFiles": null,
+  "failedUnits": 1,
+  "startedAt": "2026-11-20T15:19:36.009Z",
+  "finishedAt": "2026-11-20T15:19:36.557Z",
+  "status": "failed_tests",
+  "executed": 171,
+  "passed": 135,
+  "failed": 36,
+  "skipped": 0,
+  "exitCode": 1,
+  "durationMs": 545,
+  "sandboxEntries": 59729,
+  "completeFileSet": true,
+  "log": "compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/run.log",
+  "resultFile": "compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/result.json",
+  "units": [
+    {
+      "id": "0001-707a3f762f",
+      "kind": "suite",
+      "files": [],
+      "included": true,
+      "fallbackFor": null,
+      "status": "failed_tests",
+      "resultFile": "compatibility-results-final/marked/2026-11-20T15-19-35-696Z/sandbox/units/0001-707a3f762f/result.json"
+    }
+  ],
+  "comparable": false,
+  "compatibilityRatio": null,
+  "comparisonNote": "Native and sandbox executed different test totals."
+}

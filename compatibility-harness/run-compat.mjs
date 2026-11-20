@@ -4,6 +4,8 @@ import {
   createWriteStream,
   existsSync,
   mkdirSync,
+  readdirSync,
+  readFileSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
@@ -251,6 +253,47 @@ export function classifyStatus({
   return "completed";
 }
 
+/**
+ * Sums the execution-guard records the sandbox runtime wrote for a library.
+ *
+ * @param {string} guardDir Directory passed to the runner as SANDBOX_GUARD_DIR.
+ * @param {string} library Library whose sandbox contexts are counted.
+ * @returns {{entries: number, contexts: number}} Boundary entries after initialization, and contexts created.
+ */
+export function readGuard(guardDir, library) {
+  let entries = 0;
+  let contexts = 0;
+  if (!existsSync(guardDir)) return { entries, contexts };
+  for (const file of readdirSync(guardDir)) {
+    if (!file.endsWith(".json")) continue;
+    try {
+      const record = JSON.parse(readFileSync(resolve(guardDir, file), "utf8"));
+      if (record.library !== library) continue;
+      contexts += 1;
+      entries += record.entries;
+    } catch {
+      // A record cut short by a crash counts as no evidence.
+    }
+  }
+  return { entries, contexts };
+}
+
+/**
+ * Rejects a unit whose mode does not match what the runtime observed: a
+ * sandbox unit must enter the library's sandbox, and a native unit must not.
+ *
+ * @param {string} status Status from the runner's own result.
+ * @param {"native" | "sandbox"} mode Mode of the unit.
+ * @param {{entries: number}} guard Guard summary for the unit.
+ * @returns {string} Status, or "guard_failed".
+ */
+export function applyGuard(status, mode, guard) {
+  if (status === "interrupted") return status;
+  if (mode === "sandbox" && guard.entries === 0) return "guard_failed";
+  if (mode === "native" && guard.entries > 0) return "guard_failed";
+  return status;
+}
+
 export function validateUnitParsedResult(parsed, files) {
   if (files.length > 0 && parsed?.executed === 0) {
     return null;
@@ -262,6 +305,9 @@ export function aggregateStatus(units, wasInterrupted = interrupted) {
   const statuses = units.map((unit) => unit.status);
   if (wasInterrupted || statuses.includes("interrupted")) {
     return "interrupted";
+  }
+  if (statuses.includes("guard_failed")) {
+    return "guard_failed";
   }
   if (statuses.includes("crashed")) {
     return "crashed";
@@ -373,11 +419,13 @@ async function executeUnit({
     reportPath,
     testFiles: unit.files,
   });
+  const guardDir = resolve(unitDir, "guard");
   const step = await runProcess(command, {
     cwd: harnessDir,
     env: {
       ...process.env,
       SANDBOX_TARGET_LIBRARY: mode === "sandbox" ? entry.name : "",
+      SANDBOX_GUARD_DIR: guardDir,
     },
     logStreams: [aggregateLog, unitLog],
     label: `${entry.name} ${mode} unit ${sequence} (${unit.kind})`,
@@ -389,12 +437,17 @@ async function executeUnit({
     reportPath,
   });
   const parsed = validateUnitParsedResult(rawParsed, unit.files);
-  const status = classifyStatus({
-    parsed,
-    exitCode: step.exitCode,
-    signal: step.signal,
-    spawnError: step.spawnError,
-  });
+  const guard = readGuard(guardDir, entry.name);
+  const status = applyGuard(
+    classifyStatus({
+      parsed,
+      exitCode: step.exitCode,
+      signal: step.signal,
+      spawnError: step.spawnError,
+    }),
+    mode,
+    guard,
+  );
   const result = {
     id: slug,
     sequence,
@@ -407,6 +460,8 @@ async function executeUnit({
     passed: parsed?.passed ?? null,
     failed: parsed?.failed ?? null,
     skipped: parsed?.skipped ?? null,
+    sandboxEntries: guard.entries,
+    sandboxContexts: guard.contexts,
     exitCode: interrupted ? null : step.exitCode,
     signal: step.signal,
     durationMs: step.durationMs,
@@ -569,7 +624,7 @@ async function runMode(entry, mode, libraryDir, plan) {
   const completedFiles =
     plan.expectedFiles === null ? null : completedFileSet.size;
   const status = aggregateStatus(included);
-  const invalidStatuses = new Set(["crashed", "parse_error", "interrupted"]);
+  const invalidStatuses = new Set(["crashed", "parse_error", "interrupted", "guard_failed"]);
   const completeFileSet =
     plan.expectedFiles === null
       ? !included.some((unit) => invalidStatuses.has(unit.status))
@@ -605,6 +660,7 @@ async function runMode(entry, mode, libraryDir, plan) {
       ? null
       : included.find((unit) => unit.exitCode)?.exitCode ?? 0,
     durationMs,
+    sandboxEntries: included.reduce((total, unit) => total + (unit.sandboxEntries ?? 0), 0),
     completeFileSet,
     log: relative(repoRoot, logFile),
     resultFile: relative(repoRoot, resultFile),

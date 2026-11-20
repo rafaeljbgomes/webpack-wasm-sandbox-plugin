@@ -1,0 +1,2 @@
+library,mode,status,executed,passed,failed,skipped,expected_files,completed_files,failed_units,exit_code,duration_ms,compatibility_ratio,comparable,comparison_note,log
+yup,sandbox,guard_failed,,,,,13,0,3,1,4328,,false,Both native and sandbox results are required.,compatibility-results-final-poison/yup/2026-11-20T15-23-11-281Z/sandbox/run.log
