@@ -1,0 +1,254 @@
+{
+ "native": {
+  "msPerCall": 9.154999999701976,
+  "totalSampledMs": 197.6,
+  "top": [
+   {
+    "fn": "t @ bundle.js:0:64",
+    "selfMs": 81.9,
+    "share": 0.415
+   },
+   {
+    "fn": "O @ bundle.js:0:9556",
+    "selfMs": 62.9,
+    "share": 0.318
+   },
+   {
+    "fn": "W @ bundle.js:0:24141",
+    "selfMs": 18.1,
+    "share": 0.092
+   },
+   {
+    "fn": "(program) @ :-1:-1",
+    "selfMs": 13,
+    "share": 0.066
+   },
+   {
+    "fn": "$ @ bundle.js:0:24425",
+    "selfMs": 5.3,
+    "share": 0.027
+   },
+   {
+    "fn": "(garbage collector) @ :-1:-1",
+    "selfMs": 4.3,
+    "share": 0.022
+   },
+   {
+    "fn": "N @ bundle.js:0:9448",
+    "selfMs": 3.5,
+    "share": 0.018
+   },
+   {
+    "fn": "C @ bundle.js:0:9502",
+    "selfMs": 2.6,
+    "share": 0.013
+   },
+   {
+    "fn": "(idle) @ :-1:-1",
+    "selfMs": 1.8,
+    "share": 0.009
+   },
+   {
+    "fn": "tr @ bundle.js:0:24576",
+    "selfMs": 1.2,
+    "share": 0.006
+   },
+   {
+    "fn": "Y @ bundle.js:0:8921",
+    "selfMs": 0.4,
+    "share": 0.002
+   },
+   {
+    "fn": "ir @ bundle.js:0:25096",
+    "selfMs": 0.4,
+    "share": 0.002
+   },
+   {
+    "fn": "J @ bundle.js:0:20304",
+    "selfMs": 0.4,
+    "share": 0.002
+   },
+   {
+    "fn": "Q @ bundle.js:0:23627",
+    "selfMs": 0.4,
+    "share": 0.002
+   },
+   {
+    "fn": "(anonymous) @ :0:0",
+    "selfMs": 0.3,
+    "share": 0.001
+   },
+   {
+    "fn": "serialize @ :202:18",
+    "selfMs": 0.3,
+    "share": 0.001
+   },
+   {
+    "fn": "ar @ bundle.js:0:25507",
+    "selfMs": 0.1,
+    "share": 0.001
+   },
+   {
+    "fn": "w @ bundle.js:0:778",
+    "selfMs": 0.1,
+    "share": 0.001
+   },
+   {
+    "fn": "r.sign @ bundle.js:0:30004",
+    "selfMs": 0.1,
+    "share": 0.001
+   },
+   {
+    "fn": "now @ :-1:-1",
+    "selfMs": 0.1,
+    "share": 0.001
+   },
+   {
+    "fn": "fr @ bundle.js:0:25982",
+    "selfMs": 0.1,
+    "share": 0.001
+   },
+   {
+    "fn": "er @ bundle.js:0:24805",
+    "selfMs": 0.1,
+    "share": 0.001
+   },
+   {
+    "fn": "Z @ bundle.js:0:13640",
+    "selfMs": 0.1,
+    "share": 0.001
+   }
+  ]
+ },
+ "lavamoat": {
+  "msPerCall": 76.61499999910593,
+  "totalSampledMs": 1564.3,
+  "top": [
+   {
+    "fn": "K @ bundle.js:0:9713",
+    "selfMs": 1347.7,
+    "share": 0.862
+   },
+   {
+    "fn": "n @ bundle.js:0:39815",
+    "selfMs": 105.2,
+    "share": 0.067
+   },
+   {
+    "fn": "t @ bundle.js:0:221",
+    "selfMs": 44.9,
+    "share": 0.029
+   },
+   {
+    "fn": "(program) @ :-1:-1",
+    "selfMs": 39.6,
+    "share": 0.025
+   },
+   {
+    "fn": "oe @ bundle.js:0:25251",
+    "selfMs": 5.6,
+    "share": 0.004
+   },
+   {
+    "fn": "J @ bundle.js:0:24582",
+    "selfMs": 4.9,
+    "share": 0.003
+   },
+   {
+    "fn": "(garbage collector) @ :-1:-1",
+    "selfMs": 3,
+    "share": 0.002
+   },
+   {
+    "fn": "q @ bundle.js:0:9659",
+    "selfMs": 2.6,
+    "share": 0.002
+   },
+   {
+    "fn": "B @ bundle.js:0:9605",
+    "selfMs": 2.2,
+    "share": 0.001
+   },
+   {
+    "fn": "X @ bundle.js:0:24298",
+    "selfMs": 1.7,
+    "share": 0.001
+   },
+   {
+    "fn": "(idle) @ :-1:-1",
+    "selfMs": 1.4,
+    "share": 0.001
+   },
+   {
+    "fn": "P @ bundle.js:0:8882",
+    "selfMs": 1.1,
+    "share": 0.001
+   },
+   {
+    "fn": "V @ bundle.js:0:20461",
+    "selfMs": 0.8,
+    "share": 0
+   },
+   {
+    "fn": "(anonymous) @ :0:0",
+    "selfMs": 0.5,
+    "share": 0
+   },
+   {
+    "fn": "e.sign @ bundle.js:0:30157",
+    "selfMs": 0.4,
+    "share": 0
+   },
+   {
+    "fn": "n @ bundle.js:0:32785",
+    "selfMs": 0.4,
+    "share": 0
+   },
+   {
+    "fn": "S @ bundle.js:0:9078",
+    "selfMs": 0.4,
+    "share": 0
+   },
+   {
+    "fn": "e.hash @ bundle.js:0:31600",
+    "selfMs": 0.3,
+    "share": 0
+   },
+   {
+    "fn": "pe @ bundle.js:0:26974",
+    "selfMs": 0.2,
+    "share": 0
+   },
+   {
+    "fn": "(anonymous) @ bundle.js:0:26262",
+    "selfMs": 0.1,
+    "share": 0
+   },
+   {
+    "fn": "evaluate @ :363:10",
+    "selfMs": 0.1,
+    "share": 0
+   },
+   {
+    "fn": "jsonValue @ :386:11",
+    "selfMs": 0.1,
+    "share": 0
+   },
+   {
+    "fn": "O @ bundle.js:0:8831",
+    "selfMs": 0.1,
+    "share": 0
+   },
+   {
+    "fn": "$ @ bundle.js:0:9527",
+    "selfMs": 0.1,
+    "share": 0
+   },
+   {
+    "fn": "Z @ bundle.js:0:23784",
+    "selfMs": 0.1,
+    "share": 0
+   }
+  ]
+ }
+}

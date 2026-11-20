@@ -50,17 +50,30 @@ document.title = "ready";
 
 function libraryOf(id) { return id.replace(/-adapter$/, ""); }
 
+// Application-level page: several libraries sandboxed in one page, each in its
+// own sandbox; one call runs each library's workload once.
+const COMPOSITES = { app3: ["date-fns", "marked", "zod"] };
+function compositeScenario(id, buildDir) {
+  const libs = COMPOSITES[id];
+  const file = path.join(buildDir, "composite.scenario.js");
+  fs.writeFileSync(file, libs.map((l, i) => `import run${i} from ${JSON.stringify(path.join(H, "scenarios", SCENARIOS[l]))};`).join("\n") +
+    `\nexport default async function run() {\n${libs.map((_, i) => `  await run${i}();`).join("\n")}\n}\n`);
+  return file;
+}
+
 function config(id, mode, buildDir) {
   const lib = libraryOf(id);
   const entry = path.join(buildDir, "bootstrap.mjs");
   fs.mkdirSync(buildDir, { recursive: true });
   fs.writeFileSync(entry, BOOTSTRAP);
   const policyPath = path.join(buildDir, "policy.cjs");
-  const policy = { [lib]: { permissions: GRANTS[lib], ...(id.endsWith("-adapter") ? { workloads: { [Object.keys(WORKLOADS[lib])[0]]: Object.values(WORKLOADS[lib])[0] } } : {}) } };
+  const policy = COMPOSITES[id]
+    ? Object.fromEntries(COMPOSITES[id].map((l) => [l, { permissions: GRANTS[l] }]))
+    : { [lib]: { permissions: GRANTS[lib], ...(id.endsWith("-adapter") ? { workloads: { [Object.keys(WORKLOADS[lib])[0]]: Object.values(WORKLOADS[lib])[0] } } : {}) } };
   fs.writeFileSync(policyPath, `module.exports = ${JSON.stringify(policy, null, 1)};\n`);
 
   const alias = {
-    __SCENARIO__: path.join(H, "scenarios", SCENARIOS[id]),
+    __SCENARIO__: COMPOSITES[id] ? compositeScenario(id, buildDir) : path.join(H, "scenarios", SCENARIOS[id]),
     "quickjs-emscripten-sync": path.join(repo, "node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js"),
     "bresenham-zingl": path.join(repo, "node_modules/bresenham-zingl/dist/index.cjs"),
   };
@@ -115,11 +128,12 @@ async function build(id, mode) {
   return { id, mode, files: files.length, bytes: size };
 }
 
-module.exports = { SCENARIOS, build, OUT };
+module.exports = { SCENARIOS, COMPOSITES, build, OUT };
 
 if (require.main === module) {
   (async () => {
     const ids = process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(SCENARIOS);
+    const reportFile = path.join(OUT, process.argv.slice(2).length ? `build-report-${ids.join("_")}.json` : "build-report.json");
     const report = [];
     for (const id of ids) {
       for (const mode of ["native", "sandbox", "lavamoat"]) {
@@ -127,7 +141,7 @@ if (require.main === module) {
         catch (e) { report.push({ id, mode, error: String(e.message ?? e).slice(0, 1500) }); console.log("FAILED", id, mode, String(e.message ?? e).slice(0, 1500)); }
       }
     }
-    fs.writeFileSync(path.join(OUT, "build-report.json"), JSON.stringify(report, null, 1));
+    fs.writeFileSync(reportFile, JSON.stringify(report, null, 1));
     process.exit(0);
   })();
 }

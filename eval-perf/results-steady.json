@@ -1,0 +1,411 @@
+{
+ "chrome": "157.0.8103.79",
+ "iterations": 3,
+ "rows": [
+  {
+   "id": "lodash",
+   "mode": "native",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1,
+   "steadyMs": 0.0285
+  },
+  {
+   "id": "lodash",
+   "mode": "native",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.300000011920929,
+   "steadyMs": 0.02919999998807907
+  },
+  {
+   "id": "lodash",
+   "mode": "native",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.0999999940395355,
+   "steadyMs": 0.02930000001192093
+  },
+  {
+   "id": "lodash",
+   "mode": "sandbox",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 73.09999999403954,
+   "steadyMs": 37.51940000000596
+  },
+  {
+   "id": "lodash",
+   "mode": "sandbox",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 76.39999997615814,
+   "steadyMs": 37.59090000000596
+  },
+  {
+   "id": "lodash",
+   "mode": "sandbox",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 73.7999999821186,
+   "steadyMs": 37.69990000000596
+  },
+  {
+   "id": "lodash",
+   "mode": "lavamoat",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.0999999940395355,
+   "steadyMs": 0.05240000000596046
+  },
+  {
+   "id": "lodash",
+   "mode": "lavamoat",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.0999999940395355,
+   "steadyMs": 0.05190000000596046
+  },
+  {
+   "id": "lodash",
+   "mode": "lavamoat",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.0999999940395355,
+   "steadyMs": 0.05209999999403953
+  },
+  {
+   "id": "zod",
+   "mode": "native",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 3.9000000059604645,
+   "steadyMs": 0.2724000000059605
+  },
+  {
+   "id": "zod",
+   "mode": "native",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4,
+   "steadyMs": 0.291
+  },
+  {
+   "id": "zod",
+   "mode": "native",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4,
+   "steadyMs": 0.25859999999403954
+  },
+  {
+   "id": "zod",
+   "mode": "sandbox",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 87.09999999403954,
+   "steadyMs": 75.54859999999404
+  },
+  {
+   "id": "zod",
+   "mode": "sandbox",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 85.90000000596046,
+   "steadyMs": 75.19019999998808
+  },
+  {
+   "id": "zod",
+   "mode": "sandbox",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 86.19999998807907,
+   "steadyMs": 73.93669999998808
+  },
+  {
+   "id": "zod",
+   "mode": "lavamoat",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.5,
+   "steadyMs": 0.6334000000059604
+  },
+  {
+   "id": "zod",
+   "mode": "lavamoat",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.9000000059604645,
+   "steadyMs": 0.6289000000059605
+  },
+  {
+   "id": "zod",
+   "mode": "lavamoat",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.699999988079071,
+   "steadyMs": 0.6206000000238419
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "native",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 14.599999994039536,
+   "steadyMs": 8.45659999999404
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "native",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 14.5,
+   "steadyMs": 8.138899999976157
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "native",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 14.400000005960464,
+   "steadyMs": 10.492700000017882
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "sandbox",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 265.19999998807907,
+   "steadyMs": 261.381
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "sandbox",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 266.30000001192093,
+   "steadyMs": 261.007400000006
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "sandbox",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 265.5,
+   "steadyMs": 260.65490000000597
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "lavamoat",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 77.59999999403954,
+   "steadyMs": 74.08419999998807
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "lavamoat",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 77.80000001192093,
+   "steadyMs": 73.89590000000597
+  },
+  {
+   "id": "tweetnacl",
+   "mode": "lavamoat",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 77,
+   "steadyMs": 73.71409999999403
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "native",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.2000000178813934,
+   "steadyMs": 0.028400000005960463
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "native",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.100000023841858,
+   "steadyMs": 0.028799999982118605
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "native",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.0999999940395355,
+   "steadyMs": 0.029600000023841857
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "sandbox",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 14,
+   "steadyMs": 1.059
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "sandbox",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 14.099999994039536,
+   "steadyMs": 1.0627000000178815
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "sandbox",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 14.600000023841858,
+   "steadyMs": 1.0617999999821186
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "lavamoat",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.0999999940395355,
+   "steadyMs": 0.05139999997615814
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "lavamoat",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.0999999940395355,
+   "steadyMs": 0.05190000000596046
+  },
+  {
+   "id": "lodash-adapter",
+   "mode": "lavamoat",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 1.199999988079071,
+   "steadyMs": 0.05209999999403953
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "native",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.5,
+   "steadyMs": 0.272
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "native",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.600000023841858,
+   "steadyMs": 0.30859999999403953
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "native",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.5,
+   "steadyMs": 0.2865
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "sandbox",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 15.199999988079071,
+   "steadyMs": 4.353199999988079
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "sandbox",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 15.200000017881393,
+   "steadyMs": 4.302199999988079
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "sandbox",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 14.599999994039536,
+   "steadyMs": 4.27140000000596
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "lavamoat",
+   "iteration": 0,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.5999999940395355,
+   "steadyMs": 0.7205
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "lavamoat",
+   "iteration": 1,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.4000000059604645,
+   "steadyMs": 0.728300000011921
+  },
+  {
+   "id": "zod-adapter",
+   "mode": "lavamoat",
+   "iteration": 2,
+   "warmupCalls": 100,
+   "measuredCalls": 1000,
+   "firstCallMs": 4.9000000059604645,
+   "steadyMs": 0.7150999999940395
+  }
+ ]
+}

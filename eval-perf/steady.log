@@ -1,0 +1,16 @@
+lodash native M 1000 steady median ms 0.0292
+lodash sandbox M 1000 steady median ms 37.5909
+lodash lavamoat M 1000 steady median ms 0.0521
+zod native M 1000 steady median ms 0.2724
+zod sandbox M 1000 steady median ms 75.1902
+zod lavamoat M 1000 steady median ms 0.6289
+tweetnacl native M 1000 steady median ms 8.4566
+tweetnacl sandbox M 1000 steady median ms 261.0074
+tweetnacl lavamoat M 1000 steady median ms 73.8959
+lodash-adapter native M 1000 steady median ms 0.0288
+lodash-adapter sandbox M 1000 steady median ms 1.0618
+lodash-adapter lavamoat M 1000 steady median ms 0.0519
+zod-adapter native M 1000 steady median ms 0.2865
+zod-adapter sandbox M 1000 steady median ms 4.3022
+zod-adapter lavamoat M 1000 steady median ms 0.7205
+done

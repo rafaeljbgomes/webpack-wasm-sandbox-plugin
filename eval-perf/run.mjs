@@ -43,7 +43,7 @@ function serve(dir) {
 const browser = await chromium.launch({ executablePath: CHROME, headless: true, args: ["--enable-precise-memory-info", "--js-flags=--expose-gc"] });
 const version = browser.version();
 const rows = [];
-const resultsFile = path.join(here, "results-raw.json");
+const resultsFile = path.join(here, process.env.RESULTS_FILE ?? "results-raw.json");
 
 async function iteration(port, id, mode, i, warmup) {
   const context = await browser.newContext();
