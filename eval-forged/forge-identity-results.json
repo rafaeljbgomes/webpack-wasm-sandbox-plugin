@@ -1,0 +1,91 @@
+{
+ "node": "v25.8.1",
+ "seed": 986526,
+ "objectKinds": 19,
+ "channels": [
+  "return",
+  "nested",
+  "grantedArg",
+  "callbackArg"
+ ],
+ "forgedCounterModes": [
+  "own",
+  "intrinsic",
+  "bystander",
+  "bystanderReg",
+  "oob"
+ ],
+ "repetitions": 20,
+ "bystanderHostObjects": 526,
+ "bystanderSecretInOwnMemory": true,
+ "configs": {
+  "real": {
+   "trials": 7600,
+   "crossingsAttempted": 5700,
+   "deliveredForeignObject": 0,
+   "deliveredHostGlobalOrSecret": 0,
+   "oracleViolations": 0,
+   "bystanderBroken": 0,
+   "violationsSample": []
+  },
+  "control": {
+   "trials": 7600,
+   "crossingsAttempted": 7600,
+   "deliveredForeignObject": 11,
+   "deliveredHostGlobalOrSecret": 0,
+   "oracleViolations": 11,
+   "bystanderBroken": 0,
+   "violationsSample": [
+    {
+     "kind": "({a:1,b:2})",
+     "channel": "nested",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    },
+    {
+     "kind": "function f(){return 1;}",
+     "channel": "nested",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    },
+    {
+     "kind": "new Map([[1,2]])",
+     "channel": "nested",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    },
+    {
+     "kind": "new Set([1,2])",
+     "channel": "return",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    },
+    {
+     "kind": "Object.prototype",
+     "channel": "callbackArg",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    },
+    {
+     "kind": "Function.prototype",
+     "channel": "return",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    },
+    {
+     "kind": "[1,2,3]",
+     "channel": "return",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    },
+    {
+     "kind": "Symbol.iterator",
+     "channel": "callbackArg",
+     "mode": "bystander",
+     "violation": "bystander-object"
+    }
+   ]
+  }
+ },
+ "pass": true
+}

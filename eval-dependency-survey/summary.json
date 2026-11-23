@@ -1,0 +1,103 @@
+{
+ "Jitsi Meet": {
+  "direct": 116,
+  "closure": 981,
+  "I": 24,
+  "N": 42,
+  "C": 15,
+  "U": 24,
+  "P": 7,
+  "C-heavy": 4,
+  "sept2025": [
+   "ansi-regex",
+   "ansi-styles",
+   "chalk",
+   "color",
+   "color-convert",
+   "color-name",
+   "color-string",
+   "debug",
+   "error-ex",
+   "is-arrayish",
+   "simple-swizzle",
+   "strip-ansi",
+   "supports-color",
+   "wrap-ansi"
+  ]
+ },
+ "Mattermost": {
+  "direct": 102,
+  "closure": 498,
+  "U": 53,
+  "I": 10,
+  "C": 22,
+  "N": 7,
+  "P": 8,
+  "C-heavy": 2,
+  "sept2025": [
+   "debug",
+   "error-ex",
+   "is-arrayish",
+   "supports-color"
+  ]
+ },
+ "Bitwarden clients": {
+  "direct": 58,
+  "closure": 392,
+  "U": 17,
+  "I": 7,
+  "N": 22,
+  "C": 3,
+  "C-heavy": 6,
+  "P": 3,
+  "sept2025": [
+   "ansi-regex",
+   "ansi-styles",
+   "chalk",
+   "color-convert",
+   "color-name",
+   "debug",
+   "error-ex",
+   "is-arrayish",
+   "strip-ansi",
+   "supports-color",
+   "wrap-ansi"
+  ]
+ },
+ "Nextcloud server": {
+  "direct": 40,
+  "closure": 437,
+  "U": 14,
+  "I": 17,
+  "C": 8,
+  "P": 1,
+  "sept2025": [
+   "ansi-regex",
+   "ansi-styles",
+   "color",
+   "color-convert",
+   "color-name",
+   "color-string",
+   "debug",
+   "strip-ansi",
+   "wrap-ansi"
+  ]
+ },
+ "Jellyfin web": {
+  "direct": 60,
+  "closure": 295,
+  "U": 24,
+  "N": 6,
+  "I": 13,
+  "P": 11,
+  "C-heavy": 1,
+  "C": 5,
+  "sept2025": [
+   "ansi-regex",
+   "debug",
+   "error-ex",
+   "is-arrayish",
+   "strip-ansi"
+  ]
+ }
+}

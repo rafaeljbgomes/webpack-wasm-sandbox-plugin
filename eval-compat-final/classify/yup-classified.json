@@ -1,0 +1,770 @@
+[
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/array.ts",
+  "test": "Array types > validation > should prevent recursive casting",
+  "message": "Error: _cast does not exist",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/array.ts",
+  "test": "Array types > should respect abortEarly",
+  "message": "AssertionError: expected ValidationError: 2 errors occurred { \u2026(2) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/array.ts",
+  "test": "Array types > should ensure arrays",
+  "message": "AssertionError: expected [ 1, 4 ] to be [ 1, 4 ] // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/bool.ts",
+  "test": "Boolean types > should CAST correctly",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/bool.ts",
+  "test": "Boolean types > should type check",
+  "message": "TypeError: not a boolean",
+  "category": "representation",
+  "rule": "boxed-or-host-value-type-check",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/date.ts",
+  "test": "Date types > should check MIN correctly",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/date.ts",
+  "test": "Date types > should check MAX correctly",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/lazy.ts",
+  "test": "lazy > mapper > should allow meta",
+  "message": "AssertionError: expected { a: 1 } to deeply equal { a: 1, added: true }",
+  "category": "state",
+  "rule": "callback-mutates-library-object",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should check types",
+  "message": "AssertionError: expected ValidationError: must be a string! { \u2026(3) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should limit values with a ref",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > oneOf > should work with refs",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should overload test()",
+  "message": "AssertionError: expected [Function noop] to be [Function noop] // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should allow non string messages",
+  "message": "AssertionError: expected { key: 'foo' } to be { key: 'foo' } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > tests should be able to access nested parent",
+  "message": "AssertionError: expected ObjectSchema{ type: 'object', \u2026(15) } to be <Anonymous Class>{ \u2026(16) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > withMutation > should pass the same instance to a provided function",
+  "message": "AssertionError: expected \"spy\" to be called with arguments: [ <Anonymous Class>{ \u2026(12) } ]\u001b[90m",
+  "category": "env",
+  "rule": "spy-on-host",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > withMutation > should temporarily make mutable",
+  "message": "AssertionError: expected [] to have a length of 1 but got +0",
+  "category": "state",
+  "rule": "callback-mutates-library-object",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > withMutation > should work with nesting",
+  "message": "AssertionError: expected [ [Function validate] ] to have a length of 2 but got 1",
+  "category": "state",
+  "rule": "callback-mutates-library-object",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > concat should fail on different types",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > concats whitelist with refs",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > schema.describe() > should describe",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > schema.describe() > should describe with options",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/array.ts",
+  "test": "Array types > validation > should prevent recursive casting",
+  "message": "Error: _cast does not exist",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/array.ts",
+  "test": "Array types > should respect abortEarly",
+  "message": "AssertionError: expected ValidationError: 2 errors occurred { \u2026(2) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/array.ts",
+  "test": "Array types > should ensure arrays",
+  "message": "AssertionError: expected [ 1, 4 ] to be [ 1, 4 ] // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/bool.ts",
+  "test": "Boolean types > should CAST correctly",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/bool.ts",
+  "test": "Boolean types > should type check",
+  "message": "TypeError: not a boolean",
+  "category": "representation",
+  "rule": "boxed-or-host-value-type-check",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/date.ts",
+  "test": "Date types > should check MIN correctly",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/date.ts",
+  "test": "Date types > should check MAX correctly",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/lazy.ts",
+  "test": "lazy > mapper > should allow meta",
+  "message": "AssertionError: expected { a: 1 } to deeply equal { a: 1, added: true }",
+  "category": "state",
+  "rule": "callback-mutates-library-object",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "[internal] normal methods should be running in sync Mode",
+  "message": "Error: promise rejected \"Error: Did not execute synchronously\" instead of resolving",
+  "category": "env",
+  "rule": "internal-helper-import",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should check types",
+  "message": "AssertionError: expected ValidationError: must be a string! { \u2026(3) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should limit values with a ref",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > synchronous methods > should throw on async test",
+  "message": "AssertionError: expected [Function] to throw error matching /Validation test of type: \"test\"/ but got 'Did not execute synchronously'",
+  "category": "engine",
+  "rule": "synchronous-completion-of-promise-jobs",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > oneOf > should work with refs",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should overload test()",
+  "message": "AssertionError: expected [Function noop] to be [Function noop] // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > should allow non string messages",
+  "message": "AssertionError: expected { key: 'foo' } to be { key: 'foo' } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > tests should be able to access nested parent",
+  "message": "AssertionError: expected ObjectSchema{ type: 'object', \u2026(15) } to be <Anonymous Class>{ \u2026(16) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > withMutation > should pass the same instance to a provided function",
+  "message": "AssertionError: expected \"spy\" to be called with arguments: [ <Anonymous Class>{ \u2026(12) } ]\u001b[90m",
+  "category": "env",
+  "rule": "spy-on-host",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > withMutation > should temporarily make mutable",
+  "message": "AssertionError: expected [] to have a length of 1 but got +0",
+  "category": "state",
+  "rule": "callback-mutates-library-object",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > withMutation > should work with nesting",
+  "message": "AssertionError: expected [ [Function validate] ] to have a length of 2 but got 1",
+  "category": "state",
+  "rule": "callback-mutates-library-object",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > concat should fail on different types",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > concats whitelist with refs",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > schema.describe() > should describe",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/mixed.ts",
+  "test": "Mixed Types  > schema.describe() > should describe with options",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Set-crosses-by-value",
+  "unit": "0001-5a3bc23bd4"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > is extensible",
+  "message": "TypeError: (intermediate value).foo is not a function",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast ",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast false",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast true",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast 2026-11-20T15:23:08.092Z",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast {}",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should round",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > should type check",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > casting > should recursively cast fields",
+  "message": "AssertionError: expected { num: 5 } to be { num: 5 } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > casting > should return the same object if all props are already cast",
+  "message": "AssertionError: expected { num: 5, str: 'hello', \u2026(4) } to be { num: 5, str: 'hello', \u2026(4) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > validation > should run validations recursively",
+  "message": "AssertionError: expected ValidationError: nested.str must be a `st\u2026 { \u2026(6) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > validation > should prevent recursive casting",
+  "message": "Error: _cast does not exist",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > lazy evaluation > should be passed the options",
+  "message": "AssertionError: expected {} to be {} // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > should respect abortEarly",
+  "message": "AssertionError: expected ValidationError: 2 errors occurred { \u2026(3) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > should flatten validation errors with abortEarly=false",
+  "message": "Error: Snapshot `Object types > should flatten validation errors with abortEarly=false 1` mismatched",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/setLocale.ts",
+  "test": "Custom locale > should set a new locale",
+  "message": "AssertionError: expected '${path} must be a valid email' to be 'Invalid email' // Object.is equality",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/setLocale.ts",
+  "test": "Custom locale > should update the main locale",
+  "message": "AssertionError: expected '${path} must be a valid email' to be 'Invalid email' // Object.is equality",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/standardSchema.ts",
+  "test": "Conditional validation tests with when API > should handle when with function returning schema",
+  "message": "AssertionError: expected { userType: 'individual' } to deeply equal { userType: 'individual', \u2026(2) }",
+  "category": "unclassified",
+  "rule": null,
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > casting > should not cast null",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > casting > should not cast {}",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > casting > should not cast []",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > should type check",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > is extensible",
+  "message": "TypeError: (intermediate value).foo is not a function",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast ",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast false",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast true",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast 2026-11-20T15:23:08.144Z",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should not cast {}",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > casting > should round",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/number.ts",
+  "test": "Number types > should type check",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > casting > should recursively cast fields",
+  "message": "AssertionError: expected { num: 5 } to be { num: 5 } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > casting > should return the same object if all props are already cast",
+  "message": "AssertionError: expected { num: 5, str: 'hello', \u2026(4) } to be { num: 5, str: 'hello', \u2026(4) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > validation > should run validations recursively",
+  "message": "AssertionError: expected ValidationError: nested.str must be a `st\u2026 { \u2026(6) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > validation > should prevent recursive casting",
+  "message": "Error: _cast does not exist",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > lazy evaluation > should be passed the options",
+  "message": "AssertionError: expected {} to be {} // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > should respect abortEarly",
+  "message": "AssertionError: expected ValidationError: 2 errors occurred { \u2026(3) } to deeply equal ObjectContaining{\u2026}",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/object.ts",
+  "test": "Object types > should flatten validation errors with abortEarly=false",
+  "message": "Error: Snapshot `Object types > should flatten validation errors with abortEarly=false 1` mismatched",
+  "category": "representation",
+  "rule": "error-or-schema-copy",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/setLocale.ts",
+  "test": "Custom locale > should set a new locale",
+  "message": "AssertionError: expected '${path} must be a valid email' to be 'Invalid email' // Object.is equality",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/setLocale.ts",
+  "test": "Custom locale > should update the main locale",
+  "message": "AssertionError: expected '${path} must be a valid email' to be 'Invalid email' // Object.is equality",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/standardSchema.ts",
+  "test": "Conditional validation tests with when API > should handle when with function returning schema",
+  "message": "AssertionError: expected { userType: 'individual' } to deeply equal { userType: 'individual', \u2026(2) }",
+  "category": "unclassified",
+  "rule": null,
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > casting > should not cast null",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > casting > should not cast {}",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > casting > should not cast []",
+  "message": "AssertionError: expected error to be instance of TypeError",
+  "category": "identity",
+  "rule": "error-class-instanceof",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/string.ts",
+  "test": "String types > should type check",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0002-37c8f1ef85"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/ValidationError.ts",
+  "test": "ValidationError > should disable stacks",
+  "message": "AssertionError: expected '' to deeply equal 'ValidationErrorNoStack'",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0003-aea1902e8e"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/yup.js",
+  "test": "Yup > should getIn correctly",
+  "message": "AssertionError: expected NumberSchema{ type: 'number', \u2026(11) } to be <Anonymous Class>{ \u2026(12) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0003-aea1902e8e"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/yup.js",
+  "test": "Yup > should getIn array correctly",
+  "message": "AssertionError: expected ObjectSchema{ type: 'object', \u2026(15) } to be <Anonymous Class>{ \u2026(16) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0003-aea1902e8e"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/yup.js",
+  "test": "Yup > should REACH conditionally correctly",
+  "message": "AssertionError: expected <Anonymous Class>{ \u2026(11) } not to be <Anonymous Class>{ \u2026(11) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0003-aea1902e8e"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/ValidationError.ts",
+  "test": "ValidationError > should disable stacks",
+  "message": "AssertionError: expected '' to deeply equal 'ValidationErrorNoStack'",
+  "category": "state",
+  "rule": "host-sets-library-state",
+  "unit": "0003-aea1902e8e"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/yup.js",
+  "test": "Yup > should getIn correctly",
+  "message": "AssertionError: expected NumberSchema{ type: 'number', \u2026(11) } to be <Anonymous Class>{ \u2026(12) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0003-aea1902e8e"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/yup.js",
+  "test": "Yup > should getIn array correctly",
+  "message": "AssertionError: expected ObjectSchema{ type: 'object', \u2026(15) } to be <Anonymous Class>{ \u2026(16) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0003-aea1902e8e"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/yup/test/yup.js",
+  "test": "Yup > should REACH conditionally correctly",
+  "message": "AssertionError: expected <Anonymous Class>{ \u2026(11) } not to be <Anonymous Class>{ \u2026(11) } // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference",
+  "unit": "0003-aea1902e8e"
+ }
+]

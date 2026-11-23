@@ -1,0 +1,111 @@
+// Case study (M3/M7): Markdown Live Preview, a small open-source browser
+// application (github.com/tanabe/markdown-live-preview, commit 051369f,
+// MIT). Its unmodified src/main.js is built with Webpack, because our plugin
+// targets Webpack (the project itself uses Vite), in three modes:
+//   native    no isolation
+//   sandbox   marked runs in its own QuickJS sandbox with an empty grant,
+//             and classify-or-fail checks every other package in the bundle
+//   lavamoat  @lavamoat/webpack with a generated policy
+// The page is the project's index.html with the Google Analytics tag removed
+// (no external requests) and the module script pointed at the bundle.
+//
+// Usage: APP=<path to the checkout> node eval-case-mlp/build.cjs [mode ...]
+//   CLASSIFY=off|error (default error), TRUSTED=<file> (default ./trusted.cjs)
+const path = require("path");
+const fs = require("fs");
+require("tsx/cjs");
+const webpack = require("webpack");
+const { WebpackSandboxPlugin } = require("../webpack-sandbox-plugin/src/plugin.ts");
+
+const here = __dirname;
+const repo = path.resolve(here, "..");
+const APP = path.resolve(process.env.APP ?? "");
+if (!fs.existsSync(path.join(APP, "src/main.js"))) throw new Error("set APP to the markdown-live-preview checkout");
+const OUT = path.join(here, "out");
+const loader = (n) => require.resolve(n, { paths: [here] });
+
+function config(mode, outRoot) {
+  const plugins = [];
+  if (mode === "sandbox") {
+    const policyPath = path.join(outRoot, "policy.cjs");
+    fs.mkdirSync(outRoot, { recursive: true });
+    fs.writeFileSync(policyPath, `module.exports = ${JSON.stringify({ marked: { permissions: [] } }, null, 1)};\n`);
+    plugins.push(new WebpackSandboxPlugin({
+      configPath: policyPath,
+      proxyDirectory: path.join(repo, ".sandbox", "proxys"),
+      classification: { mode: process.env.CLASSIFY ?? "error", trustedPath: process.env.TRUSTED ?? path.join(here, "trusted.cjs") },
+    }));
+  }
+  if (mode === "lavamoat") {
+    const LavaMoatPlugin = require("@lavamoat/webpack");
+    plugins.push(new LavaMoatPlugin({ generatePolicy: true, policyLocation: path.join(outRoot, "lavamoat"), readableResourceIds: true }));
+  }
+  return {
+    mode: "production",
+    target: ["web", "es2022"],
+    context: APP,
+    cache: false,
+    devtool: false,
+    entry: "./src/main.js",
+    output: { filename: "bundle.js", path: path.join(outRoot, "dist"), publicPath: "/dist/", clean: true },
+    experiments: { topLevelAwait: true, asyncWebAssembly: true },
+    resolve: {
+      modules: [path.join(APP, "node_modules"), path.join(repo, "node_modules"), "node_modules"],
+      fallback: { path: false, fs: false, url: false },
+      alias: { "quickjs-emscripten-sync": path.join(repo, "node_modules/quickjs-emscripten-sync/dist/quickjs-emscripten-sync.js") },
+    },
+    resolveLoader: { modules: [path.join(here, "node_modules"), path.join(repo, "node_modules")] },
+    module: {
+      rules: [
+        { test: /[\\/]src[\\/]main\.js$/, use: [path.join(here, "start-after-load-loader.cjs")] },
+        { test: /\.css$/, use: [loader("style-loader"), loader("css-loader")] },
+        { test: /\.ttf$/, type: "asset/resource" },
+        { test: /\.m?js$/, resolve: { fullySpecified: false } },
+      ],
+    },
+    performance: { hints: false },
+    plugins,
+    stats: "errors-warnings",
+    infrastructureLogging: { level: "error" },
+  };
+}
+
+function page(outRoot, mode) {
+  let html = fs.readFileSync(path.join(APP, "index.html"), "utf8");
+  html = html.replace(/<!-- Google tag[\s\S]*?<\/script>\s*<script>[\s\S]*?gtag\('config'[^<]*<\/script>/, "");
+  html = html.replace(/<script async src="https:\/\/www\.googletagmanager\.com[^>]*><\/script>/, "");
+  html = html.replace(/<script type="module" src="\/src\/main\.js[^"]*"><\/script>/,
+    `${mode === "lavamoat" ? '<script src="/dist/lockdown"></script>' : ""}<script src="/dist/bundle.js"></script>`);
+  if (/googletagmanager|gtag\(/.test(html)) throw new Error("analytics tag still present");
+  fs.writeFileSync(path.join(outRoot, "index.html"), html);
+  fs.cpSync(path.join(APP, "public"), outRoot, { recursive: true });
+}
+
+async function build(mode) {
+  const outRoot = path.join(OUT, mode);
+  const t0 = Date.now();
+  const stats = await new Promise((ok, ko) => webpack(config(mode, outRoot), (e, s) => (e ? ko(e) : ok(s))));
+  const ms = Date.now() - t0;
+  if (stats.hasErrors()) {
+    const text = stats.toString({ all: false, errors: true });
+    fs.mkdirSync(outRoot, { recursive: true });
+    fs.writeFileSync(path.join(outRoot, "build-errors.txt"), text);
+    const flagged = [...new Set([...text.matchAll(/Package "([^"]+)"@(\S+) is neither/g)].map((m) => m[1]))].sort();
+    fs.writeFileSync(path.join(outRoot, "flagged.json"), JSON.stringify(flagged, null, 1));
+    throw new Error(`${flagged.length} packages flagged by classify-or-fail; see build-errors.txt\n` + text.slice(0, 1500));
+  }
+  page(outRoot, mode);
+  const files = fs.readdirSync(path.join(outRoot, "dist"));
+  const bytes = files.reduce((n, f) => n + fs.statSync(path.join(outRoot, "dist", f)).size, 0);
+  return { mode, buildMs: ms, files: files.length, bytes };
+}
+
+module.exports = { build, OUT };
+if (require.main === module) {
+  (async () => {
+    const modes = process.argv.slice(2).length ? process.argv.slice(2) : ["native", "sandbox"];
+    for (const m of modes) {
+      try { console.log(JSON.stringify(await build(m))); } catch (e) { console.log(m, "FAILED", String(e.message ?? e).slice(0, 3000)); process.exitCode = 1; }
+    }
+  })();
+}

@@ -1,0 +1,6 @@
+{
+  "name": "eval-case-mlp",
+  "private": true,
+  "description": "Case study: Markdown Live Preview (tanabe/markdown-live-preview) built with Webpack, natively and with marked sandboxed.",
+  "devDependencies": { "css-loader": "^7.1.2", "style-loader": "^4.0.0" }
+}

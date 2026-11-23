@@ -1,0 +1,1556 @@
+[
+ {
+  "file": "Image.test.ts",
+  "test": "create new images should create from existing data array",
+  "message": "AssertionError: expected Uint8Array[ 0, 1, 2, 3, 4, 5 ] to be Uint8Array[ 0, 1, 2, 3, 4, 5 ] // Object.is equality\n\nIf it should pass with deep equality, replace \"toBe\" with \"toStrictEqual\"\n\nExpected: Uint8Array[ 0, 1, 2, 3, 4, 5 ]\nReceived: serializes to the same string\n\n    at \n    at file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "Image.test.ts",
+  "test": "check custom inspect, RGB image",
+  "message": "Error: Snapshot `check custom inspect, RGB image 1` mismatched\n    at createMismatchError (file://\n    at SnapshotClient.assert (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at ",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-value"
+ },
+ {
+  "file": "Image.test.ts",
+  "test": "check custom inspect, GREYA image",
+  "message": "Error: Snapshot `check custom inspect, GREYA image 1` mismatched\n    at createMismatchError (file://\n    at SnapshotClient.assert (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    a",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-value"
+ },
+ {
+  "file": "Image.test.ts",
+  "test": "check custom inspect with image too large",
+  "message": "Error: Snapshot `check custom inspect with image too large 1` mismatched\n    at createMismatchError (file://\n    at SnapshotClient.assert (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-value"
+ },
+ {
+  "file": "Mask.test.ts",
+  "test": "check custom inspect",
+  "message": "Error: Snapshot `check custom inspect 1` mismatched\n    at createMismatchError (file://\n    at SnapshotClient.assert (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTime",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-value"
+ },
+ {
+  "file": "Mask.test.ts",
+  "test": "check custom inspect with image too large",
+  "message": "Error: Snapshot `check custom inspect with image too large 1` mismatched\n    at createMismatchError (file://\n    at SnapshotClient.assert (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-value"
+ },
+ {
+  "file": "Stack.test.ts",
+  "test": "Stack constructor create a stack containing one image",
+  "message": "AssertionError: expected <Anonymous Class>{ \u2026(7) } to be an instance of Stack\n    at Proxy.<anonymous> (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n ",
+  "category": "identity",
+  "rule": "instanceof-library-class"
+ },
+ {
+  "file": "Stack.test.ts",
+  "test": "iterator",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.image (file://\n    at \n    at file://\n    at file://\n    at file:/",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "Stack.test.ts",
+  "test": "clone",
+  "message": "AssertionError: expected <Anonymous Class>{ \u2026(7) } to be an instance of Stack\n    at Proxy.<anonymous> (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n ",
+  "category": "identity",
+  "rule": "instanceof-library-class"
+ },
+ {
+  "file": "divide.test.ts",
+  "test": "divide by 2",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "divide.test.ts",
+  "test": "divide by decimal",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "divide.test.ts",
+  "test": "divide by prime number",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "divide.test.ts",
+  "test": "testing channels option",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "divide.test.ts",
+  "test": "testing out option",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "multiply.test.ts",
+  "test": "multiply by 2",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "multiply.test.ts",
+  "test": "mulitply by 100",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "multiply.test.ts",
+  "test": "multiply by decimal",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "multiply.test.ts",
+  "test": "testing channels option",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "multiply.test.ts",
+  "test": "testing out option",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "alignMinDifference.test.ts",
+  "test": "twice same image",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "alignMinDifference.test.ts",
+  "test": "larger image and crop",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "alignMinDifference.test.ts",
+  "test": "larger image and crop 2",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "alignMinDifference.test.ts",
+  "test": "id crops",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "alignMinDifference.test.ts",
+  "test": "other id crops",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "blur.test.ts",
+  "test": "blur compared to opencv",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "blur.test.ts",
+  "test": "error handling",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "gaussianBlur.test.ts",
+  "test": "gaussian blur should have same result as opencv",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "hypotenuse.test.ts",
+  "test": "function should be symmetrical",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "increaseContrast.test.ts",
+  "test": "bigger image",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "medianFilter.test.ts",
+  "test": "error handling",
+  "message": "AssertionError: expected a thrown error to be RangeError: Invalid property \"cellSize\". \u2026\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTest (file://",
+  "category": "identity",
+  "rule": "thrown-error-class"
+ },
+ {
+  "file": "pixelate.test.ts",
+  "test": "pixelization of images throws a Range error",
+  "message": "AssertionError: expected a thrown error to be RangeError: cellSize must be greater than\u2026\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTest (file://",
+  "category": "identity",
+  "rule": "thrown-error-class"
+ },
+ {
+  "file": "pixelate.test.ts",
+  "test": "pixelization of images throws a Type error",
+  "message": "AssertionError: expected a thrown error to be TypeError: cellSize must be an integer\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTest (file://",
+  "category": "identity",
+  "rule": "thrown-error-class"
+ },
+ {
+  "file": "pixelate.test.ts",
+  "test": "throws a Type error",
+  "message": "AssertionError: expected a thrown error to be Error: unreachable: test\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTest (file://",
+  "category": "identity",
+  "rule": "thrown-error-class"
+ },
+ {
+  "file": "decodePng.test.ts",
+  "test": "should extract image resolution",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "decodeTiff.test.ts",
+  "test": "should decode image resolution",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "fetchURL.test.ts",
+  "test": "decodes image from data URL",
+  "message": "    at fetchURL (<input>:13:28)\n    at <anonymous> (eval.js:1:43)\n",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "read.test.ts",
+  "test": "read existing image",
+  "message": "    at getNodeApiOrThrow (<input>:13:24)\n    at read (<input>:18:96)\n    at <anonymous> (eval.js:1:39)\n",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getPerspectiveWarp.test.ts",
+  "test": "openCV comparison nearest interpolation plants",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getPerspectiveWarp.test.ts",
+  "test": "openCV comparison nearest interpolation card",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getPerspectiveWarp.test.ts",
+  "test": "openCV comparison nearest interpolation poker card",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "compare with OpenCV (nearest, larger)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "compare with OpenCV (nearest, same size)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "compare with OpenCV (nearest, smaller)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "result should have correct dimensions",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "resize to given width and height",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "aspect ratio not preserved",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "xFactor = 2",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "yFactor = 2",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "should throw no parameter",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "resize.test.ts",
+  "test": "should throw factor and size used at the same time",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "compare result of translation with opencv with default parameters",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "compare result of clockwise rotation with opencv",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "compare result of clockwise rotation with opencv and fullImage:true",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "compare result of anti-clockwise rotation with opencv",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "get a vertical reflection of an image",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "get a scale of an image to 32*40",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "affineTransformation",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "should throw if matrix has wrong size",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transform.test.ts",
+  "test": "check borderValue behavior",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "rotate + scale compared to opencv (nearest)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "rotate + scale compared to opencv (bilinear)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "rotate + scale compared to opencv (bicubic)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "default options",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "coordinates as a string",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "rotate around corner",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "rotate around center",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "transformRotate.test.ts",
+  "test": "fullImage option",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "cannyEdgeDetector.test.ts",
+  "test": "cannyEdgeDetector compare alphabet image to expected",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "cannyEdgeDetector.test.ts",
+  "test": "cannyEdgeDetector compare grey image to expected",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "clearBorder.test.ts",
+  "test": "larger image",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "floodFill.test.ts",
+  "test": "larger image",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "solidFill.test.ts",
+  "test": "larger image",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "convertColor.test.ts",
+  "test": "convert to same colorModel",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 2, \u2026(12) } to strictly equal <Anonymous Class>{ width: 2, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "convertColor.test.ts",
+  "test": "image to GREY",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "paintMaskOnImage.test.ts",
+  "test": "blend = false, all values null",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 1, \u2026(12) } to strictly equal <Anonymous Class>{ width: 1, \u2026(12) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "threshold with a fixed value of 100",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "computeThreshold with OTSU",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "computeThreshold with OTSU (2)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "computeThreshold default should be Otsu",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "automatic threshold with OTSU",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "error too many channels",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "error threshold out of range",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "16 bits image",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "16 bits image simple with default number of slots 2**16",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 2, \u2026(10) } to strictly equal <Anonymous Class>{ width: 2, \u2026(10) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "threshold.test.ts",
+  "test": "16 bits image simple with custom number of slots 2**8",
+  "message": "AssertionError: expected <Anonymous Class>{ width: 2, \u2026(10) } to strictly equal <Anonymous Class>{ width: 2, \u2026(10) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "borderLengths.test.ts",
+  "test": "border lengths property 5x5",
+  "message": "TypeError: invalid brand on object\n    at get borders (<input>:352:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get borders (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "borderLengths.test.ts",
+  "test": "border lengths property 4x4",
+  "message": "TypeError: invalid brand on object\n    at get borders (<input>:352:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get borders (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "borderLengths.test.ts",
+  "test": "border lengths property 4x4 2",
+  "message": "TypeError: invalid brand on object\n    at get borders (<input>:352:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get borders (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "centroid.test.ts",
+  "test": "centroid property 4x4",
+  "message": "TypeError: invalid brand on object\n    at get centroid (<input>:497:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get centroid (file://\n    at Refl",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "centroid.test.ts",
+  "test": "border lengths property 5x5",
+  "message": "TypeError: invalid brand on object\n    at get centroid (<input>:497:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get centroid (file://\n    at Refl",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "centroid.test.ts",
+  "test": "border lengths property 5x5 2",
+  "message": "TypeError: invalid brand on object\n    at get centroid (<input>:497:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get centroid (file://\n    at Refl",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "computeRois.test.ts",
+  "test": "3x3 mask",
+  "message": "Error: Snapshot `3x3 mask 1` mismatched\n    at createMismatchError (file://\n    at SnapshotClient.assert (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-value"
+ },
+ {
+  "file": "computeRois.test.ts",
+  "test": "waterShed for a grey image",
+  "message": "AssertionError: expected { Object (map, whiteRois, ...) } to strictly equal { Object (map, whiteRois, ...) }\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTe",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "ellipse.test.ts",
+  "test": "ellipse on a small figure 3x3",
+  "message": "TypeError: invalid brand on object\n    at get ellipse (<input>:319:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get ellipse (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "ellipse.test.ts",
+  "test": "ellipse on a small figure 3x3 2",
+  "message": "TypeError: invalid brand on object\n    at get ellipse (<input>:319:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get ellipse (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "ellipse.test.ts",
+  "test": "ellipse on 3x3 cross",
+  "message": "TypeError: invalid brand on object\n    at get ellipse (<input>:319:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get ellipse (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "ellipse.test.ts",
+  "test": "ellipse on slightly changed 3x3 cross",
+  "message": "TypeError: invalid brand on object\n    at get ellipse (<input>:319:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get ellipse (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "ellipse.test.ts",
+  "test": "ellipse on 4x4 ROI",
+  "message": "TypeError: invalid brand on object\n    at get ellipse (<input>:319:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get ellipse (file://\n    at Reflec",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "eqpc.test.ts",
+  "test": "calculates eqpc to Roi",
+  "message": "AssertionError: expected NaN to be close to 2.52, received difference is NaN, but expected 0.005\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTest (file://",
+  "category": "unclassified",
+  "rule": null
+ },
+ {
+  "file": "eqpc.test.ts",
+  "test": "calculates surface from eqpc",
+  "message": "AssertionError: expected NaN to be close to 6, received difference is NaN, but expected 0.005\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTest (file://",
+  "category": "unclassified",
+  "rule": null
+ },
+ {
+  "file": "fillRatio.test.ts",
+  "test": "fillRatio 4x4",
+  "message": "TypeError: invalid brand on object\n    at get holesInfo (<input>:329:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get fillRatio (<input>:403:51)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResul",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "fillRatio.test.ts",
+  "test": "fillRatio 4x4 with open borders",
+  "message": "TypeError: invalid brand on object\n    at get holesInfo (<input>:329:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get fillRatio (<input>:403:51)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResul",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "fillRatio.test.ts",
+  "test": "fillRatio 4x4 with open borders 2",
+  "message": "TypeError: invalid brand on object\n    at get holesInfo (<input>:329:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get fillRatio (<input>:403:51)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResul",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "fromMask.test.ts",
+  "test": "no way to exceed max number of ROIs error",
+  "message": "Error: STACK_TRACE_ERROR\n    at task (file://\n    at Object.<anonymous> (file://\n    at Object.<anonymous> (file://\n    at chain (file://\n    at \n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at VitestModuleEvaluator._runInlinedModule (file://\n    at VitestModuleRunn",
+  "category": "unclassified",
+  "rule": null
+ },
+ {
+  "file": "holesInfo.test.ts",
+  "test": "holes surface and number of holes 4x4",
+  "message": "TypeError: invalid brand on object\n    at get holesInfo (<input>:329:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get holesInfo (file://\n    at Re",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "holesInfo.test.ts",
+  "test": "holes surface and number of holes 4x5",
+  "message": "TypeError: invalid brand on object\n    at get holesInfo (<input>:329:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get holesInfo (file://\n    at Re",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "ped.test.ts",
+  "test": "calculates ped from roi",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\n    at get (native)\n    at get (eval.js:4:37)\n    at get ped (<input>:85:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "perimeter.test.ts",
+  "test": "ROI perimeter perimeter",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapR",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "perimeter.test.ts",
+  "test": "ROI perimeter perimeter with external borders",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapR",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "perimeter.test.ts",
+  "test": "ROI perimeter perimeter with a hole in ROI",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapR",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "perimeter.test.ts",
+  "test": "ROI perimeter perimeter of ROI surrounded by 4 external sides",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapR",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "perimeter.test.ts",
+  "test": "ROI perimeter line",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapR",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "points.test.ts",
+  "test": "points 1st test",
+  "message": "TypeError: invalid brand on object\n    at get relativePoints (<input>:247:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get relativePoints (file://",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "points.test.ts",
+  "test": "points 2nt test for absolute coordinates",
+  "message": "TypeError: invalid brand on object\n    at get absolutePoints (<input>:257:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get absolutePoints (file://",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "points.test.ts",
+  "test": "points 3rd test for relative coordinates",
+  "message": "TypeError: invalid brand on object\n    at get relativePoints (<input>:247:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get relativePoints (file://",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "points.test.ts",
+  "test": "points 4th test for absolute coordinates",
+  "message": "TypeError: invalid brand on object\n    at get absolutePoints (<input>:257:20)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Object.get absolutePoints (file://",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "roundness.test.ts",
+  "test": "roundness 1",
+  "message": "TypeError: invalid brand on object\n    at get feret (<input>:463:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get roundness (<input>:454:52)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "roundness.test.ts",
+  "test": "roundness 2",
+  "message": "TypeError: invalid brand on object\n    at get feret (<input>:463:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get roundness (<input>:454:52)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "solidity.test.ts",
+  "test": "ROI solidity solidity 1",
+  "message": "TypeError: invalid brand on object\n    at get convexHull (<input>:435:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get solidity (<input>:426:35)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResul",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "solidity.test.ts",
+  "test": "ROI solidity solidity 2",
+  "message": "TypeError: invalid brand on object\n    at get convexHull (<input>:435:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get solidity (<input>:426:35)\nHost: TypeError: invalid brand on object\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResul",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "sphericity.test.ts",
+  "test": "ROI sphericity sphericity 1",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\n    at get (native)\n    at get (eval.js:4:37)\n    at get sphericity (<input>:411:62)\nHost: TypeError: invalid brand on object\n    at QuickJ",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "sphericity.test.ts",
+  "test": "ROI sphericity sphericity 2",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\n    at get (native)\n    at get (eval.js:4:37)\n    at get sphericity (<input>:411:62)\nHost: TypeError: invalid brand on object\n    at QuickJ",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "sphericity.test.ts",
+  "test": "ROI sphericity sphericity 3",
+  "message": "TypeError: invalid brand on object\n    at get perimeterInfo (<input>:168:20)\n    at get (native)\n    at get (eval.js:4:37)\n    at get perimeter (<input>:234:26)\n    at get (native)\n    at get (eval.js:4:37)\n    at get sphericity (<input>:411:62)\nHost: TypeError: invalid brand on object\n    at QuickJ",
+  "category": "identity",
+  "rule": "private-field-brand-check"
+ },
+ {
+  "file": "encodeDataURL.test.ts",
+  "test": "basic image 2 (jpeg)",
+  "message": "ReferenceError: 'Buffer' is not defined\n    at <anonymous> (<input>:733:14)\n    at encode (<input>:799:27)\n    at encodeJpeg (<input>:24:67)\n    at <anonymous> (<input>:31:162)\n    at with (<input>:14:3819)\n    at encode (<input>:31:14)\n    at encodeDataURL (<input>:16:70)\n    at <anonymous> (eval.j",
+  "category": "grant",
+  "rule": "Buffer-not-granted"
+ },
+ {
+  "file": "encodeDataURL.test.ts",
+  "test": "legacy image-js test",
+  "message": "ReferenceError: 'Buffer' is not defined\n    at <anonymous> (<input>:733:14)\n    at encode (<input>:799:27)\n    at encodeJpeg (<input>:24:67)\n    at <anonymous> (<input>:31:162)\n    at with (<input>:14:3819)\n    at encode (<input>:31:14)\n    at encodeDataURL (<input>:16:70)\n    at <anonymous> (eval.j",
+  "category": "grant",
+  "rule": "Buffer-not-granted"
+ },
+ {
+  "file": "encodeJpeg.test.ts",
+  "test": "encode an 8-bit rgba image",
+  "message": "ReferenceError: 'Buffer' is not defined\n    at <anonymous> (<input>:733:14)\n    at encode (<input>:799:27)\n    at encodeJpeg (<input>:24:67)\n    at <anonymous> (eval.js:1:45)\nHost: ReferenceError: 'Buffer' is not defined\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithout",
+  "category": "grant",
+  "rule": "Buffer-not-granted"
+ },
+ {
+  "file": "encodeJpeg.test.ts",
+  "test": "decode the encoded jpeg returns image with same characteristics",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "encodeJpeg.test.ts",
+  "test": "encoding a 16-bit image should convert it to a 8-bit image",
+  "message": "ReferenceError: 'Buffer' is not defined\n    at <anonymous> (<input>:733:14)\n    at encode (<input>:799:27)\n    at encodeJpeg (<input>:24:67)\n    at <anonymous> (eval.js:1:45)\nHost: ReferenceError: 'Buffer' is not defined\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithout",
+  "category": "grant",
+  "rule": "Buffer-not-granted"
+ },
+ {
+  "file": "encodePng.test.ts",
+  "test": "should encode a 16bits image correctly",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "encodePng.test.ts",
+  "test": "add mask test",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "async write image to disk (png)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "format option png",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "async write image to disk (jpeg)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "sync write image to disk",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "sync write image to disk (jpeg)",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "sync write mask image to disk",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "async write mask image to disk",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "async write with URL",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "sync write with URL",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "async write with recursive option",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "sync write with recursive option",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "unknown format error",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "write.test.ts",
+  "test": "image extension error",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "cross_platform.test.ts",
+  "test": "getCanvasContext throws a helpful error when skia-canvas is not installed",
+  "message": "AssertionError: expected [Function] to throw error including 'drawText on Node.js requires the opti\u2026' but got 'getCanvasContext is not a function'\n    at Proxy.<anonymous> (file://\n    at Proxy.<anonymous> (file://\n    at Proxy.methodWrapper (file://\n    at \n    at file://",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getAffineTransform.test.ts",
+  "test": "RGB images",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getAffineTransform.test.ts",
+  "test": "crosscheck = false",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getAffineTransform.test.ts",
+  "test": "debug = true",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getBestKeypointsInRadius.test.ts",
+  "test": "star",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "alphabet image, default options",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "alphabet image, nonMaxSuppression = false",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "alphabet image, maxNbFeatures = 50",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "alphabet image, threshold = 150",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "alphabet image, scoreAlgorithm = HARRIS, maxNbFeatures = 50",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "star",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "star with harris",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "star with shi-tomasi",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "wrong color model error",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getFastKeypoints.test.ts",
+  "test": "undefined score algorithm error",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getOrientedFastKeypoints.test.ts",
+  "test": "patch with one keypoint",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getOrientedFastKeypoints.test.ts",
+  "test": "patch with one keypoint, centroidPatchDiameter=15",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getOrientedFastKeypoints.test.ts",
+  "test": "centroidPatchDiameter = 31 ('scaleneTriangle')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getOrientedFastKeypoints.test.ts",
+  "test": "centroidPatchDiameter = 31 ('scaleneTriangle90')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getOrientedFastKeypoints.test.ts",
+  "test": "verify single keypoint orientation",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getOrientedFastKeypoints.test.ts",
+  "test": "small patchsize and large marker",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getOrientedFastKeypoints.test.ts",
+  "test": "check angle for different centroidPatchDiameter",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getBriefDescriptors.test.ts",
+  "test": "count occurences of 1 and 0 with default options",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getBriefDescriptors.test.ts",
+  "test": "patch size error",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getBriefDescriptors.test.ts",
+  "test": "alphabet image should work",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "bruteForceMatch.test.ts",
+  "test": "various polygons, centroidPatchDiameter = 31 ('scalene triangle rotated 10\u00b0')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "bruteForceMatch.test.ts",
+  "test": "various polygons, centroidPatchDiameter = 31 ('scalene triangle rotated 90\u00b0')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "bruteForceMatch.test.ts",
+  "test": "various polygons, centroidPatchDiameter = 31 ('scalene triangle rotated 180\u00b0')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "bruteForceMatch.test.ts",
+  "test": "various polygons, centroidPatchDiameter = 31 ('polygon rotated 10\u00b0')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "bruteForceMatch.test.ts",
+  "test": "various polygons, centroidPatchDiameter = 31 ('polygon rotated 180\u00b0')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getCrosscheckMatches.test.ts",
+  "test": "getCrosscheckMatches various polygons, centroidPatchDiameter = 31 ('scalene triangle')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getCrosscheckMatches.test.ts",
+  "test": "getCrosscheckMatches various polygons, centroidPatchDiameter = 31 ('scalene triangle 90')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getCrosscheckMatches.test.ts",
+  "test": "getCrosscheckMatches various polygons, centroidPatchDiameter = 31 ('polygon')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getCrosscheckMatches.test.ts",
+  "test": "getCrosscheckMatches various polygons, centroidPatchDiameter = 31 ('polygon rotated 180\u00b0')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "getCrosscheckMatches.test.ts",
+  "test": "getCrosscheckMatches various polygons, centroidPatchDiameter = 31 ('polygon rotated 10\u00b0')",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "Montage.test.ts",
+  "test": "constructor default options",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "Montage.test.ts",
+  "test": "constructor should error when scale is not an integer",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "Montage.test.ts",
+  "test": "constructor invalid disposition type",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "Montage.test.ts",
+  "test": "drawKeypoints scale = 2",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "Montage.test.ts",
+  "test": "drawKeypoints disposition vertical",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "Montage.test.ts",
+  "test": "drawMatches scale = 2",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "Montage.test.ts",
+  "test": "drawMatches disposition vertical",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "drawKeypoints.test.ts",
+  "test": "alphabet image with score coloring",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "drawKeypoints.test.ts",
+  "test": "only draw 5 best matches",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "drawKeypoints.test.ts",
+  "test": "draw orientation",
+  "message": "NOT EXECUTED (file failed to load: readSync is only implemented for Node.js)",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "drawMatches.test.ts",
+  "test": "alphabet image as source and destination, nbKeypoint = 10",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "drawMatches.test.ts",
+  "test": "destination rotated +2\u00b0",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "drawMatches.test.ts",
+  "test": "destination rotated +10\u00b0",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "drawMatches.test.ts",
+  "test": "showDistance = true",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "overlapImages.test.ts",
+  "test": "two triangles",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "overlapImages.test.ts",
+  "test": "scale cannot be zero",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Huang should work similarily to ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Intermodes should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Isodata should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Percentile should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Li should work similarily to ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "MaxEntropy should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Mean should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "MinError should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Minimum should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Moments should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Otsu should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "RenyiEntropy should work similarily to ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Shanbhag should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Triangle should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "thresholdAlgorithms.test.ts",
+  "test": "Yen should work like ImageJ",
+  "message": "Error: readSync is only implemented for Node.js\n    at getNodeApiOrThrow (<input>:13:24)\n    at readSync (<input>:29:96)\n    at <anonymous> (eval.js:1:43)\nHost: Error: readSync is only implemented for Node.js\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as ",
+  "category": "grant",
+  "rule": "node-file-system"
+ },
+ {
+  "file": "decodeStack.test.ts",
+  "test": "stacks with multiple images ('GREY', bitDepth = 8)",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.next (file://\n    at \n    at file://\n    at file://\n    at file://",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "decodeStack.test.ts",
+  "test": "stacks with multiple images ('GREY', bitDepth = 8)",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.next (file://\n    at \n    at file://\n    at file://\n    at file://",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "decodeStack.test.ts",
+  "test": "stacks with multiple images ('GREY', bitDepth = 16)",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.next (file://\n    at \n    at file://\n    at file://\n    at file://",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "decodeStack.test.ts",
+  "test": "stacks with multiple images ('RGB', bitDepth = 8)",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.next (file://\n    at \n    at file://\n    at file://\n    at file://",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "decodeStack.test.ts",
+  "test": "stacks with multiple images ('RGB', bitDepth = 16)",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.next (file://\n    at \n    at file://\n    at file://\n    at file://",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "decodeStack.test.ts",
+  "test": "stacks with multiple images ('RGBA', bitDepth = 8)",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.next (file://\n    at \n    at file://\n    at file://\n    at file://",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "decodeStack.test.ts",
+  "test": "stacks with multiple images ('RGBA', bitDepth = 8)",
+  "message": "TypeError: not a generator\n    at next (native)\nHost: TypeError: not a generator\n    at QuickJSContext.unwrapResult (file://\n    at QuickJSContext.unwrapWithoutContext [as unwrapResult] (\n    at file://\n    at g (file://\n    at Proxy.next (file://\n    at \n    at file://\n    at file://\n    at file://",
+  "category": "representation",
+  "rule": "generator-crosses-as-object"
+ },
+ {
+  "file": "channelLabels.test.ts",
+  "test": "channelLabels for 'grey' image",
+  "message": "AssertionError: expected [ 'Grey' ] to strictly equal [ 'Grey' ]\n    at \n    at file://\n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "channelLabels.test.ts",
+  "test": "channelLabels for 'greya' image",
+  "message": "AssertionError: expected [ 'Grey', 'Alpha' ] to strictly equal [ 'Grey', 'Alpha' ]\n    at \n    at file://\n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "channelLabels.test.ts",
+  "test": "channelLabels for 'rgb' image",
+  "message": "AssertionError: expected [ 'Red', 'Green', 'Blue' ] to strictly equal [ 'Red', 'Green', 'Blue' ]\n    at \n    at file://\n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "channelLabels.test.ts",
+  "test": "channelLabels for 'rgba' image",
+  "message": "AssertionError: expected [ 'Red', 'Green', 'Blue', 'Alpha' ] to strictly equal [ 'Red', 'Green', 'Blue', 'Alpha' ]\n    at \n    at file://\n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace ",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "channelLabels.test.ts",
+  "test": "channelLabels for 'binary' image",
+  "message": "AssertionError: expected [ 'Mask' ] to strictly equal [ 'Mask' ]\n    at \n    at file://\n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "channelLabels.test.ts",
+  "test": "channelLabels through image colorModel",
+  "message": "AssertionError: expected [ 'Red', 'Green', 'Blue' ] to strictly equal [ 'Red', 'Green', 'Blue' ]\n    at \n    at file://\n    at file://\n    at file://\n    at new Promise (<anonymous>)\n    at runWithTimeout (file://\n    at file://\n    at Traces.$ (file://\n    at trace (file://\n    at runTest (file://",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ }
+]

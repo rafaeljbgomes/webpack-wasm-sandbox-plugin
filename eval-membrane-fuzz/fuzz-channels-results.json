@@ -1,0 +1,23 @@
+{
+ "seed": 805393,
+ "iterations": 5000,
+ "node": "v25.8.1",
+ "c1Calls": 1667,
+ "c2CallbackCalls": 384,
+ "c3ApiCalls": 5192,
+ "c4HostOps": 1659,
+ "vmProbedValues": 8962779,
+ "vmProbedFunctions": 3801700,
+ "V1_hostEval": 0,
+ "H1_hostRef": 0,
+ "H2_pollution": false,
+ "H3_argMutated": 0,
+ "H4_grantChanged": 0,
+ "H4_nonPrimitiveWritten": 0,
+ "errors": 59,
+ "violations": [],
+ "control": null,
+ "seconds": 358.711,
+ "V1_byPath": {},
+ "pass": true
+}

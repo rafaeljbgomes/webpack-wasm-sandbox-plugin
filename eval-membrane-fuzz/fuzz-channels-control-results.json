@@ -1,0 +1,27 @@
+{
+ "seed": 805393,
+ "iterations": 300,
+ "node": "v25.8.1",
+ "c1Calls": 100,
+ "c2CallbackCalls": 1514,
+ "c3ApiCalls": 1181,
+ "c4HostOps": 98,
+ "vmProbedValues": 599988,
+ "vmProbedFunctions": 281813,
+ "V1_hostEval": 299,
+ "H1_hostRef": 0,
+ "H2_pollution": false,
+ "H3_argMutated": 0,
+ "H4_grantChanged": 0,
+ "H4_nonPrimitiveWritten": 0,
+ "errors": 6,
+ "violations": [],
+ "control": "leak",
+ "seconds": 88.016,
+ "V1_byPath": {
+  "c3.Api#5": 98,
+  "c3.Api#6": 99,
+  "c3.leak#6": 102
+ },
+ "pass": false
+}

@@ -1,0 +1,1164 @@
+[
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/tokenParse.test.js",
+  "test": "DateTime.fromFormat() throws if you specify meridiem with 24-hour time",
+  "message": "Error: expect(received).toThrow(expected)",
+  "category": "identity",
+  "rule": "error-class-crosses-as-QuickJSUnwrapError"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/tokenParse.test.js",
+  "test": "DateTime.fromFormat() respects Settings.twoDigitCutoffYear when parsing yy to the right century",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/tokenParse.test.js",
+  "test": "DateTime.fromFormat() respects Settings.twoDigitCutoffYear when parsing two digit weekYear to the right century",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/tokenParse.test.js",
+  "test": "DateTime.fromFormatExplain() explains success",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/tokenParse.test.js",
+  "test": "DateTime.fromFormatExplain() explains a bad match",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/tokenParse.test.js",
+  "test": "DateTime.fromFormatExplain() parses zone correctly",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/many.test.js",
+  "test": "Interval.merge returns the minimal set of intervals",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "unclassified",
+  "rule": null
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/many.test.js",
+  "test": "Interval.xor returns non-overlapping intervals as-is",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/many.test.js",
+  "test": "Interval.xor returns empty for an empty input",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/many.test.js",
+  "test": "Interval.xor returns empty for a fully overlapping set of intervals",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/many.test.js",
+  "test": "Interval.xor returns the non-overlapping parts of intervals",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/many.test.js",
+  "test": "Interval.xor handles funny adjacency cases",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/many.test.js",
+  "test": "Interval#split by works across varying length months",
+  "message": "Error: expect(received).toEqual(expected) // deep equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/relative.test.js",
+  "test": "DateTime#toRelative takes a unit argument",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/relative.test.js",
+  "test": "With no RelativeTimeFormat support, DateTime#toRelative falls back to English",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "env",
+  "rule": "test-removes-host-Intl-API"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/relative.test.js",
+  "test": "DateTime#toRelativeCalendar picks the correct unit with no options at last day of month",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/relative.test.js",
+  "test": "DateTime#toRelativeCalendar picks the correct unit with no options at least day of year",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/relative.test.js",
+  "test": "With no RelativeTimeFormat support, DateTime#toRelativeCalendar falls back to English",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "env",
+  "rule": "test-removes-host-Intl-API"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.now accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.now accepts the default numbering system",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.now accepts the default output calendar",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.now accepts the default time zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.local accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.local accepts the default numbering system",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.local accepts the default output calendar",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.local accepts the default time zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.utc accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromJSDate(date) accepts a zone option",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromJSDate accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromJSDate(date) throw errors for invalid values when throwOnInvalid is true",
+  "message": "Error: expect(received).toThrow()",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromMillis accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromSeconds accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromObject() reject invalid values",
+  "message": "TypeError: this is not a Date object.",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromObject accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.fromObject handles null as a language tag",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/create.test.js",
+  "test": "DateTime.local works even after time zone change",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/toFormat.test.js",
+  "test": "DateTime#toFormat('n')",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/toFormat.test.js",
+  "test": "DateTime#toFormat('nn')",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/toFormat.test.js",
+  "test": "DateTime#toFormat('ii')",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/toFormat.test.js",
+  "test": "DateTime#toFormat('iiii')",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/regexParse.test.js",
+  "test": "DateTime.fromISO() optionally adopts the UTC offset provided",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/regexParse.test.js",
+  "test": "DateTime.fromISO() accepts year-ordinalTtime+offset",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/diff.test.js",
+  "test": "DateTime#diff accepts multiple units",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/diff.test.js",
+  "test": "DateTime#diff handles unmatched units",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/diff.test.js",
+  "test": "DateTime#diff sets units to 0 if second object is slightly larger",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/diff.test.js",
+  "test": "DateTime#diff results works when needing to backtrack months",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/diff.test.js",
+  "test": "DateTime#diff handles datetimes whose dayDiff is off by 2 days instead of the usual 1 due to zone differences",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/diff.test.js",
+  "test": "DateTime#diffNow defaults to milliseconds",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/diff.test.js",
+  "test": "DateTime#diffNow accepts units",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#toLocal() accepts the default locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#setZone accepts \"default\" and uses the default zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#setZone accepts \"utc+3\"",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#setZone accepts \"utc-3\"",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#setZone accepts \"utc-3:30\"",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#setZone works for dates before 1970 with milliseconds",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#getPossibleOffsets() returns the same DateTime for fixed zones",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "DateTime#getPossibleOffsets() returns the same DateTime when not at an ambiguous local time",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/zone.test.js",
+  "test": "Setting the default zone results in a different creation zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/format.test.js",
+  "test": "DateTime#toISO({precision}) throws when the precision is invalid",
+  "message": "Error: expect(received).toThrow(expected)",
+  "category": "identity",
+  "rule": "error-class-crosses-as-QuickJSUnwrapError"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/format.test.js",
+  "test": "DateTime#toISODate({precision}) throws when the precision is invalid",
+  "message": "Error: expect(received).toThrow(expected)",
+  "category": "identity",
+  "rule": "error-class-crosses-as-QuickJSUnwrapError"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/format.test.js",
+  "test": "DateTime#toISOTime({precision}) throws when the precision is invalid",
+  "message": "Error: expect(received).toThrow(expected)",
+  "category": "identity",
+  "rule": "error-class-crosses-as-QuickJSUnwrapError"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/format.test.js",
+  "test": "DateTime#toLocaleString() shows things in the right custom zone",
+  "message": "Error: Zone is an abstract class",
+  "category": "identity",
+  "rule": "subclass-of-library-class"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/format.test.js",
+  "test": "DateTime#toLocaleString() shows things in the right custom zone when showing the zone",
+  "message": "Error: Zone is an abstract class",
+  "category": "identity",
+  "rule": "subclass-of-library-class"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/format.test.js",
+  "test": "DateTime#toLocaleString() shows things in the right custom zone with timeStyle full",
+  "message": "Error: Zone is an abstract class",
+  "category": "identity",
+  "rule": "subclass-of-library-class"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/dst.test.js",
+  "test": "DateTime.fromObject > Ambiguous dates pick the one with the current offset",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/dst.test.js",
+  "test": "DateTime.local > Ambiguous dates pick the one with the cached offset",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "startOf(week) with useLocaleWeeks adheres to the locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "endOf(week) with useLocaleWeeks adheres to the locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "hasSame(week) with useLocaleWeeks adheres to the locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "hasSame(week) with useLocaleWeeks ignores the locale of otherDateTime",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "isWeekend in locale he reports Friday and Saturday as weekend",
+  "message": "Error: expect(received).toStrictEqual(expected) // deep equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekNumber in locale en-US > Jan  1 2012 should be week 1, year 2012",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekNumber in locale en-US > Jan  8 2012 should be week 2, year 2012",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekNumber in locale en-US > Jan  15 2012 should be week 3, year 2012",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekday in locale en-US > Sunday should be reported as the 1st day of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekday in locale en-US > Monday should be reported as the 2nd day of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekday in locale en-US > Tuesday should be reported as the 3rd day of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekday in locale en-US > Wednesday should be reported as the 4th day of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekday in locale en-US > Thursday should be reported as the 5th day of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekday in locale en-US > Friday should be reported as the 6th day of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "localWeekday in locale en-US > Saturday should be reported as the 7th day of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "Week settings can be overridden > Overridden week info should be reported by Info",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "Week settings can be overridden > Overridden week info should be reported by DateTime#isWeekend",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "Week settings can be overridden > Overridden week info should be respected by DateTime accessors",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/localeWeek.test.js",
+  "test": "Week settings can be overridden > Overridden week info should be respected by DateTime#set",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/info.test.js",
+  "test": "Interval#toDuration accepts multiple units",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/info.test.js",
+  "test": "Interval#toDuration accepts duration options",
+  "message": "TypeError: Method Array Iterator.prototype.next called on incompatible receiver [object Array Iterator]",
+  "category": "identity",
+  "rule": "cross-realm-iterator"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/misc.test.js",
+  "test": "DateTime#until() creates an Interval",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/create.test.js",
+  "test": "Interval.fromDateTimes creates an interval from datetimes",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/create.test.js",
+  "test": "Interval.fromDateTimes throws with start date coming after end date",
+  "message": "Error: expect(received).toThrow()",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/create.test.js",
+  "test": "Interval.after takes a duration",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/create.test.js",
+  "test": "Interval.after an object",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/create.test.js",
+  "test": "Interval.before takes a duration",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/create.test.js",
+  "test": "Interval.before takes a number and unit",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/create.test.js",
+  "test": "Interval.invalid throws if throwOnInvalid is set",
+  "message": "Error: expect(received).toThrow()",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set() sets Gregorian fields",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ month }) doesn't go to the wrong month",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ year }) doesn't wrap leap years",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ weekYear }) sets the date to the same weekNumber/weekday of the target weekYear",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ weekNumber }) sets the date to the same weekday of the target weekNumber",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ weekday }) sets the weekday to this week's matching day",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ localWeekday }) sets the weekday to this week's matching day based on the locale (en-US)",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ localWeekday }) sets the weekday to this week's matching day based on the locale (de-DE)",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ localWeekday }) handles crossing over into the previous year",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ localWeekday }) handles crossing over into the previous year",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ localWeekNumber }) sets the date to the same weekday of the target weekNumber (de-DE)",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ localWeekYear }) sets the date to the same weekNumber/weekday of the target weekYear (de-DE)",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set({ ordinal }) sets the date to the ordinal within the current year",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime.set does units in increasing size",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set throws for invalid units",
+  "message": "Error: expect(received).toThrow()",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set throws for metadata",
+  "message": "Error: expect(received).toThrow()",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/set.test.js",
+  "test": "DateTime#set throws for mixing incompatible units",
+  "message": "Error: expect(received).toThrow()",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/duration/create.test.js",
+  "test": "Duration.fromDurationLike returns a Duration from millis",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/duration/create.test.js",
+  "test": "Duration.fromDurationLike returns a Duration from object",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#year returns the year",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#month returns the (1-indexed) month",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#day returns the day",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#hour returns the hour",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#minute returns the minute",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#second returns the second",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#millisecond returns the millisecond",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#weekYear returns the weekYear",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#weekNumber returns the weekNumber",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#weekday returns the weekday",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#weekdayShort returns the short human readable weekday for en-US locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#weekdayLong returns the human readable weekday for en-US locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#weekdayShort returns the short human readable weekday for fr locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#weekdayLong returns the human readable weekday for fr locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#monthShort returns the short human readable month",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#monthLong returns the human readable month",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#monthShort returns the short human readable month",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#monthLong returns the human readable month",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#monthShort returns the short human readable month for fr locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#monthLong returns the human readable month for fr locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#ordinal returns the ordinal",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#get can retrieve any unit",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#zone returns the time zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/getters.test.js",
+  "test": "DateTime#zoneName returns the name of the time zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/zones/IANA.test.js",
+  "test": "IANAZone.create should return IANAZone instance",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/zones.test.js",
+  "test": "Info.hasDST defaults to the global zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/zones.test.js",
+  "test": "Info.normalizeZone returns Zone objects unchanged",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "identity",
+  "rule": "same-value-different-reference"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/zones.test.js",
+  "test": "Info.normalizeZone converts null and undefined to default Zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/zones.test.js",
+  "test": "Info.normalizeZone converts local to system Zone",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/many.test.js",
+  "test": "DateTime.min is stable",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/many.test.js",
+  "test": "DateTime.max is stable",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/parse.test.js",
+  "test": "Interval.fromISO accepts a zone argument",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/invalid.test.js",
+  "test": "invalid zones result in invalid dates",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/invalid.test.js",
+  "test": "throwOnInvalid throws",
+  "message": "Error: expect(received).toThrow()",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/invalid.test.js",
+  "test": "throwOnInvalid throws if year is too big",
+  "message": "Error: expect(received).toThrow()",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/setter.test.js",
+  "test": "Interval.set can set the start",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/setter.test.js",
+  "test": "Interval.set can set the end",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/duration/invalid.test.js",
+  "test": "throwOnInvalid throws",
+  "message": "Error: expect(received).toThrow()",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/localeWeek.test.js",
+  "test": "Info.getStartOfWeek reports the correct start of the week",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/localeWeek.test.js",
+  "test": "Info.getWeekendWeekdays reports the correct value",
+  "message": "Error: expect(received).toStrictEqual(expected) // deep equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/localeWeek.test.js",
+  "test": "With no Intl.Locale.weekInfo support, Info.getWeekendWeekdays reports [6, 7]",
+  "message": "Error: expect(received).toStrictEqual(expected) // deep equality",
+  "category": "env",
+  "rule": "test-removes-host-Intl-API"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/zones/fixedOffset.test.js",
+  "test": "FixedOffsetZone.utcInstance provides valid UTC data",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/localeWeek.test.js",
+  "test": "count(weeks) with useLocaleWeeks adheres to the locale",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "representation",
+  "rule": "week-data-of-granted-Intl.Locale"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/getters.test.js",
+  "test": "Interval.start gets the start",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/interval/getters.test.js",
+  "test": "Interval.end gets the end",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "defect",
+  "rule": "getter-on-object-read-through-property"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/degrade.test.js",
+  "test": "With no RelativeTimeFormat support, calling toRelative falls back to English",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "env",
+  "rule": "test-removes-host-Intl-API"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/transform.test.js",
+  "test": "DateTime#toJSDate() returns a native Date equivalent",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/transform.test.js",
+  "test": "DateTime#toBSON() return a BSON serializable equivalent",
+  "message": "Error: expect(received).toBeInstanceOf(expected)",
+  "category": "identity",
+  "rule": "instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/info.test.js",
+  "test": "DateTime#toObject returns the object",
+  "message": "Error: expect(received).toEqual(expected) // deep equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/datetime/info.test.js",
+  "test": "DateTime#toObject accepts a flag to return config",
+  "message": "Error: expect(received).toEqual(expected) // deep equality",
+  "category": "representation",
+  "rule": "host-Date-argument"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/features.test.js",
+  "test": "Info.features shows this environment supports all the features",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "state",
+  "rule": "host-writes-library-Settings"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/luxon/test/info/features.test.js",
+  "test": "With no RelativeTimeFormat support, Info.features shows no support",
+  "message": "Error: expect(received).toBe(expected) // Object.is equality",
+  "category": "env",
+  "rule": "test-removes-host-Intl-API"
+ }
+]

@@ -1,0 +1,13 @@
+library,total,identity,representation,state,grant,env,defect,engine,other
+strip-ansi,0,0,0,0,0,0,0,0,0
+MIME,0,0,0,0,0,0,0,0,0
+Marked (spec),5,0,0,0,0,0,0,5,0
+TweetNaCl,46,42,0,4,0,0,0,0,0
+Yup,96,50,26,14,0,3,0,1,2
+Luxon,166,33,68,46,0,5,13,0,1
+Zod,154,75,52,1,24,0,0,0,2
+Lodash,1374,538,191,389,115,12,25,14,90
+Marked (unit),44,0,0,36,0,8,0,0,0
+ImageJS,222,61,14,0,144,0,0,0,3
+date-fns,880,751,84,0,0,45,0,0,0
+Total,2987,1550,435,490,283,73,38,20,98

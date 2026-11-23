@@ -1,0 +1,1080 @@
+[
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/apply.test.ts",
+  "test": "The callback's return value becomes the apply's return value.",
+  "message": "AssertionError: expected Symbol(undefined) to be Symbol() // Object.is equality",
+  "category": "representation",
+  "rule": "symbol-description-lost"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "string async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "number async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "bigInt async parse",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "boolean async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "date async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "undefined async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "null async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "void async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "array async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "object async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "union async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "record async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "literal async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "enum async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "nativeEnum async parse",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+  "test": "promise async parse bad",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/bigint.test.ts",
+  "test": "passing validations",
+  "message": "ZodError: [",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/bigint.test.ts",
+  "test": "min max getters",
+  "message": "AssertionError: expected null to deeply equal 5n",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/catch.test.ts",
+  "test": "reported issues with nested usage",
+  "message": "TypeError: Cannot read properties of undefined (reading 'length')",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "stringToBigInt codec",
+  "message": "ZodError: [",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "numberToBigInt codec",
+  "message": "ZodError: [",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "utf8ToBytes codec",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "bytesToUtf8 codec",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "base64 codec",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "base64urlToBytes codec",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "hexToBytes codec",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "stringToURL codec",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+  "test": "stringToHttpURL codec",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/coerce.test.ts",
+  "test": "string coercion",
+  "message": "AssertionError: expected 'undefined' to deeply equal '15'",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/coerce.test.ts",
+  "test": "number coercion",
+  "message": "ZodError: [",
+  "category": "unclassified",
+  "rule": null
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/coerce.test.ts",
+  "test": "boolean coercion",
+  "message": "AssertionError: expected false to deeply equal true",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/coerce.test.ts",
+  "test": "bigint coercion",
+  "message": "AssertionError: expected undefined to deeply equal 5n",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/describe-meta-checks.test.ts",
+  "test": "z.describe() check > registers description in globalRegistry",
+  "message": "AssertionError: expected undefined to be 'A string' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/describe-meta-checks.test.ts",
+  "test": "z.meta() check > registers metadata in globalRegistry",
+  "message": "AssertionError: expected undefined to be 'Age' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/describe-meta-checks.test.ts",
+  "test": "combined usage > works with multiple checks",
+  "message": "AssertionError: expected undefined to be 'Email address' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/description.test.ts",
+  "test": "adding description with z.globalRegistry",
+  "message": "AssertionError: expected undefined to deeply equal 'a description'",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/discriminated-unions.test.ts",
+  "test": "_values",
+  "message": "TypeError: Set object expected",
+  "category": "representation",
+  "rule": "Map-Set-cross-by-value"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/discriminated-unions.test.ts",
+  "test": "valid - discriminator value of various primitive types",
+  "message": "Error: Duplicate discriminator value \"undefined\"",
+  "category": "representation",
+  "rule": "BigInt-or-Symbol-literal-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/discriminated-unions.test.ts",
+  "test": "invalid - null",
+  "message": "Error: Snapshot `invalid - null 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error-utils.test.ts",
+  "test": ".flatten()",
+  "message": "TypeError: parsed.error.flatten is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error-utils.test.ts",
+  "test": "custom .flatten()",
+  "message": "TypeError: parsed.error.flatten is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error-utils.test.ts",
+  "test": ".format()",
+  "message": "TypeError: parsed.error.format is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error-utils.test.ts",
+  "test": "custom .format()",
+  "message": "TypeError: parsed.error.format is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error-utils.test.ts",
+  "test": "z.treeifyError 2",
+  "message": "TypeError: cannot read property 'code' of null",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error-utils.test.ts",
+  "test": "inheritance",
+  "message": "AssertionError: expected ZodError: [] { issues: [] } to be an instance of ZodError",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "literal bigint default error message",
+  "message": "AssertionError: expected true to be false // Object.is equality",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "root level formatting",
+  "message": "TypeError: result.error.format is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "custom path",
+  "message": "TypeError: result.error.format is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "detect issue with input fallback",
+  "message": "AssertionError: expected error to be instance of ZodError",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "formatting",
+  "message": "TypeError: result1.error.format is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "formatting with nullable and optional fields",
+  "message": "TypeError: result.error.format is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "inferFlattenedErrors",
+  "message": "TypeError: result.error.flatten is not a function",
+  "category": "representation",
+  "rule": "error-methods-not-on-copy"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "error inheritance",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/error.test.ts",
+  "test": "error serialization",
+  "message": "Error: Snapshot `error serialization 2` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/file.test.ts",
+  "test": "passing validations",
+  "message": "ReferenceError: 'File' is not defined",
+  "category": "grant",
+  "rule": "File-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/file.test.ts",
+  "test": "types",
+  "message": "ReferenceError: 'File' is not defined",
+  "category": "grant",
+  "rule": "File-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/file.test.ts",
+  "test": "failing validations",
+  "message": "ReferenceError: 'File' is not defined",
+  "category": "grant",
+  "rule": "File-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "unrecognized keys stored in globalRegistry by default",
+  "message": "AssertionError: expected undefined to be defined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "unrecognized keys stored in custom registry",
+  "message": "AssertionError: expected undefined to be defined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "$id and id are captured as metadata",
+  "message": "AssertionError: expected undefined to be 'https://example.com/schemas/user' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "x-* extension keys are captured as metadata",
+  "message": "AssertionError: expected undefined to be 'example value' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "metadata on nested schemas",
+  "message": "AssertionError: expected undefined to be 'User' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "writeOnly and examples are captured as metadata",
+  "message": "AssertionError: expected undefined to be true // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "$comment and $anchor are captured as metadata",
+  "message": "AssertionError: expected undefined to be 'This is a developer note' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+  "test": "contentEncoding and contentMediaType are stored as metadata",
+  "message": "AssertionError: expected undefined to be 'base64' // Object.is equality",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/function.test.ts",
+  "test": "input validation error",
+  "message": "Error: Snapshot `input validation error 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/function.test.ts",
+  "test": "output validation error",
+  "message": "Error: Snapshot `output validation error 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.bigint",
+  "message": "ZodError: [",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.symbol",
+  "message": "AssertionError: expected Symbol(undefined) to deeply equal Symbol()",
+  "category": "representation",
+  "rule": "symbol-description-lost"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.coerce.bigint",
+  "message": "AssertionError: expected undefined to deeply equal 123n",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.record",
+  "message": "AssertionError: expected { Object (1, a) } to deeply equal { Object (1, a) }",
+  "category": "representation",
+  "rule": "symbol-keyed-properties-dropped"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.map",
+  "message": "AssertionError: expected 'invalid_type' to deeply equal 'invalid_key'",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.map invalid_element",
+  "message": "AssertionError: expected 'invalid_type' to deeply equal 'invalid_element'",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.file",
+  "message": "ReferenceError: 'File' is not defined",
+  "category": "grant",
+  "rule": "File-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/index.test.ts",
+  "test": "z.preprocess",
+  "message": "AssertionError: expected 'UNDEFINED' to deeply equal '1234'",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/literal.test.ts",
+  "test": "literal bigint default error message",
+  "message": "AssertionError: expected true to be false // Object.is equality",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/map.test.ts",
+  "test": "throws when the given map has invalid key and invalid input",
+  "message": "Error: Snapshot `throws when the given map has invalid key and invalid input 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/primitive.test.ts",
+  "test": "literal bigint schema",
+  "message": "AssertionError: expected undefined to be 42n // Object.is equality",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/primitive.test.ts",
+  "test": "bigint schema",
+  "message": "ZodError: [",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/promise.test.ts",
+  "test": "promise parsing fail",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/promise.test.ts",
+  "test": "promise parsing fail 2",
+  "message": "AssertionError: expected ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/promise.test.ts",
+  "test": "async function fail",
+  "message": "Error: expected $ZodError: [",
+  "category": "identity",
+  "rule": "error-class-instanceof"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/prototypes.test.ts",
+  "test": "prototype extension",
+  "message": "TypeError: __vite_ssr_import_1__.string(...)._classic is not a function",
+  "category": "state",
+  "rule": "host-extends-library-prototype"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/readonly.test.ts",
+  "test": "object freezing",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "representation",
+  "rule": "frozen-state-not-preserved"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/readonly.test.ts",
+  "test": "async object freezing",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "representation",
+  "rule": "frozen-state-not-preserved"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/readonly.test.ts",
+  "test": "readonly and the get method",
+  "message": "ZodError: [",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/registries.test.ts",
+  "test": "globalRegistry",
+  "message": "AssertionError: expected false to deeply equal true",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/registries.test.ts",
+  "test": "globalRegistry is singleton and attached to globalThis",
+  "message": "TypeError: Map Iterator object expected",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/registries.test.ts",
+  "test": "re-registering same id silently overwrites",
+  "message": "TypeError: Map object expected",
+  "category": "representation",
+  "rule": "Map-Set-cross-by-value"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/registries.test.ts",
+  "test": "toJSONSchema throws on duplicate id across different schemas",
+  "message": "AssertionError: expected [Function] to throw an error",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/registries.test.ts",
+  "test": "toJSONSchema allows same schema with same id",
+  "message": "AssertionError: expected undefined to be defined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/set.test.ts",
+  "test": "throws when the given set has invalid input",
+  "message": "Error: Snapshot `throws when the given set has invalid input 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/standard-schema.test.ts",
+  "test": "z.toJSONSchema() returns StandardJSONSchemaV1",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "base64 validations",
+  "message": "AssertionError: expected 'SGVsbG8gV29ybGQ=false' to be 'SGVsbG8gV29ybGQ=true' // Object.is equality",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "base64url validations",
+  "message": "AssertionError: expected 'SGVsbG8gV29ybGQfalse' to be 'SGVsbG8gV29ybGQtrue' // Object.is equality",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "big base64 and base64url",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "jwt token",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "atob-btoa-TextEncoder-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "url validations",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "url preserves original input",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "url trims whitespace",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "url normalize flag",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "url normalize with hostname and protocol constraints",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "httpurl",
+  "message": "ZodError: [",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "url error overrides",
+  "message": "TypeError: Cannot read properties of undefined (reading '0')",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "IPv6 validation",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/string.test.ts",
+  "test": "CIDR v6 validation",
+  "message": "AssertionError: expected false to be true // Object.is equality",
+  "category": "grant",
+  "rule": "URL-not-granted"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/template-literal.test.ts",
+  "test": "template literal parsing - success - basic cases",
+  "message": "ZodError: [",
+  "category": "representation",
+  "rule": "BigInt-or-Symbol-literal-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/template-literal.test.ts",
+  "test": "regexes",
+  "message": "Error: Snapshot `regexes 19` mismatched",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > composite types > object with optional",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > optional",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > nullish",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > default",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > default function",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > prefault",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > prefault function",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > catch",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > readonly",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > wrapper types > nonoptional",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > special types > lazy",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > special types > promise",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > special types > pipe",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > special types > transform",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > parameters > io input",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > edge cases with metadata > schema with id metadata",
+  "message": "AssertionError: expected { \u2026(4) } to deeply equal { \u2026(3) }",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+  "test": "toJSONSchema method > edge cases with metadata > schema with id then additional metadata",
+  "message": "AssertionError: expected { \u2026(5) } to deeply equal { \u2026(4) }",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > unsupported schema types",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > nullable openapi-3.0",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > tuple with rest draft-7 - issue #5151 regression test",
+  "message": "Error: Snapshot `toJSONSchema > tuple with rest draft-7 - issue #5151 regression test 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > promise",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > lazy",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > pipe",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > optional fields - object",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > recursive object",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "toJSONSchema > simple interface",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "override: do not run on references",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "override with refs",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "pipe",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "passthrough schemas",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "extract schemas with id",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "unrepresentable literal values are ignored",
+  "message": "Error: Snapshot `unrepresentable literal values are ignored 1` mismatched",
+  "category": "representation",
+  "rule": "BigInt-does-not-cross"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "describe with id",
+  "message": "Error: Snapshot `describe with id 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "describe with id on wrapper",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "overwrite id",
+  "message": "Error: Snapshot `overwrite id 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "overwrite descriptions",
+  "message": "Error: Snapshot `overwrite descriptions 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "top-level readonly",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "_ref",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "defaults/prefaults",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "input type",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "examples on pipe",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "use output type for preprocess",
+  "message": "TypeError: cannot set property 'ref' of undefined",
+  "category": "identity",
+  "rule": "schema-identity-as-map-key"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+  "test": "flatten simple intersections",
+  "message": "Error: Snapshot `flatten simple intersections 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/union.test.ts",
+  "test": "return errors from both union arms",
+  "message": "Error: Snapshot `return errors from both union arms 1` mismatched",
+  "category": "representation",
+  "rule": "snapshot-of-crossed-error-or-schema"
+ },
+ {
+  "file": "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/ee6bd4a5-f42d-4ae1-ac90-f0716f45feff/scratchpad/repo/test-harness/zod/packages/zod/src/v4/classic/tests/url.test.ts",
+  "test": "url regex",
+  "message": "AssertionError: expected undefined to be '^example\\.com$' // Object.is equality",
+  "category": "unclassified",
+  "rule": null
+ }
+]

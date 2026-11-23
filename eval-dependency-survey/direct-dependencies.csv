@@ -1,0 +1,377 @@
+app,package,category
+Jitsi Meet,@amplitude/analytics-browser,I
+Jitsi Meet,@amplitude/analytics-react-native,N
+Jitsi Meet,@braintree/sanitize-url,C
+Jitsi Meet,@emotion/cache,U
+Jitsi Meet,@emotion/react,U
+Jitsi Meet,@emotion/styled,U
+Jitsi Meet,@giphy/js-fetch-api,I
+Jitsi Meet,@giphy/react-components,U
+Jitsi Meet,@giphy/react-native-sdk,N
+Jitsi Meet,@jitsi/excalidraw,U
+Jitsi Meet,@jitsi/js-utils,I
+Jitsi Meet,@jitsi/logger,I
+Jitsi Meet,@jitsi/rnnoise-wasm,I
+Jitsi Meet,@matrix-org/olm,I
+Jitsi Meet,@mediapipe/selfie_segmentation,I
+Jitsi Meet,@microsoft/microsoft-graph-client,I
+Jitsi Meet,@mui/material,U
+Jitsi Meet,@react-native-async-storage/async-storage,N
+Jitsi Meet,@react-native-clipboard/clipboard,N
+Jitsi Meet,@react-native-community/netinfo,N
+Jitsi Meet,@react-native-community/slider,N
+Jitsi Meet,@react-native-google-signin/google-signin,N
+Jitsi Meet,@react-navigation/bottom-tabs,N
+Jitsi Meet,@react-navigation/elements,N
+Jitsi Meet,@react-navigation/material-top-tabs,N
+Jitsi Meet,@react-navigation/native,N
+Jitsi Meet,@react-navigation/stack,N
+Jitsi Meet,@sayem314/react-native-keep-awake,N
+Jitsi Meet,@stomp/stompjs,I
+Jitsi Meet,@svgr/webpack,N
+Jitsi Meet,@tensorflow-models/body-segmentation,I
+Jitsi Meet,@tensorflow/tfjs-backend-wasm,I
+Jitsi Meet,@tensorflow/tfjs-backend-webgl,I
+Jitsi Meet,@tensorflow/tfjs-backend-webgpu,I
+Jitsi Meet,@tensorflow/tfjs-converter,I
+Jitsi Meet,@tensorflow/tfjs-core,I
+Jitsi Meet,@vladmandic/human,I
+Jitsi Meet,@vladmandic/human-models,I
+Jitsi Meet,@xmldom/xmldom,C
+Jitsi Meet,abab,P
+Jitsi Meet,amplitude-js,I
+Jitsi Meet,base64-js,C
+Jitsi Meet,bc-css-flags,U
+Jitsi Meet,clipboard-copy,I
+Jitsi Meet,clsx,C
+Jitsi Meet,dayjs,C
+Jitsi Meet,dompurify,U
+Jitsi Meet,dropbox,I
+Jitsi Meet,focus-visible,P
+Jitsi Meet,grapheme-splitter,C
+Jitsi Meet,i18n-iso-countries,C
+Jitsi Meet,i18next,C
+Jitsi Meet,i18next-browser-languagedetector,I
+Jitsi Meet,i18next-http-backend,I
+Jitsi Meet,image-capture,P
+Jitsi Meet,jquery,U
+Jitsi Meet,js-md5,C-heavy
+Jitsi Meet,js-sha512,C-heavy
+Jitsi Meet,jwt-decode,C
+Jitsi Meet,lib-jitsi-meet,I
+Jitsi Meet,lodash-es,C
+Jitsi Meet,null-loader,N
+Jitsi Meet,optional-require,N
+Jitsi Meet,pixelmatch,C-heavy
+Jitsi Meet,promise.withresolvers,P
+Jitsi Meet,punycode,C
+Jitsi Meet,react,U
+Jitsi Meet,react-dom,U
+Jitsi Meet,react-emoji-render,U
+Jitsi Meet,react-focus-on,U
+Jitsi Meet,react-i18next,U
+Jitsi Meet,react-linkify,U
+Jitsi Meet,react-native,N
+Jitsi Meet,react-native-background-timer,N
+Jitsi Meet,react-native-calendar-events,N
+Jitsi Meet,react-native-default-preference,N
+Jitsi Meet,react-native-device-info,N
+Jitsi Meet,react-native-dialog,N
+Jitsi Meet,react-native-gesture-handler,N
+Jitsi Meet,react-native-get-random-values,N
+Jitsi Meet,react-native-orientation-locker,N
+Jitsi Meet,react-native-pager-view,N
+Jitsi Meet,react-native-paper,N
+Jitsi Meet,react-native-performance,N
+Jitsi Meet,react-native-safe-area-context,N
+Jitsi Meet,react-native-screen-corner-radius,N
+Jitsi Meet,react-native-screens,N
+Jitsi Meet,react-native-sound,N
+Jitsi Meet,react-native-splash-view,N
+Jitsi Meet,react-native-svg,N
+Jitsi Meet,react-native-svg-transformer,N
+Jitsi Meet,react-native-tab-view,N
+Jitsi Meet,react-native-url-polyfill,N
+Jitsi Meet,react-native-video,N
+Jitsi Meet,react-native-webrtc,N
+Jitsi Meet,react-native-webview,N
+Jitsi Meet,react-native-worklets-core,N
+Jitsi Meet,react-native-youtube-iframe,N
+Jitsi Meet,react-redux,U
+Jitsi Meet,react-textarea-autosize,U
+Jitsi Meet,react-virtualized-auto-sizer,U
+Jitsi Meet,react-window,U
+Jitsi Meet,react-youtube,U
+Jitsi Meet,redux,U
+Jitsi Meet,redux-thunk,U
+Jitsi Meet,reselect,U
+Jitsi Meet,seamless-scroll-polyfill,P
+Jitsi Meet,semver,C
+Jitsi Meet,text-encoding,P
+Jitsi Meet,ts-ebml,C
+Jitsi Meet,tss-react,U
+Jitsi Meet,util,P
+Jitsi Meet,uuid,C
+Jitsi Meet,wasm-check,I
+Jitsi Meet,windows-iana,C
+Jitsi Meet,zxcvbn,C-heavy
+Mattermost,@atlaskit/pragmatic-drag-and-drop,U
+Mattermost,@atlaskit/pragmatic-drag-and-drop-hitbox,U
+Mattermost,@atlaskit/pragmatic-drag-and-drop-react-drop-indicator,U
+Mattermost,@floating-ui/react,U
+Mattermost,@giphy/js-fetch-api,I
+Mattermost,@giphy/react-components,U
+Mattermost,@guyplusplus/turndown-plugin-gfm,C
+Mattermost,@hello-pangea/dnd,U
+Mattermost,@mattermost/client,I
+Mattermost,@mattermost/compass-ui,U
+Mattermost,@mattermost/desktop-api,N
+Mattermost,@mattermost/shared,U
+Mattermost,@mattermost/types,N
+Mattermost,@mui/base,U
+Mattermost,@mui/material,U
+Mattermost,@mui/styled-engine-sc,U
+Mattermost,@redux-devtools/extension,N
+Mattermost,@tanstack/react-table,U
+Mattermost,@tiptap/extension-code-block-lowlight,U
+Mattermost,@tiptap/extension-link,U
+Mattermost,@tiptap/extension-placeholder,U
+Mattermost,@tiptap/extension-table,U
+Mattermost,@tiptap/extension-table-cell,U
+Mattermost,@tiptap/extension-table-header,U
+Mattermost,@tiptap/extension-table-row,U
+Mattermost,@tiptap/markdown,U
+Mattermost,@tiptap/react,U
+Mattermost,@tiptap/starter-kit,U
+Mattermost,@types/color-hash,N
+Mattermost,@types/react-is,N
+Mattermost,@types/turndown,N
+Mattermost,bootstrap,U
+Mattermost,buffer,P
+Mattermost,chart.js,U
+Mattermost,classnames,C
+Mattermost,color-contrast-checker,C
+Mattermost,color-hash,C
+Mattermost,core-js,P
+Mattermost,country-list,C
+Mattermost,crypto-browserify,P
+Mattermost,css-vars-ponyfill,P
+Mattermost,date-fns,C
+Mattermost,emoji-regex,C
+Mattermost,exif2css,C
+Mattermost,fast-deep-equal,C
+Mattermost,fflate,C-heavy
+Mattermost,flexsearch,C-heavy
+Mattermost,font-awesome,U
+Mattermost,highlight.js,C
+Mattermost,history,I
+Mattermost,hoist-non-react-statics,U
+Mattermost,html-to-react,U
+Mattermost,ipaddr.js,C
+Mattermost,katex,C
+Mattermost,localforage,I
+Mattermost,localforage-observable,I
+Mattermost,lodash,C
+Mattermost,lowlight,C
+Mattermost,luxon,C
+Mattermost,mark.js,U
+Mattermost,marked,C
+Mattermost,memoize-one,U
+Mattermost,moment-timezone,C
+Mattermost,monaco-editor,U
+Mattermost,monaco-editor-webpack-plugin,N
+Mattermost,p-queue,I
+Mattermost,pdfjs-dist,I
+Mattermost,process,P
+Mattermost,prop-types,U
+Mattermost,react,U
+Mattermost,react-bootstrap,U
+Mattermost,react-color,U
+Mattermost,react-day-picker,U
+Mattermost,react-dom,U
+Mattermost,react-intl,U
+Mattermost,react-is,U
+Mattermost,react-overlays,U
+Mattermost,react-redux,U
+Mattermost,react-router-dom,U
+Mattermost,react-select,U
+Mattermost,react-transition-group,U
+Mattermost,react-virtualized-auto-sizer,U
+Mattermost,react-window,U
+Mattermost,react-window-infinite-loader,U
+Mattermost,rebound,I
+Mattermost,redux,U
+Mattermost,redux-batched-actions,U
+Mattermost,redux-persist,I
+Mattermost,redux-thunk,U
+Mattermost,regenerator-runtime,P
+Mattermost,semver,C
+Mattermost,serialize-error,C
+Mattermost,shallow-equals,C
+Mattermost,simplebar-react,U
+Mattermost,smooth-scroll-into-view-if-needed,P
+Mattermost,stream-browserify,P
+Mattermost,styled-components,U
+Mattermost,timezones.json,C
+Mattermost,tinycolor2,C
+Mattermost,turndown,U
+Mattermost,web-vitals,I
+Mattermost,zen-observable,U
+Bitwarden clients,@angular/animations,U
+Bitwarden clients,@angular/cdk,U
+Bitwarden clients,@angular/common,U
+Bitwarden clients,@angular/compiler,U
+Bitwarden clients,@angular/core,U
+Bitwarden clients,@angular/forms,U
+Bitwarden clients,@angular/platform-browser,U
+Bitwarden clients,@angular/router,U
+Bitwarden clients,@bitwarden/commercial-sdk-internal,I
+Bitwarden clients,@bitwarden/desktop-napi,N
+Bitwarden clients,@bitwarden/sdk-internal,I
+Bitwarden clients,@bufbuild/protobuf,C
+Bitwarden clients,@electron/fuses,N
+Bitwarden clients,@emotion/css,U
+Bitwarden clients,@koa/multer,N
+Bitwarden clients,@koa/router,N
+Bitwarden clients,@microsoft/signalr,I
+Bitwarden clients,@microsoft/signalr-protocol-msgpack,I
+Bitwarden clients,@ng-select/ng-select,U
+Bitwarden clients,big-integer,C-heavy
+Bitwarden clients,braintree-web-drop-in,I
+Bitwarden clients,buffer,P
+Bitwarden clients,bufferutil,N
+Bitwarden clients,chalk,N
+Bitwarden clients,chart.js,U
+Bitwarden clients,chartjs-adapter-date-fns,U
+Bitwarden clients,commander,N
+Bitwarden clients,core-js,P
+Bitwarden clients,form-data,N
+Bitwarden clients,https-proxy-agent,N
+Bitwarden clients,inquirer,N
+Bitwarden clients,jsdom,N
+Bitwarden clients,jszip,C-heavy
+Bitwarden clients,koa,N
+Bitwarden clients,koa-bodyparser,N
+Bitwarden clients,koa-json,N
+Bitwarden clients,lit,U
+Bitwarden clients,lowdb,N
+Bitwarden clients,lunr,C-heavy
+Bitwarden clients,multer,N
+Bitwarden clients,ngx-toastr,U
+Bitwarden clients,node-fetch,N
+Bitwarden clients,node-forge,C-heavy
+Bitwarden clients,oauth4webapi,I
+Bitwarden clients,open,N
+Bitwarden clients,papaparse,C-heavy
+Bitwarden clients,proper-lockfile,N
+Bitwarden clients,qrcode-parser,I
+Bitwarden clients,qrious,U
+Bitwarden clients,rxjs,U
+Bitwarden clients,semver,C
+Bitwarden clients,tabbable,U
+Bitwarden clients,tldts,C
+Bitwarden clients,ts-node,N
+Bitwarden clients,utf-8-validate,N
+Bitwarden clients,vite-tsconfig-paths,N
+Bitwarden clients,zone.js,P
+Bitwarden clients,zxcvbn,C-heavy
+Nextcloud server,@mdi/js,U
+Nextcloud server,@mdi/svg,U
+Nextcloud server,@nextcloud/auth,I
+Nextcloud server,@nextcloud/axios,I
+Nextcloud server,@nextcloud/browser-storage,I
+Nextcloud server,@nextcloud/calendar-availability-vue,U
+Nextcloud server,@nextcloud/capabilities,I
+Nextcloud server,@nextcloud/dialogs,U
+Nextcloud server,@nextcloud/event-bus,I
+Nextcloud server,@nextcloud/files,I
+Nextcloud server,@nextcloud/initial-state,I
+Nextcloud server,@nextcloud/l10n,I
+Nextcloud server,@nextcloud/logger,I
+Nextcloud server,@nextcloud/password-confirmation,I
+Nextcloud server,@nextcloud/paths,C
+Nextcloud server,@nextcloud/router,I
+Nextcloud server,@nextcloud/sharing,I
+Nextcloud server,@nextcloud/viewer,I
+Nextcloud server,@nextcloud/vue,U
+Nextcloud server,@simplewebauthn/browser,I
+Nextcloud server,@vueuse/core,U
+Nextcloud server,@vueuse/integrations,U
+Nextcloud server,browserslist-useragent-regexp,C
+Nextcloud server,color,C
+Nextcloud server,core-js,P
+Nextcloud server,cropperjs,U
+Nextcloud server,debounce,I
+Nextcloud server,dompurify,U
+Nextcloud server,escape-html,C
+Nextcloud server,focus-trap,U
+Nextcloud server,libphonenumber-js,C
+Nextcloud server,marked,C
+Nextcloud server,moment,C
+Nextcloud server,p-queue,I
+Nextcloud server,pinia,U
+Nextcloud server,qrcode,C
+Nextcloud server,sortablejs,U
+Nextcloud server,vue,U
+Nextcloud server,vue-router,U
+Nextcloud server,webdav,I
+Jellyfin web,@emotion/react,U
+Jellyfin web,@emotion/styled,U
+Jellyfin web,@fontsource/noto-sans,N
+Jellyfin web,@fontsource/noto-sans-hk,N
+Jellyfin web,@fontsource/noto-sans-jp,N
+Jellyfin web,@fontsource/noto-sans-kr,N
+Jellyfin web,@fontsource/noto-sans-sc,N
+Jellyfin web,@fontsource/noto-sans-tc,N
+Jellyfin web,@jellyfin/libass-wasm,I
+Jellyfin web,@jellyfin/sdk,I
+Jellyfin web,@jellyfin/ux-web,U
+Jellyfin web,@mui/icons-material,U
+Jellyfin web,@mui/material,U
+Jellyfin web,@mui/x-date-pickers,U
+Jellyfin web,@react-hook/resize-observer,U
+Jellyfin web,@tanstack/react-query,U
+Jellyfin web,@tanstack/react-query-devtools,U
+Jellyfin web,@tanstack/react-query-persist-client,U
+Jellyfin web,abortcontroller-polyfill,P
+Jellyfin web,axios,I
+Jellyfin web,blurhash,C-heavy
+Jellyfin web,classlist.js,P
+Jellyfin web,classnames,C
+Jellyfin web,core-js,P
+Jellyfin web,date-fns,C
+Jellyfin web,dompurify,U
+Jellyfin web,element-closest-polyfill,P
+Jellyfin web,epubjs,I
+Jellyfin web,escape-html,C
+Jellyfin web,fast-text-encoding,P
+Jellyfin web,flv.js,I
+Jellyfin web,headroom.js,U
+Jellyfin web,history,I
+Jellyfin web,hls.js,I
+Jellyfin web,idb-keyval,I
+Jellyfin web,intersection-observer,P
+Jellyfin web,jellyfin-apiclient,I
+Jellyfin web,jquery,U
+Jellyfin web,jstree,U
+Jellyfin web,libarchive.js,I
+Jellyfin web,libbitsub,I
+Jellyfin web,lodash-es,C
+Jellyfin web,markdown-it,C
+Jellyfin web,material-design-icons-iconfont,U
+Jellyfin web,material-react-table,U
+Jellyfin web,native-promise-only,P
+Jellyfin web,pdfjs-dist,I
+Jellyfin web,proxy-polyfill,P
+Jellyfin web,react,U
+Jellyfin web,react-blurhash,U
+Jellyfin web,react-dom,U
+Jellyfin web,react-lazy-load-image-component,U
+Jellyfin web,react-router-dom,U
+Jellyfin web,resize-observer-polyfill,P
+Jellyfin web,screenfull,I
+Jellyfin web,sortablejs,U
+Jellyfin web,swiper,U
+Jellyfin web,usehooks-ts,U
+Jellyfin web,webcomponents.js,P
+Jellyfin web,whatwg-fetch,P

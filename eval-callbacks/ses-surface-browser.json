@@ -1,0 +1,23 @@
+{
+ "chrome": {
+  "version": "157.0.8103.79",
+  "reachableFromCompartment": 902,
+  "sharedWithHostRealm": 894,
+  "sharedFunctions": 844,
+  "sharedNotFrozen": 0
+ },
+ "firefox": {
+  "version": "159.0",
+  "reachableFromCompartment": 904,
+  "sharedWithHostRealm": 896,
+  "sharedFunctions": 846,
+  "sharedNotFrozen": 0
+ },
+ "webkit": {
+  "version": "27.2",
+  "reachableFromCompartment": 902,
+  "sharedWithHostRealm": 894,
+  "sharedFunctions": 844,
+  "sharedNotFrozen": 0
+ }
+}

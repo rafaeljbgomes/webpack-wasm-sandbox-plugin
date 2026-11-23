@@ -1,0 +1,4243 @@
+{
+ "@amplitude/analytics-browser": {
+  "description": "Official Amplitude SDK for Web",
+  "keywords": [
+   "analytics",
+   "amplitude"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@amplitude/analytics-react-native": {
+  "description": "Official React Native SDK",
+  "keywords": [
+   "analytics",
+   "amplitude",
+   "react-native",
+   "ios",
+   "android"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "@angular/animations": {
+  "description": "Angular - animations integration with web-animations",
+  "keywords": [],
+  "peer": [
+   "@angular/core"
+  ],
+  "browser": false
+ },
+ "@angular/cdk": {
+  "description": "Angular Material Component Development Kit",
+  "keywords": [
+   "angular",
+   "cdk",
+   "component",
+   "development",
+   "kit"
+  ],
+  "peer": [
+   "@angular/common",
+   "@angular/core",
+   "@angular/forms",
+   "@angular/platform-browser",
+   "rxjs"
+  ],
+  "browser": false
+ },
+ "@angular/common": {
+  "description": "Angular - commonly needed directives and services",
+  "keywords": [],
+  "peer": [
+   "@angular/core",
+   "rxjs"
+  ],
+  "browser": false
+ },
+ "@angular/compiler": {
+  "description": "Angular - the compiler library",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@angular/core": {
+  "description": "Angular - the core framework",
+  "keywords": [],
+  "peer": [
+   "@angular/compiler",
+   "rxjs",
+   "zone.js"
+  ],
+  "browser": false
+ },
+ "@angular/forms": {
+  "description": "Angular - directives and services for creating forms",
+  "keywords": [],
+  "peer": [
+   "@angular/common",
+   "@angular/core",
+   "@angular/platform-browser",
+   "rxjs"
+  ],
+  "browser": false
+ },
+ "@angular/platform-browser": {
+  "description": "Angular - library for using Angular in a web browser",
+  "keywords": [],
+  "peer": [
+   "@angular/animations",
+   "@angular/common",
+   "@angular/core"
+  ],
+  "browser": false
+ },
+ "@angular/router": {
+  "description": "Angular - the routing library",
+  "keywords": [
+   "angular",
+   "router"
+  ],
+  "peer": [
+   "@angular/common",
+   "@angular/core",
+   "@angular/platform-browser",
+   "rxjs"
+  ],
+  "browser": false
+ },
+ "@atlaskit/pragmatic-drag-and-drop": {
+  "description": "The core package for Pragmatic drag and drop - enabling fast drag and drop for any experience on any tech stack",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@atlaskit/pragmatic-drag-and-drop-hitbox": {
+  "description": "An optional package for Pragmatic drag and drop that enables the attaching of interaction information to a drop target",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator": {
+  "description": "An optional Pragmatic drag and drop package containing react components that provide a visual indication about what the user will achieve when the drop (eg lines)",
+  "keywords": [],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "@bitwarden/commercial-sdk-internal": {
+  "description": "**Note:** This is only for internal use. Bitwarden will not provide any support for this package.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@bitwarden/desktop-napi": {
+  "error": "HTTP Error 404: Not Found"
+ },
+ "@bitwarden/sdk-internal": {
+  "description": "**Note:** This is only for internal use. Bitwarden will not provide any support for this package.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@braintree/sanitize-url": {
+  "description": "A url sanitizer",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@bufbuild/protobuf": {
+  "description": "Protocol Buffers for ECMAScript. Fully compliant with the Protobuf conformance tests.",
+  "keywords": [
+   "protobuf",
+   "schema",
+   "typescript",
+   "ecmascript"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@electron/fuses": {
+  "description": "Flip Electron Fuses and customize your packaged build of Electron",
+  "keywords": [
+   "electron",
+   "fuses"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@emotion/cache": {
+  "description": "emotion's cache",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@emotion/css": {
+  "description": "The Next Generation of CSS-in-JS.",
+  "keywords": [
+   "styles",
+   "emotion",
+   "react",
+   "css",
+   "css-in-js"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@emotion/react": {
+  "description": "> Simple styling in React.",
+  "keywords": [],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "@emotion/styled": {
+  "description": "styled API for emotion",
+  "keywords": [],
+  "peer": [
+   "@emotion/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "@floating-ui/react": {
+  "description": "Floating UI for React",
+  "keywords": [
+   "tooltip",
+   "popover",
+   "dropdown",
+   "menu",
+   "popup",
+   "positioning",
+   "react",
+   "react-dom"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "@fontsource/noto-sans": {
+  "description": "Self-host the Noto Sans font in a neatly bundled NPM package.",
+  "keywords": [
+   "fontsource",
+   "font",
+   "font family",
+   "google fonts",
+   "noto-sans",
+   "Noto Sans",
+   "css",
+   "sass",
+   "front-end",
+   "web",
+   "typeface",
+   "variable"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@fontsource/noto-sans-hk": {
+  "description": "Self-host the Noto Sans HK font in a neatly bundled NPM package.",
+  "keywords": [
+   "fontsource",
+   "font",
+   "font family",
+   "google fonts",
+   "noto-sans-hk",
+   "Noto Sans HK",
+   "css",
+   "sass",
+   "front-end",
+   "web",
+   "typeface",
+   "variable"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@fontsource/noto-sans-jp": {
+  "description": "Self-host the Noto Sans JP font in a neatly bundled NPM package.",
+  "keywords": [
+   "fontsource",
+   "font",
+   "font family",
+   "google fonts",
+   "noto-sans-jp",
+   "Noto Sans JP",
+   "css",
+   "sass",
+   "front-end",
+   "web",
+   "typeface",
+   "variable"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@fontsource/noto-sans-kr": {
+  "description": "Self-host the Noto Sans KR font in a neatly bundled NPM package.",
+  "keywords": [
+   "fontsource",
+   "font",
+   "font family",
+   "google fonts",
+   "noto-sans-kr",
+   "Noto Sans KR",
+   "css",
+   "sass",
+   "front-end",
+   "web",
+   "typeface",
+   "variable"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@fontsource/noto-sans-sc": {
+  "description": "Self-host the Noto Sans SC font in a neatly bundled NPM package.",
+  "keywords": [
+   "fontsource",
+   "font",
+   "font family",
+   "google fonts",
+   "noto-sans-sc",
+   "Noto Sans SC",
+   "css",
+   "sass",
+   "front-end",
+   "web",
+   "typeface",
+   "variable"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@fontsource/noto-sans-tc": {
+  "description": "Self-host the Noto Sans TC font in a neatly bundled NPM package.",
+  "keywords": [
+   "fontsource",
+   "font",
+   "font family",
+   "google fonts",
+   "noto-sans-tc",
+   "Noto Sans TC",
+   "css",
+   "sass",
+   "front-end",
+   "web",
+   "typeface",
+   "variable"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@giphy/js-fetch-api": {
+  "description": "Javascript API to fetch gifs and stickers from the GIPHY API.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@giphy/react-components": {
+  "description": "A lightweight set of components, focused on easy-of-use and performance.",
+  "keywords": [],
+  "peer": [
+   "react",
+   "styled-components"
+  ],
+  "browser": false
+ },
+ "@giphy/react-native-sdk": {
+  "description": "Giphy React Native SDK",
+  "keywords": [
+   "react-native",
+   "ios",
+   "android",
+   "giphy",
+   "sdk"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "@guyplusplus/turndown-plugin-gfm": {
+  "description": "Turndown plugin to add GitHub Flavored Markdown extensions.",
+  "keywords": [
+   "turndown",
+   "turndown-plugin",
+   "html-to-markdown",
+   "html",
+   "markdown",
+   "github-flavored-markdown",
+   "gfm"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@hello-pangea/dnd": {
+  "description": "Beautiful and accessible drag and drop for lists with React",
+  "keywords": [
+   "drag and drop",
+   "dnd",
+   "sortable",
+   "reorder",
+   "reorderable",
+   "react",
+   "react.js",
+   "natural",
+   "beautiful",
+   "accessible"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "@jellyfin/libass-wasm": {
+  "description": "libass Subtitle Renderer and Parser library for browsers",
+  "keywords": [
+   "libass",
+   "subtitle",
+   "wasm",
+   "emscripten"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@jellyfin/sdk": {
+  "description": "A TypeScript SDK for Jellyfin.",
+  "keywords": [
+   "jellyfin"
+  ],
+  "peer": [
+   "axios"
+  ],
+  "browser": false
+ },
+ "@jellyfin/ux-web": {
+  "description": "UX resources for the Jellyfin Web client.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@jitsi/excalidraw": {
+  "error": "HTTP Error 404: Not Found"
+ },
+ "@jitsi/js-utils": {
+  "description": "Utilities for Jitsi JS projects",
+  "keywords": [
+   "browser",
+   "jitsi",
+   "utils"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@jitsi/logger": {
+  "description": "A simple npm utility module for logging",
+  "keywords": [
+   "javascript",
+   "logging",
+   "simple"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@jitsi/rnnoise-wasm": {
+  "description": "Rnnoise sub-module compiled with emscripten as web assembly module",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@koa/multer": {
+  "description": "Route middleware for Koa that handles `multipart/form-data` using multer",
+  "keywords": [
+   "form",
+   "form-data",
+   "formdata",
+   "koa",
+   "middleware",
+   "multipart",
+   "post"
+  ],
+  "peer": [
+   "koa",
+   "multer"
+  ],
+  "browser": false
+ },
+ "@koa/router": {
+  "description": "Router middleware for Koa.",
+  "keywords": [
+   "koa",
+   "middleware",
+   "route",
+   "router"
+  ],
+  "peer": [
+   "koa"
+  ],
+  "browser": false
+ },
+ "@matrix-org/olm": {
+  "description": "An implementation of the Double Ratchet cryptographic ratchet",
+  "keywords": [
+   "matrix-org"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@mattermost/client": {
+  "description": "JavaScript/TypeScript client for Mattermost",
+  "keywords": [
+   "mattermost"
+  ],
+  "peer": [
+   "@mattermost/types",
+   "typescript"
+  ],
+  "browser": false
+ },
+ "@mattermost/compass-ui": {
+  "description": "Compass design system UI components for Mattermost products",
+  "keywords": [],
+  "peer": [
+   "@mattermost/compass-icons",
+   "react",
+   "react-dom",
+   "simplebar-react"
+  ],
+  "browser": false
+ },
+ "@mattermost/desktop-api": {
+  "description": "Shared types for the Desktop App API provided to the Web App",
+  "keywords": [
+   "mattermost"
+  ],
+  "peer": [
+   "typescript"
+  ],
+  "browser": false
+ },
+ "@mattermost/shared": {
+  "description": "Shared components and utilities for use by the Mattermost web app and its plugins",
+  "keywords": [
+   "mattermost"
+  ],
+  "peer": [
+   "@mattermost/types",
+   "@testing-library/react",
+   "react",
+   "react-intl",
+   "typescript"
+  ],
+  "browser": false
+ },
+ "@mattermost/types": {
+  "description": "Shared type definitions used by the Mattermost web app",
+  "keywords": [
+   "mattermost"
+  ],
+  "peer": [
+   "typescript"
+  ],
+  "browser": false
+ },
+ "@mdi/js": {
+  "description": "Dist for Material Design Icons for JS/TypeScript",
+  "keywords": [
+   "Material",
+   "Design",
+   "Icons",
+   "mdi"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@mdi/svg": {
+  "description": "Material Design Icons SVG",
+  "keywords": [
+   "material",
+   "design",
+   "icons",
+   "mdi"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@mediapipe/selfie_segmentation": {
+  "description": "Mediapipe Selfie Segmentation Solution",
+  "keywords": [
+   "AR",
+   "ML",
+   "Augmented"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "@microsoft/microsoft-graph-client": {
+  "description": "Microsoft Graph Client Library",
+  "keywords": [
+   "Microsoft",
+   "Graph",
+   "SDK",
+   "JavaScript",
+   "Client"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "@microsoft/signalr": {
+  "description": "ASP.NET Core SignalR Client",
+  "keywords": [
+   "signalr",
+   "aspnetcore"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@microsoft/signalr-protocol-msgpack": {
+  "description": "MsgPack Protocol support for ASP.NET Core SignalR",
+  "keywords": [
+   "signalr",
+   "aspnetcore"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@mui/base": {
+  "description": "MUI\u00a0Base is a library of headless ('unstyled') React components and low-level hooks. You gain complete control over your app's CSS and accessibility features.",
+  "keywords": [
+   "react",
+   "react-component",
+   "mui",
+   "unstyled",
+   "a11y"
+  ],
+  "peer": [
+   "@types/react",
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "@mui/icons-material": {
+  "description": "Material Design icons distributed as SVG React components.",
+  "keywords": [
+   "react",
+   "react-component",
+   "mui",
+   "material-ui",
+   "material design",
+   "icons"
+  ],
+  "peer": [
+   "@mui/material",
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "@mui/material": {
+  "description": "Material UI is an open-source React component library that implements Google's Material Design. It's comprehensive and can be used in production out of the box.",
+  "keywords": [
+   "react",
+   "react-component",
+   "mui",
+   "material-ui",
+   "material design"
+  ],
+  "peer": [
+   "@emotion/react",
+   "@emotion/styled",
+   "@mui/material-pigment-css",
+   "@types/react",
+   "react",
+   "react-dom"
+  ],
+  "browser": true
+ },
+ "@mui/styled-engine-sc": {
+  "description": "styled() API wrapper package for styled-components.",
+  "keywords": [
+   "react",
+   "react-component",
+   "mui",
+   "styled-components"
+  ],
+  "peer": [
+   "styled-components"
+  ],
+  "browser": false
+ },
+ "@mui/x-date-pickers": {
+  "description": "The community edition of the MUI X Date and Time Picker components.",
+  "keywords": [
+   "react",
+   "react-component",
+   "mui",
+   "mui-x",
+   "material-ui",
+   "material design",
+   "datepicker",
+   "timepicker",
+   "datetimepicker"
+  ],
+  "peer": [
+   "@emotion/react",
+   "@emotion/styled",
+   "@mui/material",
+   "@mui/system",
+   "date-fns",
+   "date-fns-jalali",
+   "dayjs",
+   "luxon",
+   "moment",
+   "moment-hijri",
+   "moment-jalaali",
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "@nextcloud/auth": {
+  "description": "Nextcloud helpers related to authentication and the current user",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/axios": {
+  "description": "Axios client for Nextcloud",
+  "keywords": [
+   "nextcloud",
+   "http",
+   "axios",
+   "csrf"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/browser-storage": {
+  "description": "Browser storage (e.g. local storage) abstraction for Nextcloud apps",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/calendar-availability-vue": {
+  "description": "Weekly calendar availability component for Nextcloud apps",
+  "keywords": [
+   "nextcloud",
+   "calendar",
+   "caldav",
+   "availability",
+   "rfc7953"
+  ],
+  "peer": [
+   "@nextcloud/l10n",
+   "@nextcloud/vue",
+   "vue"
+  ],
+  "browser": false
+ },
+ "@nextcloud/capabilities": {
+  "description": "Nextcloud helper to obtain the server capabilities",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/dialogs": {
+  "description": "Nextcloud dialog helpers",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/event-bus": {
+  "description": "A simple event bus to communicate between Nextcloud components.",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/files": {
+  "description": "Nextcloud files utils",
+  "keywords": [
+   "nextcloud",
+   "files",
+   "library"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/initial-state": {
+  "description": "Access data from the nextcloud server-side initial state API within apps.",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/l10n": {
+  "description": "Nextcloud localization and translation helpers for apps and libraries",
+  "keywords": [
+   "nextcloud",
+   "l10n",
+   "localization",
+   "translation",
+   "internationalization"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/logger": {
+  "description": "Generic JavaScript logging interface for Nextcloud apps and libraries",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/password-confirmation": {
+  "description": "Password confirmation for Nextcloud",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/paths": {
+  "description": "Helper functions for working with paths in Nextcloud apps",
+  "keywords": [
+   "nextcloud",
+   "paths"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/router": {
+  "description": "Utils for generating Nextcloud URLs",
+  "keywords": [
+   "nextcloud"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/sharing": {
+  "description": "Front-end utilities for Nextcloud files sharing",
+  "keywords": [
+   "nextcloud",
+   "sharing"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@nextcloud/viewer": {
+  "description": "Nextcloud viewer app API bindings",
+  "keywords": [
+   "nextcloud",
+   "viewer",
+   "api"
+  ],
+  "peer": [
+   "vue"
+  ],
+  "browser": false
+ },
+ "@nextcloud/vue": {
+  "description": "Nextcloud vue components",
+  "keywords": [
+   "vuejs",
+   "nextcloud",
+   "components"
+  ],
+  "peer": [
+   "@nextcloud/dialogs",
+   "@nextcloud/files"
+  ],
+  "browser": false
+ },
+ "@ng-select/ng-select": {
+  "description": "Angular select, multiselect and autocomplete with Signal Forms, Reactive Forms and Template-driven Forms support",
+  "keywords": [
+   "angular",
+   "select",
+   "ui-select",
+   "dropdown",
+   "multiselect",
+   "autocomplete",
+   "signal-forms",
+   "reactive-forms",
+   "template-driven-forms",
+   "angular2"
+  ],
+  "peer": [
+   "@angular/cdk",
+   "@angular/common",
+   "@angular/core",
+   "@angular/forms"
+  ],
+  "browser": false
+ },
+ "@react-hook/resize-observer": {
+  "description": "A React hook that fires a callback whenever ResizeObserver detects a change to its size",
+  "keywords": [
+   "react",
+   "react hook",
+   "resize observer",
+   "resize observer hook",
+   "resize observer react hook",
+   "use-resize-observer",
+   "useresizeobserver",
+   "resize hook",
+   "size hook"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "@react-native-async-storage/async-storage": {
+  "description": "Asynchronous, persistent, key-value storage system for React Native.",
+  "keywords": [
+   "react-native",
+   "react native",
+   "async storage",
+   "asyncstorage",
+   "storage"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "@react-native-clipboard/clipboard": {
+  "description": "React Native Clipboard API for macOS, iOS, Android, and Windows",
+  "keywords": [
+   "Clipboard",
+   "getString",
+   "react-native",
+   "setString"
+  ],
+  "peer": [
+   "react",
+   "react-native",
+   "react-native-macos",
+   "react-native-windows"
+  ],
+  "browser": false
+ },
+ "@react-native-community/netinfo": {
+  "description": "React Native Network Info API for iOS & Android",
+  "keywords": [
+   "react-native",
+   "react native",
+   "netinfo",
+   "networking",
+   "network info"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "@react-native-community/slider": {
+  "description": "React Native component used to select a single value from a range of values.",
+  "keywords": [
+   "react-native",
+   "react native",
+   "slider"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@react-native-google-signin/google-signin": {
+  "description": "Google sign in for your react native applications",
+  "keywords": [
+   "react-native",
+   "google sign in",
+   "google login",
+   "android creadential manager",
+   "oauth",
+   "oauth2",
+   "ios",
+   "android",
+   "web"
+  ],
+  "peer": [
+   "expo",
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "@react-navigation/bottom-tabs": {
+  "description": "Bottom tab navigator following iOS design guidelines",
+  "keywords": [
+   "react-native-component",
+   "react-component",
+   "react-native",
+   "react-navigation",
+   "ios",
+   "android",
+   "tab"
+  ],
+  "peer": [
+   "@react-navigation/native",
+   "react",
+   "react-native",
+   "react-native-safe-area-context",
+   "react-native-screens"
+  ],
+  "browser": false
+ },
+ "@react-navigation/elements": {
+  "description": "UI Components for React Navigation",
+  "keywords": [
+   "react-native",
+   "react-navigation",
+   "ios",
+   "android"
+  ],
+  "peer": [
+   "@react-native-masked-view/masked-view",
+   "@react-navigation/native",
+   "react",
+   "react-native",
+   "react-native-safe-area-context"
+  ],
+  "browser": false
+ },
+ "@react-navigation/material-top-tabs": {
+  "description": "Integration for the animated tab view component from react-native-tab-view",
+  "keywords": [
+   "react-native-component",
+   "react-component",
+   "react-native",
+   "react-navigation",
+   "ios",
+   "android",
+   "material",
+   "tab"
+  ],
+  "peer": [
+   "@react-navigation/native",
+   "react",
+   "react-native",
+   "react-native-pager-view",
+   "react-native-safe-area-context"
+  ],
+  "browser": false
+ },
+ "@react-navigation/native": {
+  "description": "React Native integration for React Navigation",
+  "keywords": [
+   "react-native",
+   "react-navigation",
+   "ios",
+   "android"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "@react-navigation/stack": {
+  "description": "Stack navigator component for iOS and Android with animated transitions and gestures",
+  "keywords": [
+   "react-native-component",
+   "react-component",
+   "react-native",
+   "react-navigation",
+   "ios",
+   "android",
+   "stack"
+  ],
+  "peer": [
+   "@react-navigation/native",
+   "react",
+   "react-native",
+   "react-native-gesture-handler",
+   "react-native-safe-area-context",
+   "react-native-screens"
+  ],
+  "browser": false
+ },
+ "@redux-devtools/extension": {
+  "description": "Wrappers for Redux DevTools Extension.",
+  "keywords": [],
+  "peer": [
+   "redux"
+  ],
+  "browser": false
+ },
+ "@sayem314/react-native-keep-awake": {
+  "description": "Keep the screen from going to sleep. iOS, Android and Web.",
+  "keywords": [
+   "react-native",
+   "ios",
+   "android",
+   "awake",
+   "screen",
+   "lock",
+   "sleep"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "@simplewebauthn/browser": {
+  "description": "SimpleWebAuthn for Browsers",
+  "keywords": [
+   "typescript",
+   "webauthn",
+   "passkeys",
+   "fido",
+   "umd"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@stomp/stompjs": {
+  "description": "STOMP client for Javascript and Typescript",
+  "keywords": [
+   "STOMP",
+   "RabbitMQ",
+   "ActiveMQ",
+   "Websocket",
+   "messaging",
+   "queue",
+   "JavaScript"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "@svgr/webpack": {
+  "description": "SVGR webpack loader.",
+  "keywords": [
+   "svgr",
+   "svg",
+   "react",
+   "webpack",
+   "webpack-loader"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@tanstack/react-query": {
+  "description": "Hooks for managing, caching and syncing asynchronous and remote data in React",
+  "keywords": [],
+  "peer": [
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "@tanstack/react-query-devtools": {
+  "description": "Developer tools to interact with and visualize the TanStack/react-query cache",
+  "keywords": [],
+  "peer": [
+   "@tanstack/react-query",
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "@tanstack/react-query-persist-client": {
+  "description": "React bindings to work with persisters in TanStack/react-query",
+  "keywords": [],
+  "peer": [
+   "@tanstack/react-query",
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "@tanstack/react-table": {
+  "description": "Headless UI for building powerful tables & datagrids for React.",
+  "keywords": [
+   "react",
+   "table",
+   "react-table",
+   "datagrid",
+   "tanstack-intent"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "@tensorflow-models/body-segmentation": {
+  "description": "Pretrained body segmentation model",
+  "keywords": [],
+  "peer": [
+   "@mediapipe/selfie_segmentation",
+   "@tensorflow/tfjs-backend-webgl",
+   "@tensorflow/tfjs-converter",
+   "@tensorflow/tfjs-core"
+  ],
+  "browser": false
+ },
+ "@tensorflow/tfjs-backend-wasm": {
+  "description": "This package adds a WebAssembly backend to TensorFlow.js. It currently supports the following models from our [models](https://github.com/tensorflow/tfjs-models) repo: - BlazeFace - BodyPix - CocoSSD ",
+  "keywords": [],
+  "peer": [
+   "@tensorflow/tfjs-core"
+  ],
+  "browser": true
+ },
+ "@tensorflow/tfjs-backend-webgl": {
+  "description": "GPU accelerated WebGL backend for TensorFlow.js",
+  "keywords": [],
+  "peer": [
+   "@tensorflow/tfjs-core"
+  ],
+  "browser": true
+ },
+ "@tensorflow/tfjs-backend-webgpu": {
+  "description": "This package adds a GPU accelerated [WebGPU](https://www.w3.org/TR/webgpu/) backend to TensorFlow.js. It currently supports the following models: - BlazeFace - BodyPix - Face landmarks detection - Han",
+  "keywords": [],
+  "peer": [
+   "@tensorflow/tfjs-core"
+  ],
+  "browser": false
+ },
+ "@tensorflow/tfjs-converter": {
+  "description": "Tensorflow model converter for javascript",
+  "keywords": [],
+  "peer": [
+   "@tensorflow/tfjs-core"
+  ],
+  "browser": false
+ },
+ "@tensorflow/tfjs-core": {
+  "description": "Hardware-accelerated JavaScript library for machine intelligence",
+  "keywords": [],
+  "peer": [],
+  "browser": true
+ },
+ "@tiptap/extension-code-block-lowlight": {
+  "description": "code block extension for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap extension"
+  ],
+  "peer": [
+   "@tiptap/core",
+   "@tiptap/extension-code-block",
+   "@tiptap/pm",
+   "highlight.js",
+   "lowlight"
+  ],
+  "browser": false
+ },
+ "@tiptap/extension-link": {
+  "description": "link extension for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap extension"
+  ],
+  "peer": [
+   "@tiptap/core",
+   "@tiptap/pm"
+  ],
+  "browser": false
+ },
+ "@tiptap/extension-placeholder": {
+  "description": "placeholder extension for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap extension"
+  ],
+  "peer": [
+   "@tiptap/extensions"
+  ],
+  "browser": false
+ },
+ "@tiptap/extension-table": {
+  "description": "table extension for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap extension"
+  ],
+  "peer": [
+   "@tiptap/core",
+   "@tiptap/pm"
+  ],
+  "browser": false
+ },
+ "@tiptap/extension-table-cell": {
+  "description": "table cell extension for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap extension"
+  ],
+  "peer": [
+   "@tiptap/extension-table"
+  ],
+  "browser": false
+ },
+ "@tiptap/extension-table-header": {
+  "description": "table cell extension for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap extension"
+  ],
+  "peer": [
+   "@tiptap/extension-table"
+  ],
+  "browser": false
+ },
+ "@tiptap/extension-table-row": {
+  "description": "table row extension for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap extension"
+  ],
+  "peer": [
+   "@tiptap/extension-table"
+  ],
+  "browser": false
+ },
+ "@tiptap/markdown": {
+  "description": "markdown parser and serializer for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap utility"
+  ],
+  "peer": [
+   "@tiptap/core",
+   "@tiptap/pm"
+  ],
+  "browser": false
+ },
+ "@tiptap/react": {
+  "description": "React components for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap react components"
+  ],
+  "peer": [
+   "@tiptap/core",
+   "@tiptap/pm",
+   "@types/react",
+   "@types/react-dom",
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "@tiptap/starter-kit": {
+  "description": "starter kit for tiptap",
+  "keywords": [
+   "tiptap",
+   "tiptap starter kit"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@types/color-hash": {
+  "description": "TypeScript definitions for color-hash",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@types/react-is": {
+  "description": "TypeScript definitions for react-is",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@types/turndown": {
+  "description": "TypeScript definitions for turndown",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "@vladmandic/human": {
+  "description": "Human: AI-powered 3D Face Detection & Rotation Tracking, Face Description & Recognition, Body Pose Tracking, 3D Hand & Finger Tracking, Iris Analysis, Age & Gender & Emotion Prediction, Gesture Recogn",
+  "keywords": [
+   "human",
+   "human-library",
+   "face-detection",
+   "faceid",
+   "face-geometry",
+   "face-embedding",
+   "face-recognition",
+   "face-description",
+   "face-matching",
+   "body-tracking",
+   "body-segmentation",
+   "hand-tracking"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "@vladmandic/human-models": {
+  "description": "Repository for Human models",
+  "keywords": [
+   "human",
+   "human-library",
+   "tfjs-models"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "@vueuse/core": {
+  "description": "Collection of essential Vue Composition Utilities",
+  "keywords": [
+   "vue",
+   "vue-use",
+   "utils"
+  ],
+  "peer": [
+   "vue"
+  ],
+  "browser": false
+ },
+ "@vueuse/integrations": {
+  "description": "Integration wrappers for utility libraries",
+  "keywords": [
+   "vue",
+   "vue-use",
+   "utils"
+  ],
+  "peer": [
+   "async-validator",
+   "axios",
+   "change-case",
+   "drauu",
+   "focus-trap",
+   "fuse.js",
+   "idb-keyval",
+   "jwt-decode",
+   "nprogress",
+   "qrcode",
+   "sortablejs",
+   "universal-cookie",
+   "vue"
+  ],
+  "browser": false
+ },
+ "@xmldom/xmldom": {
+  "description": "A pure JavaScript W3C standard-based (XML DOM Level 2 Core) DOMParser and XMLSerializer module.",
+  "keywords": [
+   "w3c",
+   "dom",
+   "xml",
+   "parser",
+   "javascript",
+   "DOMParser",
+   "XMLSerializer",
+   "ponyfill"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "abab": {
+  "description": "WHATWG spec-compliant implementations of window.atob and window.btoa.",
+  "keywords": [
+   "atob",
+   "btoa",
+   "browser"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "abortcontroller-polyfill": {
+  "description": "Polyfill/ponyfill for the AbortController DOM API + optional patching of fetch (stub that calls catch, doesn't actually abort request).",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "amplitude-js": {
+  "description": "Javascript library for Amplitude Analytics",
+  "keywords": [
+   "analytics",
+   "amplitude"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "axios": {
+  "description": "Promise based HTTP client for the browser and node.js",
+  "keywords": [
+   "xhr",
+   "http",
+   "ajax",
+   "promise",
+   "node",
+   "browser",
+   "fetch",
+   "rest",
+   "api",
+   "client"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "base64-js": {
+  "description": "Base64 encoding/decoding in pure JS",
+  "keywords": [
+   "base64"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "bc-css-flags": {
+  "description": "Countries flags styles using only one picture",
+  "keywords": [
+   "countries",
+   "flags",
+   "css"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "big-integer": {
+  "description": "An arbitrary length integer library for Javascript",
+  "keywords": [
+   "math",
+   "big",
+   "bignum",
+   "bigint",
+   "biginteger",
+   "integer",
+   "arbitrary",
+   "precision",
+   "arithmetic"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "blurhash": {
+  "description": "Encoder and decoder for the Wolt BlurHash algorithm.",
+  "keywords": [
+   "blurhash",
+   "blur",
+   "hash",
+   "image"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "bootstrap": {
+  "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+  "keywords": [
+   "css",
+   "sass",
+   "mobile-first",
+   "responsive",
+   "front-end",
+   "framework",
+   "web"
+  ],
+  "peer": [
+   "@popperjs/core"
+  ],
+  "browser": false
+ },
+ "braintree-web-drop-in": {
+  "description": "[![Build Status](https://github.com/braintree/braintree-web-drop-in/workflows/Unit%20Tests/badge.svg)](https://github.com/braintree/braintree-web-drop-in/actions?query=workflow%3A%22Unit+Tests%22) [![",
+  "keywords": [],
+  "peer": [],
+  "browser": true
+ },
+ "browserslist-useragent-regexp": {
+  "description": "A utility to compile browserslist query to a RegExp to test browser useragent.",
+  "keywords": [
+   "browserslist",
+   "useragent",
+   "regexp"
+  ],
+  "peer": [
+   "browserslist"
+  ],
+  "browser": false
+ },
+ "buffer": {
+  "description": "Node.js Buffer API, for the browser",
+  "keywords": [
+   "arraybuffer",
+   "browser",
+   "browserify",
+   "buffer",
+   "compatible",
+   "dataview",
+   "uint8array"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "bufferutil": {
+  "description": "WebSocket buffer utils",
+  "keywords": [
+   "bufferutil"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "chalk": {
+  "description": "Terminal string styling done right",
+  "keywords": [
+   "color",
+   "colour",
+   "colors",
+   "terminal",
+   "console",
+   "cli",
+   "string",
+   "ansi",
+   "style",
+   "styles",
+   "tty",
+   "formatting"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "chart.js": {
+  "description": "Simple HTML5 charts using the canvas element.",
+  "keywords": [
+   "canvas",
+   "charts",
+   "data",
+   "graphs",
+   "html5",
+   "responsive"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "chartjs-adapter-date-fns": {
+  "description": "Chart.js adapter to use date-fns for time functionalities",
+  "keywords": [
+   "chart.js",
+   "date",
+   "date-fns",
+   "time"
+  ],
+  "peer": [
+   "chart.js",
+   "date-fns"
+  ],
+  "browser": false
+ },
+ "classlist.js": {
+  "description": "Cross-browser element.classList",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "classnames": {
+  "description": "A simple utility for conditionally joining classNames together",
+  "keywords": [
+   "react",
+   "css",
+   "classes",
+   "classname",
+   "classnames",
+   "util",
+   "utility"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "clipboard-copy": {
+  "description": "Lightweight copy to clipboard for the web",
+  "keywords": [
+   "browser",
+   "clipboard",
+   "clipboard copy",
+   "clipboard.js",
+   "copy",
+   "copy to clipboard",
+   "modern browsers",
+   "simple"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "clsx": {
+  "description": "A tiny (239B) utility for constructing className strings conditionally.",
+  "keywords": [
+   "classes",
+   "classname",
+   "classnames"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "color": {
+  "description": "Color conversion and manipulation with CSS string support",
+  "keywords": [
+   "color",
+   "colour",
+   "css"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "color-contrast-checker": {
+  "description": "This is an accessibility validator based on WCAG 2.0 standard for checking the color contrast.",
+  "keywords": [
+   "wcag",
+   "wcag-aa",
+   "color",
+   "contrast",
+   "verifier",
+   "accessibility",
+   "standard"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "color-hash": {
+  "description": "Generate color based on the given string (using HSL color space and SHA256).",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "commander": {
+  "description": "the complete solution for node.js command-line programs",
+  "keywords": [
+   "commander",
+   "command",
+   "option",
+   "parser",
+   "cli",
+   "argument",
+   "args",
+   "argv"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "core-js": {
+  "description": "Standard library",
+  "keywords": [
+   "ES3",
+   "ES5",
+   "ES6",
+   "ES7",
+   "ES2015",
+   "ES2016",
+   "ES2017",
+   "ES2018",
+   "ES2019",
+   "ES2020",
+   "ES2021",
+   "ES2022"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "country-list": {
+  "description": "Maps ISO 3166-1-alpha-2 codes to English country names and vice versa.",
+  "keywords": [
+   "country",
+   "countries",
+   "ISO 3166-1-alpha-2",
+   "ISO 3166-1"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "cropperjs": {
+  "description": "JavaScript image cropper.",
+  "keywords": [
+   "image",
+   "crop",
+   "move",
+   "zoom",
+   "rotate",
+   "scale",
+   "cropper",
+   "cropper.js",
+   "image-cropping",
+   "image-viewing",
+   "image-processing",
+   "cropper-element"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "crypto-browserify": {
+  "description": "implementation of crypto for the browser",
+  "keywords": [],
+  "peer": [],
+  "browser": true
+ },
+ "css-vars-ponyfill": {
+  "description": "Client-side support for CSS custom properties (aka \"CSS variables\") in legacy and modern browsers",
+  "keywords": [
+   "client",
+   "component",
+   "css",
+   "custom properties",
+   "custom property",
+   "custom",
+   "dom",
+   "es6",
+   "ie",
+   "ie9",
+   "ie10",
+   "ie11"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "date-fns": {
+  "description": "Modern JavaScript date utility library",
+  "keywords": [],
+  "peer": [],
+  "browser": true
+ },
+ "dayjs": {
+  "description": "2KB immutable date time library alternative to Moment.js with the same modern API ",
+  "keywords": [
+   "dayjs",
+   "date",
+   "time",
+   "immutable",
+   "moment"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "debounce": {
+  "description": "Delay function calls until a set time elapses after the last invocation",
+  "keywords": [
+   "debouncing",
+   "function",
+   "throttle",
+   "invoke",
+   "limit",
+   "limited",
+   "interval",
+   "rate",
+   "batch",
+   "rate-limit"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "dompurify": {
+  "description": "DOMPurify is a DOM-only, super-fast, uber-tolerant XSS sanitizer for HTML, MathML and SVG. It runs as JavaScript and works in all modern browsers, as well as in Node.js (via jsdom). DOMPurify is writt",
+  "keywords": [
+   "dom",
+   "xss",
+   "html",
+   "svg",
+   "mathml",
+   "security",
+   "secure",
+   "sanitizer",
+   "sanitize",
+   "filter",
+   "purify"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "dropbox": {
+  "description": "The Dropbox JavaScript SDK is a lightweight, promise based interface to the Dropbox v2 API that works in both nodejs and browser environments.",
+  "keywords": [
+   "dropbox",
+   "files",
+   "sync",
+   "sdk",
+   "client"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "element-closest-polyfill": {
+  "description": "A minimal polyfill for Element.closest",
+  "keywords": [
+   "element",
+   "closest",
+   "css",
+   "polyfill",
+   "microsoft",
+   "ie",
+   "msie",
+   "npm",
+   "package"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "emoji-regex": {
+  "description": "A regular expression to match all Emoji-only symbols as per the Unicode Standard.",
+  "keywords": [
+   "unicode",
+   "regex",
+   "regexp",
+   "regular expressions",
+   "code points",
+   "symbols",
+   "characters",
+   "emoji"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "epubjs": {
+  "description": "Parse and Render Epubs",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "escape-html": {
+  "description": "Escape string for use in HTML",
+  "keywords": [
+   "escape",
+   "html",
+   "utility"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "exif2css": {
+  "description": "Convert EXIF orientation to CSS transform rules.",
+  "keywords": [
+   "exif2css",
+   "exif",
+   "css",
+   "orientation"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "fast-deep-equal": {
+  "description": "Fast deep equal",
+  "keywords": [
+   "fast",
+   "equal",
+   "deep-equal"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "fast-text-encoding": {
+  "description": "Fast polyfill for TextEncoder and TextDecoder, only supports utf-8",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "fflate": {
+  "description": "High performance (de)compression in an 8kB package",
+  "keywords": [
+   "gzip",
+   "gunzip",
+   "deflate",
+   "inflate",
+   "compression",
+   "decompression",
+   "zlib",
+   "pako",
+   "jszip",
+   "browser",
+   "node.js",
+   "tiny"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "flexsearch": {
+  "description": "Next-Generation full-text search library for Browser and Node.js",
+  "keywords": [
+   "fulltext search",
+   "elastic search",
+   "fastest search",
+   "contextual search",
+   "document search",
+   "fuzzy search",
+   "fuzzy match",
+   "search engine"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "flv.js": {
+  "description": "HTML5 FLV Player",
+  "keywords": [
+   "html5",
+   "flv",
+   "mse",
+   "javascript"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "focus-trap": {
+  "description": "Trap focus within a DOM node.",
+  "keywords": [
+   "focus",
+   "accessibility",
+   "trap",
+   "capture",
+   "keyboard",
+   "modal"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "focus-visible": {
+  "description": "Polyfill for :focus-visible pseudo-selector",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "font-awesome": {
+  "description": "The iconic font and CSS framework",
+  "keywords": [
+   "font",
+   "awesome",
+   "fontawesome",
+   "icon",
+   "font",
+   "bootstrap"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "form-data": {
+  "description": "A library to create readable \"multipart/form-data\" streams. Can be used to submit forms and file uploads to other web applications.",
+  "keywords": [],
+  "peer": [],
+  "browser": true
+ },
+ "grapheme-splitter": {
+  "description": "A JavaScript library that breaks strings into their individual user-perceived characters. It supports emojis!",
+  "keywords": [
+   "utf-8",
+   "strings",
+   "emoji",
+   "split"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "headroom.js": {
+  "description": "Give your page some headroom. Hide your header until you need it",
+  "keywords": [
+   "header",
+   "fixed",
+   "scroll",
+   "menu"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "highlight.js": {
+  "description": "Syntax highlighting with language autodetection.",
+  "keywords": [
+   "highlight",
+   "syntax"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "history": {
+  "description": "Manage session history with JavaScript",
+  "keywords": [
+   "history",
+   "location"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "hls.js": {
+  "description": "JavaScript HLS client using MediaSourceExtension",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "hoist-non-react-statics": {
+  "description": "Copies non-react specific statics from a child component to a parent component",
+  "keywords": [
+   "react"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "html-to-react": {
+  "description": "A lightweight library that converts raw HTML to a React DOM structure.",
+  "keywords": [
+   "react",
+   "react-component",
+   "html"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "https-proxy-agent": {
+  "description": "An HTTP(s) proxy `http.Agent` implementation for HTTPS",
+  "keywords": [
+   "https",
+   "proxy",
+   "endpoint",
+   "agent"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "i18n-iso-countries": {
+  "description": "i18n for ISO 3166-1 country codes",
+  "keywords": [
+   "i18n",
+   "iso",
+   "3166",
+   "iso 3166",
+   "iso 3166-1",
+   "alpha",
+   "alpha-2",
+   "alpha-3",
+   "numeric",
+   "country",
+   "countries",
+   "af"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "i18next": {
+  "description": "i18next internationalization framework",
+  "keywords": [
+   "i18next",
+   "internationalization",
+   "i18n",
+   "translation",
+   "localization",
+   "l10n",
+   "globalization",
+   "gettext"
+  ],
+  "peer": [
+   "typescript"
+  ],
+  "browser": false
+ },
+ "i18next-browser-languagedetector": {
+  "description": "language detector used in browser environment for i18next",
+  "keywords": [
+   "i18next",
+   "i18next-languageDetector"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "i18next-http-backend": {
+  "description": "i18next-http-backend is a backend layer for i18next using in Node.js, in the browser and for Deno.",
+  "keywords": [
+   "i18next",
+   "i18next-backend",
+   "i18next-http-backend"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "idb-keyval": {
+  "description": "A super-simple-small keyval store built on top of IndexedDB",
+  "keywords": [
+   "idb",
+   "indexeddb",
+   "store",
+   "keyval",
+   "localstorage",
+   "storage",
+   "promise"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "image-capture": {
+  "description": "MediaStream ImageCapture polyfill: takePhoto(), grabFrame() and more",
+  "keywords": [
+   "camera",
+   "webcam",
+   "photo",
+   "picture",
+   "image",
+   "capture",
+   "ImageCapture",
+   "MediaStream",
+   "getUserMedia"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "inquirer": {
+  "description": "A collection of common interactive command line user interfaces.",
+  "keywords": [
+   "answer",
+   "answers",
+   "ask",
+   "base",
+   "cli",
+   "command",
+   "command-line",
+   "confirm",
+   "enquirer",
+   "generate",
+   "generator",
+   "hyper"
+  ],
+  "peer": [
+   "@types/node"
+  ],
+  "browser": false
+ },
+ "intersection-observer": {
+  "description": "A polyfill for IntersectionObserver",
+  "keywords": [
+   "Intersection",
+   "Observer"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "ipaddr.js": {
+  "description": "A library for manipulating IPv4 and IPv6 addresses in JavaScript.",
+  "keywords": [
+   "ip",
+   "ipv4",
+   "ipv6"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "jellyfin-apiclient": {
+  "description": "API client for Jellyfin",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "jquery": {
+  "description": "JavaScript library for DOM operations",
+  "keywords": [
+   "jquery",
+   "javascript",
+   "browser",
+   "library"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "js-md5": {
+  "description": "A simple MD5 hash function for JavaScript supports UTF-8 encoding.",
+  "keywords": [
+   "md5",
+   "hash",
+   "encryption",
+   "cryptography",
+   "HMAC"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "js-sha512": {
+  "description": "This is a simple SHA-512, SHA-384, SHA-512/224, SHA-512/256 hash functions for JavaScript supports UTF-8 encoding.",
+  "keywords": [
+   "sha",
+   "sha2",
+   "sha384",
+   "sha512",
+   "sha512/224",
+   "sha512/256",
+   "hash",
+   "encryption",
+   "cryptography",
+   "HMAC"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "jsdom": {
+  "description": "A JavaScript implementation of many web standards",
+  "keywords": [
+   "dom",
+   "html",
+   "w3c",
+   "whatwg"
+  ],
+  "peer": [
+   "@napi-rs/canvas"
+  ],
+  "browser": false
+ },
+ "jstree": {
+  "description": "jQuery tree plugin",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "jszip": {
+  "description": "Create, read and edit .zip files with JavaScript http://stuartk.com/jszip",
+  "keywords": [
+   "zip",
+   "deflate",
+   "inflate"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "jwt-decode": {
+  "description": "Decode JWT tokens, mostly useful for browser applications.",
+  "keywords": [
+   "jwt",
+   "browser"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "katex": {
+  "description": "Fast math typesetting for the web.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "koa": {
+  "description": "Koa web app framework",
+  "keywords": [
+   "web",
+   "app",
+   "http",
+   "application",
+   "framework",
+   "middleware",
+   "rack"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "koa-bodyparser": {
+  "description": "a body parser for Koa",
+  "keywords": [
+   "bodyParser",
+   "json",
+   "urlencoded",
+   "koa",
+   "body"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "koa-json": {
+  "description": "pretty (non-compressed) json response middleware",
+  "keywords": [
+   "koa",
+   "json"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "lib-jitsi-meet": {
+  "description": "",
+  "keywords": [
+   "jitsi"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "libarchive.js": {
+  "description": "extract/create archive files in browser/nodejs, libarchive port in wasm",
+  "keywords": [
+   "archive",
+   "extract",
+   "zip",
+   "rar",
+   "gz",
+   "7z",
+   "javascript",
+   "js",
+   "browser",
+   "nodejs"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "libbitsub": {
+  "description": "High-performance WASM renderer for graphical subtitles (PGS, VobSub, and DVB)",
+  "keywords": [
+   "libbitsub",
+   "pgs",
+   "vobsub",
+   "dvb",
+   "subtitle",
+   "wasm",
+   "rust",
+   "rendering",
+   "video",
+   "player",
+   "videojs",
+   "shaka"
+  ],
+  "peer": [
+   "hls.js",
+   "react",
+   "shaka-player",
+   "video.js"
+  ],
+  "browser": false
+ },
+ "libphonenumber-js": {
+  "description": "A simpler (and smaller) rewrite of Google Android's libphonenumber library in javascript",
+  "keywords": [
+   "telephone",
+   "phone",
+   "number",
+   "input",
+   "mobile",
+   "libphonenumber"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "lit": {
+  "description": "A library for building fast, lightweight web components",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "localforage": {
+  "description": "Offline storage, improved.",
+  "keywords": [
+   "indexeddb",
+   "localstorage",
+   "storage",
+   "websql"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "localforage-observable": {
+  "description": "Adds observable method to localForage.",
+  "keywords": [
+   "localforage",
+   "observable"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "lodash": {
+  "description": "Lodash modular utilities.",
+  "keywords": [
+   "modules",
+   "stdlib",
+   "util"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "lodash-es": {
+  "description": "Lodash exported as ES modules.",
+  "keywords": [
+   "es6",
+   "modules",
+   "stdlib",
+   "util"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "lowdb": {
+  "description": "Tiny local JSON database for Node, Electron and the browser",
+  "keywords": [
+   "database",
+   "db",
+   "electron",
+   "embed",
+   "embedded",
+   "flat",
+   "JSON",
+   "local",
+   "localStorage",
+   "sessionStorage",
+   "browser",
+   "esm"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "lowlight": {
+  "description": "Virtual syntax highlighting for virtual DOMs and non-HTML things",
+  "keywords": [
+   "syntax",
+   "code",
+   "ast",
+   "virtual",
+   "dom",
+   "highlight",
+   "highlighting"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "lunr": {
+  "description": "Simple full-text search in your browser.",
+  "keywords": [
+   "search"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "luxon": {
+  "description": "Immutable date wrapper",
+  "keywords": [
+   "date",
+   "immutable"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "mark.js": {
+  "description": "Highlight keywords using JavaScript. Intended for every use case. Can e.g. be used to mark text in search results.",
+  "keywords": [
+   "mark.js",
+   "markjs",
+   "mark",
+   "jquery.mark",
+   "jmHighlight",
+   "highlight",
+   "search",
+   "jquery",
+   "javascript",
+   "text",
+   "keyword"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "markdown-it": {
+  "description": "Markdown-it - modern pluggable markdown parser.",
+  "keywords": [
+   "markdown",
+   "parser",
+   "commonmark",
+   "markdown-it",
+   "markdown-it-plugin"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "marked": {
+  "description": "A markdown parser built for speed",
+  "keywords": [
+   "markdown",
+   "markup",
+   "html"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "material-design-icons-iconfont": {
+  "description": "Material Design Icons DX",
+  "keywords": [
+   "icons",
+   "material",
+   "material-design",
+   "material-design-icons",
+   "material-design-icons-build",
+   "material-design-icons-release",
+   "material-design-icons-dist",
+   "material-design-icons-iconfont",
+   "mdidx",
+   "google",
+   "nuxt"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "material-react-table": {
+  "description": "A fully featured Material UI V6 implementation of TanStack React Table V8, written from the ground up in TypeScript.",
+  "keywords": [
+   "react-table",
+   "material-ui",
+   "material-table",
+   "tanstack table",
+   "data table"
+  ],
+  "peer": [
+   "@emotion/react",
+   "@emotion/styled",
+   "@mui/icons-material",
+   "@mui/material",
+   "@mui/x-date-pickers",
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "memoize-one": {
+  "description": "A memoization library which only remembers the latest invocation",
+  "keywords": [
+   "memoize",
+   "memoization",
+   "cache",
+   "performance"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "moment": {
+  "description": "Parse, validate, manipulate, and display dates",
+  "keywords": [
+   "moment",
+   "date",
+   "time",
+   "i18n",
+   "l10n"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "moment-timezone": {
+  "description": "Parse and display moments in any timezone.",
+  "keywords": [
+   "moment",
+   "date",
+   "time",
+   "timezone",
+   "olson",
+   "iana",
+   "zone",
+   "tz"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "monaco-editor": {
+  "description": "A browser based code editor",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "monaco-editor-webpack-plugin": {
+  "description": "A webpack plugin for the Monaco Editor",
+  "keywords": [
+   "webpack",
+   "monaco",
+   "editor",
+   "loader"
+  ],
+  "peer": [
+   "monaco-editor",
+   "webpack"
+  ],
+  "browser": false
+ },
+ "multer": {
+  "description": "Middleware for handling `multipart/form-data`.",
+  "keywords": [
+   "form",
+   "post",
+   "multipart",
+   "form-data",
+   "formdata",
+   "express",
+   "middleware"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "native-promise-only": {
+  "description": "Native Promise Only: A polyfill for native ES6 Promises **only**, nothing else.",
+  "keywords": [
+   "ES6",
+   "Promise",
+   "async",
+   "promises-aplus"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "ngx-toastr": {
+  "description": "<div align=\"center\">   <img src=\"https://raw.githubusercontent.com/scttcper/ngx-toastr/master/misc/documentation-assets/ngx-toastr-example.png\" width=\"300\" alt=\"Angular Toastr\">   <br>   <h1>ngx-toast",
+  "keywords": [],
+  "peer": [
+   "@angular/common",
+   "@angular/core",
+   "rxjs"
+  ],
+  "browser": false
+ },
+ "node-fetch": {
+  "description": "A light-weight module that brings Fetch API to node.js",
+  "keywords": [
+   "fetch",
+   "http",
+   "promise",
+   "request",
+   "curl",
+   "wget",
+   "xhr",
+   "whatwg"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "node-forge": {
+  "description": "JavaScript implementations of network transports, cryptography, ciphers, PKI, message digests, and various utilities.",
+  "keywords": [
+   "aes",
+   "asn",
+   "asn.1",
+   "cbc",
+   "crypto",
+   "cryptography",
+   "csr",
+   "des",
+   "gcm",
+   "hmac",
+   "http",
+   "https"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "null-loader": {
+  "description": "A webpack loader that returns an empty module.",
+  "keywords": [
+   "webpack"
+  ],
+  "peer": [
+   "webpack"
+  ],
+  "browser": false
+ },
+ "oauth4webapi": {
+  "description": "Low-Level OAuth 2 / OpenID Connect Client API for JavaScript Runtimes",
+  "keywords": [
+   "access token",
+   "auth",
+   "authentication",
+   "authorization",
+   "basic",
+   "browser",
+   "bun",
+   "certified",
+   "ciba",
+   "client",
+   "cloudflare",
+   "deno"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "open": {
+  "description": "Open stuff like URLs, files, executables. Cross-platform.",
+  "keywords": [
+   "app",
+   "open",
+   "opener",
+   "opens",
+   "launch",
+   "start",
+   "xdg-open",
+   "xdg",
+   "default",
+   "cmd",
+   "browser",
+   "editor"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "optional-require": {
+  "description": "NodeJS Require that let you handle module not found error without try/catch",
+  "keywords": [
+   "optional require",
+   "optional",
+   "require"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "p-queue": {
+  "description": "Promise queue with concurrency control",
+  "keywords": [
+   "promise",
+   "queue",
+   "enqueue",
+   "limit",
+   "limited",
+   "concurrency",
+   "throttle",
+   "throat",
+   "rate",
+   "batch",
+   "ratelimit",
+   "priority"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "papaparse": {
+  "description": "Fast and powerful CSV parser for the browser that supports web workers and streaming large files. Converts CSV to JSON and JSON to CSV.",
+  "keywords": [
+   "csv",
+   "parser",
+   "parse",
+   "parsing",
+   "delimited",
+   "text",
+   "data",
+   "auto-detect",
+   "comma",
+   "tab",
+   "pipe",
+   "file"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "pdfjs-dist": {
+  "description": "Generic build of Mozilla's PDF.js library.",
+  "keywords": [
+   "Mozilla",
+   "pdf",
+   "pdf.js"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "pinia": {
+  "description": "Intuitive, type safe and flexible Store for Vue",
+  "keywords": [
+   "api",
+   "composition",
+   "pigna",
+   "pinia",
+   "pi\u00f1a",
+   "safe",
+   "setup",
+   "store",
+   "ts",
+   "type",
+   "typed",
+   "typescript"
+  ],
+  "peer": [
+   "@vue/devtools-api",
+   "typescript",
+   "vue"
+  ],
+  "browser": false
+ },
+ "pixelmatch": {
+  "description": "The smallest and fastest pixel-level image comparison library.",
+  "keywords": [
+   "image",
+   "comparison",
+   "diff"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "process": {
+  "description": "process information for node.js and browsers",
+  "keywords": [
+   "process"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "promise.withresolvers": {
+  "description": "ES Proposal spec-compliant shim for Promise.withResolvers",
+  "keywords": [
+   "javascript",
+   "ecmascript",
+   "polyfill",
+   "shim",
+   "es-shim API",
+   "Promise",
+   "promises",
+   "withResolvers",
+   "defer",
+   "deferred",
+   "settled",
+   "fulfilled"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "prop-types": {
+  "description": "Runtime type checking for React props and similar objects.",
+  "keywords": [
+   "react"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "proper-lockfile": {
+  "description": "A inter-process and inter-machine lockfile utility that works on a local or network file system",
+  "keywords": [
+   "lock",
+   "locking",
+   "file",
+   "lockfile",
+   "fs",
+   "cross-process"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "proxy-polyfill": {
+  "description": "Polyfill for the Proxy object",
+  "keywords": [
+   "polyfill",
+   "html5",
+   "proxy",
+   "es6"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "punycode": {
+  "description": "A robust Punycode converter that fully complies to RFC 3492 and RFC 5891, and works on nearly all JavaScript platforms.",
+  "keywords": [
+   "punycode",
+   "unicode",
+   "idn",
+   "idna",
+   "dns",
+   "url",
+   "domain"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "qrcode": {
+  "description": "QRCode / 2d Barcode api with both server side and client side support using canvas",
+  "keywords": [
+   "qr",
+   "code",
+   "canvas",
+   "qrcode"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "qrcode-parser": {
+  "description": "A pure javascript QR code decoding library, accept File object, image url, image base64.",
+  "keywords": [
+   "qrcode",
+   "base64",
+   "parser"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "qrious": {
+  "description": "Library for QR code generation using canvas",
+  "keywords": [
+   "qr",
+   "code",
+   "encode",
+   "canvas",
+   "image"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "react": {
+  "description": "React is a JavaScript library for building user interfaces.",
+  "keywords": [
+   "react"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "react-blurhash": {
+  "description": "Blurhash implementation for React",
+  "keywords": [
+   "blurhash",
+   "blur",
+   "hash",
+   "image",
+   "react",
+   "component"
+  ],
+  "peer": [
+   "blurhash",
+   "react"
+  ],
+  "browser": false
+ },
+ "react-bootstrap": {
+  "description": "Bootstrap 5 components built with React",
+  "keywords": [
+   "bootstrap",
+   "react",
+   "component",
+   "components",
+   "ecosystem-react",
+   "react-component"
+  ],
+  "peer": [
+   "@types/react",
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-color": {
+  "description": "A Collection of Color Pickers from Sketch, Photoshop, Chrome & more",
+  "keywords": [
+   "react",
+   "color picker",
+   "react-component",
+   "colorpicker",
+   "picker",
+   "sketch",
+   "chrome",
+   "photoshop",
+   "material design",
+   "popup"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "react-day-picker": {
+  "description": "Customizable Date Picker for React",
+  "keywords": [],
+  "peer": [
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "react-dom": {
+  "description": "React package for working with the DOM.",
+  "keywords": [
+   "react"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": true
+ },
+ "react-emoji-render": {
+  "description": "Render emoji's the way your users expect.",
+  "keywords": [
+   "react-component",
+   "emoji",
+   "twemoji",
+   "emojione"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-focus-on": {
+  "description": "The final solution for WAI ARIA compatible modal dialogs or full-screen tasks.",
+  "keywords": [
+   "react",
+   "modal",
+   "focus-management",
+   "scroll",
+   "isolation"
+  ],
+  "peer": [
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "react-i18next": {
+  "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
+  "keywords": [
+   "i18next",
+   "internationalization",
+   "i18n",
+   "translation",
+   "localization",
+   "l10n",
+   "globalization",
+   "react",
+   "reactjs"
+  ],
+  "peer": [
+   "@types/react",
+   "i18next",
+   "react",
+   "typescript"
+  ],
+  "browser": false
+ },
+ "react-intl": {
+  "description": "Internationalize React apps. This library provides React components and an API to format dates, numbers, and strings, including pluralization and handling translations.",
+  "keywords": [
+   "format",
+   "formatting",
+   "globalization",
+   "i18n",
+   "internationalization",
+   "intl",
+   "locale",
+   "localization",
+   "react",
+   "reactjs",
+   "translate",
+   "translation"
+  ],
+  "peer": [
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "react-is": {
+  "description": "Brand checking of React Elements.",
+  "keywords": [
+   "react"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "react-lazy-load-image-component": {
+  "description": "React Component to lazy load images using a HOC to track window scroll position.",
+  "keywords": [
+   "react",
+   "react-component",
+   "lazyload",
+   "lazyloading",
+   "lazy-loading",
+   "lazyload-images"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "react-linkify": {
+  "description": "React component to parse links (urls, emails, etc.) in text into clickable links",
+  "keywords": [
+   "react-linkify",
+   "react",
+   "linkify",
+   "react-component",
+   "link",
+   "url",
+   "email",
+   "autolink",
+   "urlize",
+   "urlify"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "react-native": {
+  "description": "A framework for building native apps using React",
+  "keywords": [
+   "react",
+   "react-native",
+   "android",
+   "ios",
+   "mobile",
+   "cross-platform",
+   "app-framework",
+   "mobile-development"
+  ],
+  "peer": [
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "react-native-background-timer": {
+  "description": "Emit event periodically (even when app is in the background)",
+  "keywords": [
+   "react-native",
+   "background",
+   "timer",
+   "android",
+   "ios"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-calendar-events": {
+  "description": "React Native module for IOS Calendar Events",
+  "keywords": [
+   "react-native",
+   "react-component",
+   "ios",
+   "android",
+   "eventkit",
+   "reminders",
+   "calendar-events"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-default-preference": {
+  "description": "Use SharedPreference (Android) and UserDefaults (iOS) with React Native over a unified interface",
+  "keywords": [
+   "react-native",
+   "NSUserDefaults",
+   "user defaults",
+   "SharedPreferences",
+   "shared preferences"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-device-info": {
+  "description": "Get device information using react-native",
+  "keywords": [
+   "react-component",
+   "react-native",
+   "ios",
+   "android",
+   "windows",
+   "device",
+   "events",
+   "cocoapod"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-dialog": {
+  "description": "A flexible react-native dialog",
+  "keywords": [
+   "react-native",
+   "dialog",
+   "alert",
+   "modal",
+   "button",
+   "input",
+   "switch"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-gesture-handler": {
+  "description": "Declarative API exposing native platform touch and gesture system to React Native",
+  "keywords": [],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-get-random-values": {
+  "description": "A small implementation of `crypto.getRandomValues` for React Native. This is useful to polyfill for libraries like [uuid](https://www.npmjs.com/package/uuid) that depend on it.",
+  "keywords": [
+   "Crypto.getRandomValues",
+   "crypto",
+   "get-random-values",
+   "getRandomValues",
+   "polyfill",
+   "react-native"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-orientation-locker": {
+  "description": "A react-native module that can listen on orientation changing of device, get current orientation, lock to preferred orientation.",
+  "keywords": [
+   "orientation",
+   "react-native",
+   "android",
+   "ios",
+   "windows",
+   "screen"
+  ],
+  "peer": [
+   "react",
+   "react-native",
+   "react-native-windows"
+  ],
+  "browser": false
+ },
+ "react-native-pager-view": {
+  "description": "React Native wrapper for Android and iOS ViewPager",
+  "keywords": [
+   "react-native",
+   "ios",
+   "android"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-paper": {
+  "description": "Material design for React Native",
+  "keywords": [
+   "android",
+   "ios",
+   "react native",
+   "component library",
+   "ui kit",
+   "material design",
+   "bootstrap"
+  ],
+  "peer": [
+   "react",
+   "react-native",
+   "react-native-safe-area-context"
+  ],
+  "browser": false
+ },
+ "react-native-performance": {
+  "description": "Measure React Native performance",
+  "keywords": [
+   "react-native",
+   "performance",
+   "perf",
+   "benchmark"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-safe-area-context": {
+  "description": "A flexible way to handle safe area, also works on Android and web.",
+  "keywords": [
+   "react-native",
+   "react native",
+   "react-native-web",
+   "expo-web",
+   "safe area",
+   "view"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-screen-corner-radius": {
+  "description": "A React Native library to get the Device&#39;s Screen&#39;s corner radius",
+  "keywords": [
+   "react-native",
+   "ios",
+   "android"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-screens": {
+  "description": "Native navigation primitives for your React Native app.",
+  "keywords": [],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-sound": {
+  "description": "React Native module for playing sound clips on iOS, Android, and Windows",
+  "keywords": [
+   "react-native",
+   "sound",
+   "audio",
+   "ios",
+   "android",
+   "windows"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-splash-view": {
+  "description": "A lightweight splash screen library for React Native.",
+  "keywords": [
+   "react-native",
+   "ios",
+   "android",
+   "react-native-component",
+   "react-native-splash-screen",
+   "splash-screen",
+   "splashscreen",
+   "splash",
+   "launch-screen",
+   "launchscreen",
+   "react-native-splash-view"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-svg": {
+  "description": "SVG library for react-native",
+  "keywords": [
+   "react-component",
+   "react-native",
+   "ios",
+   "android",
+   "windows",
+   "SVG",
+   "ART",
+   "VML",
+   "gradient"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-svg-transformer": {
+  "description": "SVG transformer for react-native",
+  "keywords": [],
+  "peer": [
+   "react-native",
+   "react-native-svg"
+  ],
+  "browser": false
+ },
+ "react-native-tab-view": {
+  "description": "Tab view component for React Native",
+  "keywords": [
+   "react-native-component",
+   "react-component",
+   "react-native",
+   "ios",
+   "android",
+   "tab",
+   "swipe",
+   "scrollable",
+   "coverflow"
+  ],
+  "peer": [
+   "react",
+   "react-native",
+   "react-native-pager-view"
+  ],
+  "browser": false
+ },
+ "react-native-url-polyfill": {
+  "description": "A lightweight and trustworthy URL polyfill for React Native",
+  "keywords": [
+   "URL",
+   "URLSearchParams",
+   "polyfill",
+   "react native",
+   "whatwg-url"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-video": {
+  "description": "A <Video /> element for react-native",
+  "keywords": [],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-webrtc": {
+  "description": "WebRTC for React Native",
+  "keywords": [
+   "react-component",
+   "react-native",
+   "ios",
+   "android",
+   "webrtc"
+  ],
+  "peer": [
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-webview": {
+  "description": "React Native WebView component for iOS, Android, macOS, and Windows",
+  "keywords": [],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-worklets-core": {
+  "description": "A Worklet runner for React Native",
+  "keywords": [
+   "react-native",
+   "ios",
+   "android"
+  ],
+  "peer": [
+   "react",
+   "react-native"
+  ],
+  "browser": false
+ },
+ "react-native-youtube-iframe": {
+  "description": "A simple wrapper around the youtube iframe js API for react native",
+  "keywords": [
+   "react-native",
+   "react-component",
+   "react-native-component",
+   "react",
+   "react native",
+   "mobile",
+   "ios",
+   "android",
+   "ui",
+   "youtube",
+   "youtube-iframe",
+   "iframe"
+  ],
+  "peer": [
+   "react",
+   "react-native",
+   "react-native-web-webview",
+   "react-native-webview"
+  ],
+  "browser": false
+ },
+ "react-overlays": {
+  "description": "Utilities for creating robust overlay components",
+  "keywords": [
+   "react-overlays",
+   "react-component",
+   "react",
+   "overlay",
+   "react-component",
+   "tooltip",
+   "bootstrap",
+   "popover",
+   "modal"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-redux": {
+  "description": "Official React bindings for Redux",
+  "keywords": [
+   "react",
+   "reactjs",
+   "redux"
+  ],
+  "peer": [
+   "@types/react",
+   "react",
+   "redux"
+  ],
+  "browser": false
+ },
+ "react-router-dom": {
+  "description": "Declarative routing for React web applications",
+  "keywords": [
+   "react",
+   "router",
+   "route",
+   "routing",
+   "history",
+   "link"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-select": {
+  "description": "A Select control built with and for ReactJS",
+  "keywords": [
+   "combobox",
+   "form",
+   "input",
+   "multiselect",
+   "react",
+   "react-component",
+   "select",
+   "ui"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-textarea-autosize": {
+  "description": "textarea component for React which grows with content",
+  "keywords": [
+   "autosize",
+   "grow",
+   "react",
+   "react-component",
+   "textarea"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": true
+ },
+ "react-transition-group": {
+  "description": "A react component toolset for managing animations",
+  "keywords": [
+   "react",
+   "transition",
+   "addons",
+   "transition-group",
+   "animation",
+   "css",
+   "transitions"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-virtualized-auto-sizer": {
+  "description": "<img src=\"https://react-virtualized-auto-sizer.vercel.app/og.png\" alt=\"react-virtualized-auto-sizer logo\" width=\"400\" height=\"210\" />",
+  "keywords": [
+   "react",
+   "reactjs",
+   "virtual",
+   "window",
+   "windowed",
+   "list",
+   "scrolling",
+   "infinite",
+   "virtualized",
+   "table",
+   "grid",
+   "spreadsheet"
+  ],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-window": {
+  "description": "<img src=\"https://react-window.vercel.app/og.png\" alt=\"react-window logo\" width=\"400\" height=\"210\" />",
+  "keywords": [],
+  "peer": [
+   "@types/react",
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-window-infinite-loader": {
+  "description": "Infinite loader utils inspired by `react-virtualized` but for use with `react-window`.",
+  "keywords": [],
+  "peer": [
+   "react",
+   "react-dom"
+  ],
+  "browser": false
+ },
+ "react-youtube": {
+  "description": "React.js powered YouTube player component",
+  "keywords": [
+   "react",
+   "youtube",
+   "player",
+   "react-component"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "rebound": {
+  "description": "A simple library for modeling spring dynamics",
+  "keywords": [
+   "facebook",
+   "animation"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "redux": {
+  "description": "Predictable state container for JavaScript apps",
+  "keywords": [
+   "redux",
+   "reducer",
+   "state",
+   "predictable",
+   "functional",
+   "immutable",
+   "hot",
+   "live",
+   "replay",
+   "flux",
+   "elm"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "redux-batched-actions": {
+  "description": "redux higher order reducer + action creator to reduce actions under a single subscriber notification",
+  "keywords": [
+   "redux",
+   "react",
+   "reactjs",
+   "batched",
+   "action"
+  ],
+  "peer": [
+   "redux"
+  ],
+  "browser": false
+ },
+ "redux-persist": {
+  "description": "persist and rehydrate redux stores",
+  "keywords": [],
+  "peer": [
+   "redux"
+  ],
+  "browser": false
+ },
+ "redux-thunk": {
+  "description": "Thunk middleware for Redux.",
+  "keywords": [
+   "redux",
+   "thunk",
+   "middleware",
+   "redux-middleware",
+   "flux"
+  ],
+  "peer": [
+   "redux"
+  ],
+  "browser": false
+ },
+ "regenerator-runtime": {
+  "description": "Runtime for Regenerator-compiled generator and async functions.",
+  "keywords": [
+   "regenerator",
+   "runtime",
+   "generator",
+   "async"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "reselect": {
+  "description": "Selectors for Redux.",
+  "keywords": [
+   "react",
+   "redux"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "resize-observer-polyfill": {
+  "description": "A polyfill for the Resize Observer API",
+  "keywords": [
+   "ResizeObserver",
+   "resize",
+   "observer",
+   "util",
+   "client",
+   "browser",
+   "polyfill",
+   "ponyfill"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "rxjs": {
+  "description": "Reactive Extensions for modern JavaScript",
+  "keywords": [
+   "Rx",
+   "RxJS",
+   "ReactiveX",
+   "ReactiveExtensions",
+   "Streams",
+   "Observables",
+   "Observable",
+   "Stream",
+   "ES6",
+   "ES2015"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "screenfull": {
+  "description": "Simple wrapper for cross-browser usage of the JavaScript Fullscreen API, which lets you bring the page or any element into fullscreen.",
+  "keywords": [
+   "browser",
+   "fullscreen"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "seamless-scroll-polyfill": {
+  "description": "Smooth Scroll behavior polyfill",
+  "keywords": [
+   "smooth",
+   "scroll",
+   "scrollIntoView",
+   "CSSOM",
+   "polyfill"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "semver": {
+  "description": "The semantic version parser used by npm.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "serialize-error": {
+  "description": "Serialize/deserialize an error into a plain object",
+  "keywords": [
+   "error",
+   "serialize",
+   "stringify",
+   "object",
+   "convert",
+   "process",
+   "send",
+   "cause",
+   "deserialize"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "shallow-equals": {
+  "description": "Determine if an array or object is equivalent with another, *not* recursively",
+  "keywords": [
+   "shallow",
+   "equals",
+   "compare",
+   "equality",
+   "check",
+   "test"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "simplebar-react": {
+  "description": "React component for SimpleBar",
+  "keywords": [],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "smooth-scroll-into-view-if-needed": {
+  "description": "Ponyfill for smooth scrolling elements into view (if needed!)",
+  "keywords": [
+   "behavior-smooth",
+   "if-needed",
+   "polyfill",
+   "ponyfill",
+   "scroll",
+   "scroll-into-view",
+   "scrollIntoView",
+   "scrollIntoViewIfNeeded",
+   "scrollMode",
+   "smooth",
+   "smoothscroll",
+   "typescript"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "sortablejs": {
+  "description": "JavaScript library for reorderable drag-and-drop lists on modern browsers and touch devices. No jQuery required. Supports Meteor, AngularJS, React, Polymer, Vue, Knockout and any CSS library, e.g. Boo",
+  "keywords": [
+   "sortable",
+   "reorder",
+   "drag",
+   "meteor",
+   "angular",
+   "ng-sortable",
+   "react",
+   "vue",
+   "mixin"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "stream-browserify": {
+  "description": "the stream module from node core for browsers",
+  "keywords": [
+   "stream",
+   "browser",
+   "browserify"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "styled-components": {
+  "description": "Fast, expressive styling for React.",
+  "keywords": [
+   "react",
+   "css",
+   "css-in-js",
+   "styled-components",
+   "styling"
+  ],
+  "peer": [
+   "css-to-react-native",
+   "react",
+   "react-dom",
+   "react-native"
+  ],
+  "browser": true
+ },
+ "swiper": {
+  "description": "Most modern mobile touch slider and framework with hardware accelerated transitions",
+  "keywords": [
+   "swiper",
+   "swipe",
+   "slider",
+   "touch",
+   "ios",
+   "mobile",
+   "cordova",
+   "phonegap",
+   "app",
+   "framework",
+   "framework7",
+   "carousel"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "tabbable": {
+  "description": "Returns an array of all tabbable DOM nodes within a containing node.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "text-encoding": {
+  "description": "Polyfill for the Encoding Living Standard's API.",
+  "keywords": [
+   "encoding",
+   "decoding",
+   "living standard"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "timezones.json": {
+  "description": "Full list of UTC timezones",
+  "keywords": [
+   "timezone",
+   "date",
+   "time",
+   "UTC"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "tinycolor2": {
+  "description": "Fast Color Parsing and Manipulation",
+  "keywords": [
+   "color",
+   "parser",
+   "tinycolor"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "tldts": {
+  "description": "Library to work against complex domain names, subdomains and URIs.",
+  "keywords": [
+   "tld",
+   "sld",
+   "domain",
+   "subdomain",
+   "subdomain",
+   "hostname",
+   "browser",
+   "uri",
+   "url",
+   "domain name",
+   "public suffix",
+   "url parsing"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "ts-ebml": {
+  "description": "ebml decoder and encoder",
+  "keywords": [
+   "ebml",
+   "webm",
+   "mkv",
+   "matrosika",
+   "webp"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "ts-node": {
+  "description": "TypeScript execution environment and REPL for node.js, with source map support",
+  "keywords": [
+   "typescript",
+   "node",
+   "runtime",
+   "environment",
+   "ts",
+   "compiler"
+  ],
+  "peer": [
+   "@swc/core",
+   "@swc/wasm",
+   "@types/node",
+   "typescript"
+  ],
+  "browser": false
+ },
+ "tss-react": {
+  "description": "Type safe CSS-in-JS API heavily inspired by react-jss",
+  "keywords": [
+   "jss",
+   "hooks",
+   "react",
+   "@material-ui",
+   "mui",
+   "css",
+   "makeStyles",
+   "withStyles"
+  ],
+  "peer": [
+   "@emotion/react",
+   "@emotion/server",
+   "@mui/material",
+   "@types/react",
+   "react"
+  ],
+  "browser": false
+ },
+ "turndown": {
+  "description": "A library that converts HTML to Markdown",
+  "keywords": [
+   "converter",
+   "html",
+   "markdown"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "usehooks-ts": {
+  "description": "React hook library, ready to use, written in Typescript.",
+  "keywords": [
+   "typescript",
+   "react",
+   "hooks"
+  ],
+  "peer": [
+   "react"
+  ],
+  "browser": false
+ },
+ "utf-8-validate": {
+  "description": "Check if a buffer contains valid UTF-8",
+  "keywords": [
+   "utf-8-validate"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "util": {
+  "description": "Node.js's util module for all engines",
+  "keywords": [
+   "util"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "uuid": {
+  "description": "RFC9562 UUIDs",
+  "keywords": [
+   "uuid",
+   "guid",
+   "rfc4122",
+   "rfc9562"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "vite-tsconfig-paths": {
+  "description": "Vite resolver for TypeScript compilerOptions.paths",
+  "keywords": [
+   "vite",
+   "resolver",
+   "tsconfig",
+   "paths"
+  ],
+  "peer": [
+   "vite"
+  ],
+  "browser": false
+ },
+ "vue": {
+  "description": "The progressive JavaScript framework for building modern web UI.",
+  "keywords": [
+   "vue"
+  ],
+  "peer": [
+   "typescript"
+  ],
+  "browser": false
+ },
+ "vue-router": {
+  "description": "",
+  "keywords": [],
+  "peer": [
+   "@pinia/colada",
+   "@vue/compiler-sfc",
+   "pinia",
+   "vite",
+   "vue"
+  ],
+  "browser": false
+ },
+ "wasm-check": {
+  "description": "TypeScript / JavaScript library for detect WebAssembly features in node.js & browser",
+  "keywords": [
+   "wasm",
+   "webassembly",
+   "feature",
+   "validate",
+   "check",
+   "support",
+   "test",
+   "detect"
+  ],
+  "peer": [],
+  "browser": true
+ },
+ "web-vitals": {
+  "description": "Easily measure performance metrics in JavaScript",
+  "keywords": [
+   "crux",
+   "performance",
+   "metrics",
+   "Core Web Vitals",
+   "CLS",
+   "FCP",
+   "INP",
+   "LCP",
+   "TTFB"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "webcomponents.js": {
+  "description": "webcomponents.js",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "webdav": {
+  "description": "WebDAV client for NodeJS",
+  "keywords": [
+   "webdav",
+   "client",
+   "remote",
+   "sync"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "whatwg-fetch": {
+  "description": "A window.fetch polyfill.",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "windows-iana": {
+  "description": "A small tool to convert between Windows time zones and IANA",
+  "keywords": [
+   "Time Zone",
+   "IANA",
+   "Windows Time Zone"
+  ],
+  "peer": [],
+  "browser": false
+ },
+ "zen-observable": {
+  "description": "An Implementation of ES Observables",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "zone.js": {
+  "description": "Zones for JavaScript",
+  "keywords": [],
+  "peer": [],
+  "browser": false
+ },
+ "zxcvbn": {
+  "description": "realistic password strength estimation",
+  "keywords": [
+   "password",
+   "passphrase",
+   "security",
+   "authentication",
+   "strength",
+   "meter",
+   "quality",
+   "estimation",
+   "pattern",
+   "cracking",
+   "scoring",
+   "entropy"
+  ],
+  "peer": [],
+  "browser": false
+ }
+}

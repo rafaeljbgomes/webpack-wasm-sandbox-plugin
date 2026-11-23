@@ -1,0 +1,17 @@
+┌─────────┬─────────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────────────────┬─────────────┬─────────────┬─────────────┐
+│ (index) │ label                                   │ inside                                                                                │ before      │ after       │ reachedHost │
+├─────────┼─────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────┼─────────────┼─────────────┼─────────────┤
+│ 0       │ 'overwrite existing string prop'        │ 'threw: Sandboxed code may not assign host property "str": the grant is read-only'    │ 'orig'      │ 'orig'      │ false       │
+│ 1       │ 'overwrite existing number prop'        │ 'threw: Sandboxed code may not assign host property "num": the grant is read-only'    │ '1'         │ '1'         │ false       │
+│ 2       │ 'add new prop'                          │ 'ok'                                                                                  │ 'undefined' │ 'undefined' │ false       │
+│ 3       │ 'delete existing prop'                  │ 'threw: proxy: inconsistent deleteProperty'                                           │ 'present'   │ 'present'   │ false       │
+│ 4       │ 'overwrite existing function'           │ 'ok'                                                                                  │ 'host'      │ 'host'      │ false       │
+│ 5       │ 'write nested object prop'              │ 'threw: Sandboxed code may not assign host property "v": the grant is read-only'      │ 'orig'      │ 'orig'      │ false       │
+│ 6       │ 'replace nested object'                 │ 'threw: Sandboxed code may not assign host property "nested": the grant is read-only' │ 'orig'      │ 'orig'      │ false       │
+│ 7       │ 'write array element'                   │ 'threw: Sandboxed code may not assign host property "0": the grant is read-only'      │ 'orig'      │ 'orig'      │ false       │
+│ 8       │ 'push to array'                         │ 'ok'                                                                                  │ '1'         │ '2'         │ true        │
+│ 9       │ 'set __proto__ member'                  │ 'ok'                                                                                  │ 'undefined' │ 'undefined' │ false       │
+│ 10      │ 'defineProperty getter'                 │ 'threw: property is not configurable'                                                 │ 'orig'      │ 'orig'      │ false       │
+│ 11      │ 'Intl-style: overwrite existing method' │ 'ok'                                                                                  │ 'function'  │ 'function'  │ false       │
+│ 12      │ 'Intl-style: add primitive'             │ 'ok'                                                                                  │ 'undefined' │ 'undefined' │ false       │
+└─────────┴─────────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────────────────┴─────────────┴─────────────┴─────────────┘

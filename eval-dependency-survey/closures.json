@@ -1,0 +1,561 @@
+{
+ "Jitsi Meet": {
+  "direct": [
+   "@amplitude/analytics-browser",
+   "@amplitude/analytics-react-native",
+   "@braintree/sanitize-url",
+   "@emotion/cache",
+   "@emotion/react",
+   "@emotion/styled",
+   "@giphy/js-fetch-api",
+   "@giphy/react-components",
+   "@giphy/react-native-sdk",
+   "@jitsi/excalidraw",
+   "@jitsi/js-utils",
+   "@jitsi/logger",
+   "@jitsi/rnnoise-wasm",
+   "@matrix-org/olm",
+   "@mediapipe/selfie_segmentation",
+   "@microsoft/microsoft-graph-client",
+   "@mui/material",
+   "@react-native-async-storage/async-storage",
+   "@react-native-clipboard/clipboard",
+   "@react-native-community/netinfo",
+   "@react-native-community/slider",
+   "@react-native-google-signin/google-signin",
+   "@react-navigation/bottom-tabs",
+   "@react-navigation/elements",
+   "@react-navigation/material-top-tabs",
+   "@react-navigation/native",
+   "@react-navigation/stack",
+   "@sayem314/react-native-keep-awake",
+   "@stomp/stompjs",
+   "@svgr/webpack",
+   "@tensorflow-models/body-segmentation",
+   "@tensorflow/tfjs-backend-wasm",
+   "@tensorflow/tfjs-backend-webgl",
+   "@tensorflow/tfjs-backend-webgpu",
+   "@tensorflow/tfjs-converter",
+   "@tensorflow/tfjs-core",
+   "@vladmandic/human",
+   "@vladmandic/human-models",
+   "@xmldom/xmldom",
+   "abab",
+   "amplitude-js",
+   "base64-js",
+   "bc-css-flags",
+   "clipboard-copy",
+   "clsx",
+   "dayjs",
+   "dompurify",
+   "dropbox",
+   "focus-visible",
+   "grapheme-splitter",
+   "i18n-iso-countries",
+   "i18next",
+   "i18next-browser-languagedetector",
+   "i18next-http-backend",
+   "image-capture",
+   "jquery",
+   "js-md5",
+   "js-sha512",
+   "jwt-decode",
+   "lib-jitsi-meet",
+   "lodash-es",
+   "null-loader",
+   "optional-require",
+   "pixelmatch",
+   "promise.withresolvers",
+   "punycode",
+   "react",
+   "react-dom",
+   "react-emoji-render",
+   "react-focus-on",
+   "react-i18next",
+   "react-linkify",
+   "react-native",
+   "react-native-background-timer",
+   "react-native-calendar-events",
+   "react-native-default-preference",
+   "react-native-device-info",
+   "react-native-dialog",
+   "react-native-gesture-handler",
+   "react-native-get-random-values",
+   "react-native-orientation-locker",
+   "react-native-pager-view",
+   "react-native-paper",
+   "react-native-performance",
+   "react-native-safe-area-context",
+   "react-native-screen-corner-radius",
+   "react-native-screens",
+   "react-native-sound",
+   "react-native-splash-view",
+   "react-native-svg",
+   "react-native-svg-transformer",
+   "react-native-tab-view",
+   "react-native-url-polyfill",
+   "react-native-video",
+   "react-native-webrtc",
+   "react-native-webview",
+   "react-native-worklets-core",
+   "react-native-youtube-iframe",
+   "react-redux",
+   "react-textarea-autosize",
+   "react-virtualized-auto-sizer",
+   "react-window",
+   "react-youtube",
+   "redux",
+   "redux-thunk",
+   "reselect",
+   "seamless-scroll-polyfill",
+   "semver",
+   "text-encoding",
+   "ts-ebml",
+   "tss-react",
+   "util",
+   "uuid",
+   "wasm-check",
+   "windows-iana",
+   "zxcvbn"
+  ],
+  "closure": 981,
+  "unresolved": [
+   "@types/node-fetch"
+  ],
+  "sept2025": {
+   "ansi-regex": [
+    "5.0.1"
+   ],
+   "ansi-styles": [
+    "4.3.0",
+    "5.2.0"
+   ],
+   "chalk": [
+    "4.1.2"
+   ],
+   "color-convert": [
+    "1.9.3",
+    "2.0.1"
+   ],
+   "color-name": [
+    "1.1.3",
+    "1.1.4"
+   ],
+   "color-string": [
+    "1.9.0"
+   ],
+   "debug": [
+    "2.6.9",
+    "3.1.0",
+    "4.3.4",
+    "4.4.3"
+   ],
+   "error-ex": [
+    "1.3.2"
+   ],
+   "is-arrayish": [
+    "0.2.1",
+    "0.3.2"
+   ],
+   "simple-swizzle": [
+    "0.2.2"
+   ],
+   "strip-ansi": [
+    "6.0.1"
+   ],
+   "supports-color": [
+    "7.2.0",
+    "8.1.1"
+   ],
+   "wrap-ansi": [
+    "7.0.0"
+   ],
+   "color": [
+    "3.2.1",
+    "4.2.3"
+   ]
+  }
+ },
+ "Mattermost": {
+  "direct": [
+   "@atlaskit/pragmatic-drag-and-drop",
+   "@atlaskit/pragmatic-drag-and-drop-hitbox",
+   "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator",
+   "@floating-ui/react",
+   "@giphy/js-fetch-api",
+   "@giphy/react-components",
+   "@guyplusplus/turndown-plugin-gfm",
+   "@hello-pangea/dnd",
+   "@mattermost/client",
+   "@mattermost/compass-ui",
+   "@mattermost/desktop-api",
+   "@mattermost/shared",
+   "@mattermost/types",
+   "@mui/base",
+   "@mui/material",
+   "@mui/styled-engine-sc",
+   "@redux-devtools/extension",
+   "@tanstack/react-table",
+   "@tiptap/extension-code-block-lowlight",
+   "@tiptap/extension-link",
+   "@tiptap/extension-placeholder",
+   "@tiptap/extension-table",
+   "@tiptap/extension-table-cell",
+   "@tiptap/extension-table-header",
+   "@tiptap/extension-table-row",
+   "@tiptap/markdown",
+   "@tiptap/react",
+   "@tiptap/starter-kit",
+   "@types/color-hash",
+   "@types/react-is",
+   "@types/turndown",
+   "bootstrap",
+   "buffer",
+   "chart.js",
+   "classnames",
+   "color-contrast-checker",
+   "color-hash",
+   "core-js",
+   "country-list",
+   "crypto-browserify",
+   "css-vars-ponyfill",
+   "date-fns",
+   "emoji-regex",
+   "exif2css",
+   "fast-deep-equal",
+   "fflate",
+   "flexsearch",
+   "font-awesome",
+   "highlight.js",
+   "history",
+   "hoist-non-react-statics",
+   "html-to-react",
+   "ipaddr.js",
+   "katex",
+   "localforage",
+   "localforage-observable",
+   "lodash",
+   "lowlight",
+   "luxon",
+   "mark.js",
+   "marked",
+   "memoize-one",
+   "moment-timezone",
+   "monaco-editor",
+   "monaco-editor-webpack-plugin",
+   "p-queue",
+   "pdfjs-dist",
+   "process",
+   "prop-types",
+   "react",
+   "react-bootstrap",
+   "react-color",
+   "react-day-picker",
+   "react-dom",
+   "react-intl",
+   "react-is",
+   "react-overlays",
+   "react-redux",
+   "react-router-dom",
+   "react-select",
+   "react-transition-group",
+   "react-virtualized-auto-sizer",
+   "react-window",
+   "react-window-infinite-loader",
+   "rebound",
+   "redux",
+   "redux-batched-actions",
+   "redux-persist",
+   "redux-thunk",
+   "regenerator-runtime",
+   "semver",
+   "serialize-error",
+   "shallow-equals",
+   "simplebar-react",
+   "smooth-scroll-into-view-if-needed",
+   "stream-browserify",
+   "styled-components",
+   "timezones.json",
+   "tinycolor2",
+   "turndown",
+   "web-vitals",
+   "zen-observable"
+  ],
+  "closure": 498,
+  "unresolved": [],
+  "sept2025": {
+   "debug": [
+    "4.4.3"
+   ],
+   "error-ex": [
+    "1.3.4"
+   ],
+   "is-arrayish": [
+    "0.2.1"
+   ],
+   "supports-color": [
+    "5.5.0",
+    "8.1.1"
+   ]
+  }
+ },
+ "Bitwarden clients": {
+  "direct": [
+   "@angular/animations",
+   "@angular/cdk",
+   "@angular/common",
+   "@angular/compiler",
+   "@angular/core",
+   "@angular/forms",
+   "@angular/platform-browser",
+   "@angular/router",
+   "@bitwarden/commercial-sdk-internal",
+   "@bitwarden/desktop-napi",
+   "@bitwarden/sdk-internal",
+   "@bufbuild/protobuf",
+   "@electron/fuses",
+   "@emotion/css",
+   "@koa/multer",
+   "@koa/router",
+   "@microsoft/signalr",
+   "@microsoft/signalr-protocol-msgpack",
+   "@ng-select/ng-select",
+   "big-integer",
+   "braintree-web-drop-in",
+   "buffer",
+   "bufferutil",
+   "chalk",
+   "chart.js",
+   "chartjs-adapter-date-fns",
+   "commander",
+   "core-js",
+   "form-data",
+   "https-proxy-agent",
+   "inquirer",
+   "jsdom",
+   "jszip",
+   "koa",
+   "koa-bodyparser",
+   "koa-json",
+   "lit",
+   "lowdb",
+   "lunr",
+   "multer",
+   "ngx-toastr",
+   "node-fetch",
+   "node-forge",
+   "oauth4webapi",
+   "open",
+   "papaparse",
+   "proper-lockfile",
+   "qrcode-parser",
+   "qrious",
+   "rxjs",
+   "semver",
+   "tabbable",
+   "tldts",
+   "ts-node",
+   "utf-8-validate",
+   "vite-tsconfig-paths",
+   "zone.js",
+   "zxcvbn"
+  ],
+  "closure": 392,
+  "unresolved": [],
+  "sept2025": {
+   "ansi-regex": [
+    "5.0.1"
+   ],
+   "ansi-styles": [
+    "4.3.0"
+   ],
+   "chalk": [
+    "4.1.2"
+   ],
+   "color-convert": [
+    "2.0.1"
+   ],
+   "color-name": [
+    "1.1.4"
+   ],
+   "debug": [
+    "4.4.3"
+   ],
+   "error-ex": [
+    "1.3.4"
+   ],
+   "is-arrayish": [
+    "0.2.1"
+   ],
+   "strip-ansi": [
+    "6.0.1"
+   ],
+   "supports-color": [
+    "7.2.0"
+   ],
+   "wrap-ansi": [
+    "6.2.0"
+   ]
+  }
+ },
+ "Nextcloud server": {
+  "direct": [
+   "@mdi/js",
+   "@mdi/svg",
+   "@nextcloud/auth",
+   "@nextcloud/axios",
+   "@nextcloud/browser-storage",
+   "@nextcloud/calendar-availability-vue",
+   "@nextcloud/capabilities",
+   "@nextcloud/dialogs",
+   "@nextcloud/event-bus",
+   "@nextcloud/files",
+   "@nextcloud/initial-state",
+   "@nextcloud/l10n",
+   "@nextcloud/logger",
+   "@nextcloud/password-confirmation",
+   "@nextcloud/paths",
+   "@nextcloud/router",
+   "@nextcloud/sharing",
+   "@nextcloud/viewer",
+   "@nextcloud/vue",
+   "@simplewebauthn/browser",
+   "@vueuse/core",
+   "@vueuse/integrations",
+   "browserslist-useragent-regexp",
+   "color",
+   "core-js",
+   "cropperjs",
+   "debounce",
+   "dompurify",
+   "escape-html",
+   "focus-trap",
+   "libphonenumber-js",
+   "marked",
+   "moment",
+   "p-queue",
+   "pinia",
+   "qrcode",
+   "sortablejs",
+   "vue",
+   "vue-router",
+   "webdav"
+  ],
+  "closure": 437,
+  "unresolved": [],
+  "sept2025": {
+   "ansi-regex": [
+    "5.0.1"
+   ],
+   "ansi-styles": [
+    "4.3.0"
+   ],
+   "color-convert": [
+    "2.0.1",
+    "3.1.3"
+   ],
+   "color-name": [
+    "1.1.4",
+    "2.1.1"
+   ],
+   "color-string": [
+    "2.1.4"
+   ],
+   "debug": [
+    "4.4.3"
+   ],
+   "strip-ansi": [
+    "6.0.1"
+   ],
+   "wrap-ansi": [
+    "6.2.0"
+   ],
+   "color": [
+    "5.0.3"
+   ]
+  }
+ },
+ "Jellyfin web": {
+  "direct": [
+   "@emotion/react",
+   "@emotion/styled",
+   "@fontsource/noto-sans",
+   "@fontsource/noto-sans-hk",
+   "@fontsource/noto-sans-jp",
+   "@fontsource/noto-sans-kr",
+   "@fontsource/noto-sans-sc",
+   "@fontsource/noto-sans-tc",
+   "@jellyfin/libass-wasm",
+   "@jellyfin/sdk",
+   "@jellyfin/ux-web",
+   "@mui/icons-material",
+   "@mui/material",
+   "@mui/x-date-pickers",
+   "@react-hook/resize-observer",
+   "@tanstack/react-query",
+   "@tanstack/react-query-devtools",
+   "@tanstack/react-query-persist-client",
+   "abortcontroller-polyfill",
+   "axios",
+   "blurhash",
+   "classlist.js",
+   "classnames",
+   "core-js",
+   "date-fns",
+   "dompurify",
+   "element-closest-polyfill",
+   "epubjs",
+   "escape-html",
+   "fast-text-encoding",
+   "flv.js",
+   "headroom.js",
+   "history",
+   "hls.js",
+   "idb-keyval",
+   "intersection-observer",
+   "jellyfin-apiclient",
+   "jquery",
+   "jstree",
+   "libarchive.js",
+   "libbitsub",
+   "lodash-es",
+   "markdown-it",
+   "material-design-icons-iconfont",
+   "material-react-table",
+   "native-promise-only",
+   "pdfjs-dist",
+   "proxy-polyfill",
+   "react",
+   "react-blurhash",
+   "react-dom",
+   "react-lazy-load-image-component",
+   "react-router-dom",
+   "resize-observer-polyfill",
+   "screenfull",
+   "sortablejs",
+   "swiper",
+   "usehooks-ts",
+   "webcomponents.js",
+   "whatwg-fetch"
+  ],
+  "closure": 295,
+  "unresolved": [],
+  "sept2025": {
+   "ansi-regex": [
+    "5.0.1"
+   ],
+   "debug": [
+    "4.4.3"
+   ],
+   "error-ex": [
+    "1.3.2"
+   ],
+   "is-arrayish": [
+    "0.2.1"
+   ],
+   "strip-ansi": [
+    "6.0.1"
+   ]
+  }
+ }
+}

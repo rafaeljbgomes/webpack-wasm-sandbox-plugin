@@ -1,0 +1,154 @@
+{
+ "engines": {
+  "quickjs f1139494 (ours)": {
+   "477-sort": {
+    "triggered": [
+     {
+      "trigger": 1734,
+      "comparisons": 1734,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 1500,
+      "comparisons": 1500,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 1000,
+      "comparisons": 1000,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 1800,
+      "comparisons": 1734,
+      "length": 256,
+      "err": null
+     },
+     {
+      "trigger": 2000,
+      "comparisons": 1734,
+      "length": 256,
+      "err": null
+     },
+     {
+      "trigger": 500,
+      "comparisons": 500,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 300,
+      "comparisons": 300,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 100,
+      "comparisons": 100,
+      "length": 10,
+      "err": null
+     }
+    ]
+   },
+   "478-ctor": {
+    "err": null,
+    "length": 10,
+    "byteLength": 0
+   },
+   "492-with": {
+    "err": null,
+    "length": 1024,
+    "sourceByteLength": 4,
+    "nonzeroBeyond": 3
+   }
+  },
+  "quickjs-ng (0.32.0 variant)": {
+   "477-sort": {
+    "triggered": [
+     {
+      "trigger": 1734,
+      "comparisons": 1734,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 1500,
+      "comparisons": 1500,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 1000,
+      "comparisons": 1021,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 1800,
+      "comparisons": 1734,
+      "length": 256,
+      "err": null
+     },
+     {
+      "trigger": 2000,
+      "comparisons": 1734,
+      "length": 256,
+      "err": null
+     },
+     {
+      "trigger": 500,
+      "comparisons": 500,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 300,
+      "comparisons": 300,
+      "length": 10,
+      "err": null
+     },
+     {
+      "trigger": 100,
+      "comparisons": 100,
+      "length": 10,
+      "err": null
+     }
+    ]
+   },
+   "478-ctor": {
+    "err": null,
+    "length": 0,
+    "byteLength": 0
+   },
+   "492-with": {
+    "err": null,
+    "length": 1,
+    "sourceByteLength": 4,
+    "nonzeroBeyond": 0
+   }
+  }
+ },
+ "containment": {
+  "rounds": 200,
+  "bytesOverRead": 819200,
+  "roundsWithOwnMarker": 0,
+  "printableRunsRecovered": 151,
+  "hostSecretLeaked": false,
+  "bystanderSecretLeaked": false,
+  "bystanderSecretInBystanderMemory": true,
+  "bystanderCorrectAfter": true,
+  "sampleLeakedRuns": [
+   ".;. ....Tp.Sh.S .R..S..T.;...8.S.aQ..S..S..S..",
+   ".;...0-T.aQH.T@.S..T..",
+   ".;.@..h?T.aQ..T .Sh.T..",
+   ".;.`...bT.aQ(QTH.Sp.T..",
+   ".;.`...pT.aQp_T@.Sp.T..",
+   ".;.@....T.aQ..T .Sp.T..",
+   ".;.@..X.T.aQ8.T..S..T..",
+   ".;.`...T.aQ..T@.S..T.."
+  ]
+ }
+}

@@ -1,0 +1,32 @@
+// Reviewed trusted list for the case study: every package the first
+// classify-or-fail build flagged (marked is sandboxed and absent from it).
+module.exports = { trusted: [
+ "@braintree/sanitize-url",
+ "@mermaid-js/parser",
+ "chevrotain",
+ "cose-base",
+ "css-loader",
+ "cytoscape",
+ "cytoscape-cose-bilkent",
+ "cytoscape-fcose",
+ "d3",
+ "d3-array",
+ "d3-shape",
+ "dagre-d3-es",
+ "dayjs",
+ "dompurify",
+ "elkjs",
+ "es-toolkit",
+ "katex",
+ "khroma",
+ "layout-base",
+ "lodash-es",
+ "mermaid",
+ "monaco-editor",
+ "roughjs",
+ "storehouse-js",
+ "style-loader",
+ "stylis",
+ "ts-dedent",
+ "uuid"
+] };

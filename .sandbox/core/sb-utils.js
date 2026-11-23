@@ -21,4 +21,4 @@ export function sandboxDisposedError() {
 
 /** Constructor-only invocation messages emitted by supported host engines. */
 export const REQUIRES_NEW_RE =
-  /requires 'new'|must be called with new|cannot be invoked without 'new'|use the 'new' operator|cannot be called as a function/i;
+  /requires 'new'|must be called with new|cannot be invoked without 'new'|use the 'new' operator|cannot be called as a function|constructor without new is (?:forbidden|invalid)|'new' is required/i;

@@ -61,6 +61,11 @@ for (const [engine, message] of [
   ["Node.js classes", "Class constructor HostBox cannot be invoked without 'new'"],
   ["V8 built-ins", "Constructor Map requires 'new'"],
   ["Chromium DOM constructors", "Failed to construct 'TextEncoder': Please use the 'new' operator, this DOM object constructor cannot be called as a function."],
+  // Found by the cross-browser run: the granted Intl failed to initialise in
+  // Firefox and WebKit, whose messages the matcher did not know.
+  ["SpiderMonkey built-ins", "calling a builtin Intl.ListFormat constructor without new is forbidden"],
+  ["JavaScriptCore built-ins", "calling ListFormat constructor without new is invalid"],
+  ["Firefox DOM constructors", "TextEncoder constructor: 'new' is required"],
 ]) {
   test(`constructor-only messages from ${engine} are recognised`, () => {
     assert.match(message, REQUIRES_NEW_RE);

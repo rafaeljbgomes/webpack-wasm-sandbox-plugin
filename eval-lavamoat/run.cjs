@@ -7,7 +7,12 @@
 //   lavamoat-clean      LavaMoat policy generated from the CLEAN release, then
 //                       the compromised release is built under that policy
 //   lavamoat-regen      LavaMoat policy regenerated from the compromised release
+//   lavamoat-reviewed   the regenerated policy after review: each package keeps
+//                       only the globals our grant for that library allows,
+//                       plus ECMAScript built-ins (which QuickJS provides too);
+//                       the removals are written as policy-override.json
 //
+// VARIANTS=a,b limits the run to some variants and merges the build report.
 // Usage: node eval-lavamoat/run.cjs
 const path = require("path");
 const fs = require("fs");
@@ -21,6 +26,25 @@ const app = path.join(repo, "lib-test/security/app");
 const cleanApp = process.env.CLEAN_APP;
 const OUT = path.join(__dirname, "out");
 const SCEN = ["lodash", "strip-ansi", "image-js"];
+// Our grants (sandbox-configs/<scenario>.js), as global-name prefixes.
+const GRANT = { lodash: [], "strip-ansi": [], "image-js": ["Intl", "TextEncoder", "TextDecoder"] };
+const ES_BUILTINS = new Set(["Array", "ArrayBuffer", "BigInt", "BigInt64Array", "BigUint64Array", "Boolean", "DataView", "Date", "Error", "EvalError", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "JSON", "Map", "Math", "Number", "Object", "Promise", "Proxy", "RangeError", "ReferenceError", "Reflect", "RegExp", "Set", "String", "Symbol", "SyntaxError", "TypeError", "URIError", "Uint8Array", "Uint8ClampedArray", "Uint16Array", "Uint32Array", "WeakMap", "WeakSet", "WeakRef", "FinalizationRegistry", "globalThis", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURIComponent", "encodeURIComponent"]);
+function review(policy, scenario) {
+  const reviewed = JSON.parse(JSON.stringify(policy));
+  const override = { resources: {} };
+  for (const [pkg, res] of Object.entries(reviewed.resources ?? {})) {
+    if (!res.globals) continue;
+    for (const [g, v] of Object.entries(res.globals)) {
+      const root = g.split(".")[0];
+      const keep = v !== "write" && (ES_BUILTINS.has(root) || GRANT[scenario].some((a) => g === a || g.startsWith(a + ".")));
+      if (!keep) {
+        delete res.globals[g];
+        ((override.resources[pkg] ??= { globals: {} }).globals)[g] = false;
+      }
+    }
+  }
+  return { reviewed, override };
+}
 
 function cfg({ scenario, mode, context, outDir, lavamoat }) {
   const plugins = [
@@ -58,7 +82,8 @@ function page(outRoot, lavamoat) {
 (async () => {
   const report = {};
   for (const scenario of SCEN) {
-    for (const variant of ["native", "sandbox", "lavamoat-clean", "lavamoat-regen"]) {
+    const VARIANTS = process.env.VARIANTS ? process.env.VARIANTS.split(",") : ["native", "sandbox", "lavamoat-clean", "lavamoat-regen", "lavamoat-reviewed"];
+    for (const variant of VARIANTS) {
       const outRoot = path.join(OUT, `${scenario}--${variant}`);
       const outDir = path.join(outRoot, "dist");
       fs.mkdirSync(outRoot, { recursive: true });
@@ -75,6 +100,15 @@ function page(outRoot, lavamoat) {
           const polDir = path.join(outRoot, "policy-regen");
           await run(cfg({ scenario, mode: variant, context: app, outDir, lavamoat: { generatePolicy: true, policyLocation: polDir, readableResourceIds: true } }));
           r.policy = JSON.parse(fs.readFileSync(path.join(polDir, "policy.json"), "utf8"));
+        } else if (variant === "lavamoat-reviewed") {
+          const polDir = path.join(outRoot, "policy-regen");
+          await run(cfg({ scenario, mode: variant, context: app, outDir: path.join(outRoot, "gen"), lavamoat: { generatePolicyOnly: true, policyLocation: polDir } }));
+          const regen = JSON.parse(fs.readFileSync(path.join(polDir, "policy.json"), "utf8"));
+          const { reviewed, override } = review(regen, scenario);
+          fs.writeFileSync(path.join(outRoot, "policy-override.json"), JSON.stringify(override, null, 1));
+          fs.writeFileSync(path.join(outRoot, "policy-reviewed.json"), JSON.stringify(reviewed, null, 1));
+          r.policy = reviewed; r.removed = override;
+          await run(cfg({ scenario, mode: variant, context: app, outDir, lavamoat: { policy: reviewed, readableResourceIds: true } }));
         } else {
           await run(cfg({ scenario, mode: variant, context: app, outDir }));
         }
@@ -86,6 +120,7 @@ function page(outRoot, lavamoat) {
       console.log(scenario, variant, r.built ? "built" : "BUILD FAILED " + r.buildError);
     }
   }
-  fs.writeFileSync(path.join(OUT, "build-report.json"), JSON.stringify(report, null, 1));
+  const prev = process.env.VARIANTS && fs.existsSync(path.join(OUT, "build-report.json")) ? JSON.parse(fs.readFileSync(path.join(OUT, "build-report.json"), "utf8")) : {};
+  fs.writeFileSync(path.join(OUT, "build-report.json"), JSON.stringify({ ...prev, ...report }, null, 1));
   process.exit(0);
 })();
