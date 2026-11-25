@@ -1,0 +1,34 @@
+{
+ "marked": "15.0.7",
+ "dompurify": "3.4.17",
+ "examples": 652,
+ "unchanged": 616,
+ "changed": 36,
+ "bySection": {
+  "HTML blocks": 17,
+  "Link reference definitions": 2,
+  "Lists": 2,
+  "Links": 1,
+  "Autolinks": 4,
+  "Raw HTML": 10
+ },
+ "byRemoved": {
+  "el:foo": 2,
+  "(serialization only)": 15,
+  "el:warning": 1,
+  "attr:language": 1,
+  "el:bar": 1,
+  "el:#comment": 6,
+  "attr:href": 4,
+  "el:bab": 1,
+  "el:c2c": 1,
+  "el:b2": 2,
+  "attr:zoop:33": 1,
+  "attr:_boolean": 1,
+  "attr:bam": 1,
+  "attr:foo": 1,
+  "el:responsive-image": 1,
+  "el:php": 1
+ },
+ "changedExamples": "150 151 163 165 169 170 171 172 173 176 177 178 179 180 181 182 183 196 201 308 309 491 596 598 599 601 613 614 615 616 617 625 626 627 628 629"
+}

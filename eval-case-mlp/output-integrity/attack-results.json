@@ -1,0 +1,453 @@
+{
+ "chrome": "157.0.8103.79",
+ "runs": 5,
+ "corpus": [
+  {
+   "id": "exfil-img",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-css-url",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-picture",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-a-ping",
+   "kind": "exfil",
+   "needs": "click"
+  },
+  {
+   "id": "img-onerror",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "svg-onload",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "details-ontoggle",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "video-source-onerror",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "style-onload",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "input-autofocus",
+   "kind": "script",
+   "needs": "focus"
+  },
+  {
+   "id": "iframe-srcdoc",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "iframe-javascript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "object-javascript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "a-javascript",
+   "kind": "script",
+   "needs": "click"
+  },
+  {
+   "id": "form-formaction",
+   "kind": "script",
+   "needs": "click"
+  },
+  {
+   "id": "script-tag",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "mxss-noscript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "mxss-math-style",
+   "kind": "script",
+   "needs": "load"
+  }
+ ],
+ "variants": {
+  "b-native-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "b-sb-forget-contract": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "b-sb-forget-contract-tt": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "mermaidError": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "ttViolations": [
+    "This document requires 'TrustedHTML' assignment. The action has been blocked. @ bundle.js:1"
+   ],
+   "errors": [],
+   "consistent": true
+  },
+  "b-sb-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "e-native-forget": {
+   "ready": true,
+   "executed": [
+    "a-javascript",
+    "details-ontoggle",
+    "form-formaction",
+    "iframe-javascript",
+    "iframe-srcdoc",
+    "img-onerror",
+    "mxss-noscript",
+    "style-onload",
+    "video-source-onerror"
+   ],
+   "exfiltrated": [
+    "exfil-a-ping",
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "e-native-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "e-sb-bypass-contract": {
+   "ready": true,
+   "executed": [
+    "a-javascript",
+    "details-ontoggle",
+    "form-formaction",
+    "iframe-javascript",
+    "iframe-srcdoc",
+    "img-onerror",
+    "mxss-noscript",
+    "style-onload",
+    "video-source-onerror"
+   ],
+   "exfiltrated": [
+    "exfil-a-ping",
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "e-sb-bypass-contract-tt": {
+   "ready": false,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [
+    "This document requires 'TrustedHTML' assignment. The action has been blocked. @ bundle.js:1"
+   ],
+   "errors": [
+    "Failed to set the 'innerHTML' property on 'Element': This document requires 'TrustedHTML' assignment.\n\nTypeError: This document requires 'TrustedHTML' assignmen"
+   ],
+   "consistent": true
+  },
+  "e-sb-forget": {
+   "ready": true,
+   "executed": [
+    "a-javascript",
+    "details-ontoggle",
+    "form-formaction",
+    "iframe-javascript",
+    "iframe-srcdoc",
+    "img-onerror",
+    "mxss-noscript",
+    "style-onload",
+    "video-source-onerror"
+   ],
+   "exfiltrated": [
+    "exfil-a-ping",
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "e-sb-forget-contract": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "e-sb-forget-contract-csp": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  },
+  "e-sb-forget-contract-tt": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "mermaidError": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "ttViolations": [
+    "This document requires 'TrustedHTML' assignment. The action has been blocked. @ bundle.js:1"
+   ],
+   "errors": [],
+   "consistent": true
+  },
+  "e-sb-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true
+  }
+ }
+}

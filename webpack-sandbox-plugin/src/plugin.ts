@@ -5,7 +5,7 @@ import { ProxyGenerator } from "./proxy-generator";
 import { Parser } from "./core/parser";
 import { findAllDtsFiles } from "./utils/file-utils";
 import { toJsStringLiteral } from "./utils/source-literals";
-import { compileLibrary, loadSandboxPolicy, WorkloadConfig } from "./build-helpers";
+import { compileLibrary, loadSandboxPolicy, OutputContract, WorkloadConfig } from "./build-helpers";
 import { applyClassification, ClassificationOptions } from "./classification";
 import { integrityFor, loadAndCheckManifest, ManifestOptions, SandboxManifest } from "./manifest";
 import type { BundleIntegrity } from "./proxy-generator";
@@ -175,6 +175,7 @@ export class WebpackSandboxPlugin {
           sandboxConfig[libName].writable ?? {},
           (sandboxConfig[libName].subpaths ?? []).length > 0,
           sandboxConfig[libName].limits,
+          sandboxConfig[libName].outputs ?? {},
         );
         for (const subpath of sandboxConfig[libName].subpaths ?? []) {
           this.generateProxyForSubpath(libName, subpath, compiler.context);
@@ -331,6 +332,7 @@ export class WebpackSandboxPlugin {
     writable: Record<string, string[]> = {},
     hasSubpaths = false,
     limits?: { callTimeMs?: number; memoryBytes?: number },
+    outputs: Record<string, OutputContract> = {},
   ) {
     const proxyPath = path.resolve(
       this.sandboxCacheDir,
@@ -378,7 +380,14 @@ export class WebpackSandboxPlugin {
     const libraryData = parser.parse();
 
     const generator = new ProxyGenerator();
-    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions, integrity, writable, hasSubpaths, limits);
+    // A contract on an export the declarations do not list would never apply.
+    const exported = new Set(libraryData.callableSingletonExport ? ["default"] : libraryData.exportedNames);
+    for (const exportPath of Object.keys(outputs)) {
+      if (!exported.has(exportPath.split(".")[0])) {
+        throw new Error(`[SandboxPlugin] Output contract ${libraryName}:${exportPath} names an export the library does not declare`);
+      }
+    }
+    const proxyContent = generator.generate(libraryData, libraryName, workloads, permissions, integrity, writable, hasSubpaths, limits, outputs);
 
     fs.writeFileSync(proxyPath, proxyContent);
     console.log(

@@ -1,5 +1,6 @@
 import { LibraryData } from "./domain/types";
 import { isIdentifierName, toJsStringLiteral, toModuleExportName } from "./utils/source-literals";
+import type { OutputContract } from "./build-helpers";
 
 /** Workload metadata used when generating lazy proxy accessors. */
 export interface ProxyWorkload {
@@ -38,9 +39,12 @@ export class ProxyGenerator {
     writable: Record<string, string[]> = {},
     hasSubpaths = false,
     limits?: { callTimeMs?: number; memoryBytes?: number },
+    outputs: Record<string, OutputContract> = {},
   ): string {
     let content = `// Auto-generated Sandbox Proxy for ${toJsStringLiteral(libraryName)}\n`;
-    content += `import { SandboxManager } from "../core/sandbox-manager.js";\n\n`;
+    content += `import { SandboxManager } from "../core/sandbox-manager.js";\n`;
+    content += this.generateOutputContracts(outputs);
+    content += `\n`;
 
     content += this.generateBundleLoader(integrity);
     content += `// Load the isolated bundle from the active runtime.\n`;
@@ -74,7 +78,7 @@ export class ProxyGenerator {
       content += `}\n\n`;
     }
     content += this.generateWorkloadAccessHelpers(libraryName, workloads, integrity);
-    content += this.generateExports(libraryData);
+    content += this.generateExports(libraryData, Object.keys(outputs).length > 0);
     content += `/** Disposes the QuickJS context and its boundary resources. */\n`;
     content += `export function disposeLibrary() {\n`;
     content += `  if (librarySandbox) {\n`;
@@ -132,14 +136,17 @@ export class ProxyGenerator {
    * @param libraryData Runtime export information parsed from declarations.
    * @returns JavaScript source for the export bindings.
    */
-  private generateExports(libraryData: LibraryData): string {
+  private generateExports(libraryData: LibraryData, contracted = false): string {
     let content = "";
+    // With output contracts, every export binding passes through the wrapper,
+    // which leaves exports without a declared path unchanged.
+    const W = (name: string, expr: string) => (contracted ? `__withOutputContracts(${toJsStringLiteral(name)}, ${expr}, __outputEnforcers)` : expr);
     // An `export =` declaration represents one callable value whose properties
     // must remain accessible through the same default export.
     if (libraryData.callableSingletonExport) {
       content += `// Preserve both calls and property access on the callable singleton export.\n`;
       content += `function _callable_target() {}\n`;
-      content += `export default new Proxy(_callable_target, {\n`;
+      content += contracted ? `const _callable_default = new Proxy(_callable_target, {\n` : `export default new Proxy(_callable_target, {\n`;
       content += `  apply(_t, _thisArg, args) {\n`;
       content += `    return __callSingleton(args);\n`;
       content += `  },\n`;
@@ -151,7 +158,9 @@ export class ProxyGenerator {
       content += `  construct(_t, args) {\n`;
       content += `    return __callSingleton(args);\n`;
       content += `  },\n`;
-      content += `});\n\n`;
+      content += `});\n`;
+      if (contracted) content += `export default ${W("default", "_callable_default")};\n`;
+      content += `\n`;
       return content;
     }
 
@@ -188,7 +197,7 @@ export class ProxyGenerator {
         content += `// arrow functions (no [[Construct]]), so using them directly as Proxy target\n`;
         content += `// makes the Proxy non-constructable even when a construct trap is present.\n`;
         content += `function _default_target() {}\n`;
-        content += `export default _defaultProxyTarget\n`;
+        content += contracted ? `const _default_view = _defaultProxyTarget\n` : `export default _defaultProxyTarget\n`;
         content += `  ? new Proxy(_default_target, {\n`;
         content += `      apply(_target, _thisArg, args) {\n`;
         content += `        return _defaultProxyTarget(...args);\n`;
@@ -205,7 +214,9 @@ export class ProxyGenerator {
         content += `        return _defaultSingleton?.[key];\n`;
         content += `      }\n`;
         content += `    })\n`;
-        content += `  : proxyExports.default;\n\n`;
+        content += `  : proxyExports.default;\n`;
+        if (contracted) content += `export default ${W("default", "_default_view")};\n`;
+        content += `\n`;
       } else {
         // Identifier names keep readable aliases. Other names get positional
         // aliases under a distinct prefix, so two names never share a binding.
@@ -230,14 +241,47 @@ export class ProxyGenerator {
         content += `      }\n`;
         content += `    })\n`;
         content += `  : ${exportAccess};\n`;
+        if (contracted) content += `const ${safeIdentifier}_out = ${W(name, safeIdentifier)};\n`;
         // Aliases also support reserved words; other names use the ES2022 string form.
-        content += `export { ${safeIdentifier} as ${toModuleExportName(name)} };\n\n`;
+        content += `export { ${contracted ? `${safeIdentifier}_out` : safeIdentifier} as ${toModuleExportName(name)} };\n\n`;
       }
     });
 
     return content;
   }
 
+
+  /**
+   * Generates the imports and enforcers of a library's output contracts.
+   * Sanitizer and check modules are host modules the developer named; they
+   * are imported as ordinary (non-sandboxed) dependencies of the proxy.
+   */
+  private generateOutputContracts(outputs: Record<string, OutputContract>): string {
+    const paths = Object.keys(outputs);
+    if (paths.length === 0) return "";
+    let content = `import { compileContract as __compileContract, withOutputContracts as __withOutputContracts } from "../core/output-contracts.js";\n`;
+    const modules = new Map<string, string>();
+    const binding = (request: string) => {
+      if (!modules.has(request)) {
+        const id = `__contractModule${modules.size}`;
+        modules.set(request, id);
+        content += `import * as ${id} from ${toJsStringLiteral(request)};\n`;
+      }
+      return modules.get(request)!;
+    };
+    const entries = paths.map((p) => {
+      const c = outputs[p];
+      const mods = [
+        c.sanitizer ? `sanitizer: ${binding(c.sanitizer)}` : "",
+        c.check ? `check: ${binding(c.check)}` : "",
+      ].filter(Boolean).join(", ");
+      const { sanitizer, check, ...plain } = c;
+      return `  ${toJsStringLiteral(p)}: __compileContract(${toJsStringLiteral(p)}, ${JSON.stringify(plain)}, { ${mods} }),\n`;
+    });
+    content += `/** Output contracts declared in the sandbox policy, keyed by export path. */\n`;
+    content += `const __outputEnforcers = {\n${entries.join("")}};\n`;
+    return content;
+  }
 
   /**
    * Generates the lazy loader shared by configured workload proxy modules.

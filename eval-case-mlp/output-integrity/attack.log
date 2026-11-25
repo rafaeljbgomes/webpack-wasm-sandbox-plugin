@@ -1,0 +1,13 @@
+b-native-shipped             ready=true exec=0 [] exfil=0 [] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+b-sb-forget-contract         ready=true exec=0 [] exfil=0 [] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+b-sb-forget-contract-tt      ready=true exec=0 [] exfil=0 [] mermaid=0,0,0,0,0 tt=1 consistent=true errors=0
+b-sb-shipped                 ready=true exec=0 [] exfil=0 [] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+e-native-forget              ready=true exec=9 [a-javascript,details-ontoggle,form-formaction,iframe-javascript,iframe-srcdoc,img-onerror,mxss-noscript,style-onload,video-source-onerror] exfil=4 [exfil-a-ping,exfil-css-url,exfil-img,exfil-picture] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+e-native-shipped             ready=true exec=0 [] exfil=3 [exfil-css-url,exfil-img,exfil-picture] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+e-sb-bypass-contract         ready=true exec=9 [a-javascript,details-ontoggle,form-formaction,iframe-javascript,iframe-srcdoc,img-onerror,mxss-noscript,style-onload,video-source-onerror] exfil=4 [exfil-a-ping,exfil-css-url,exfil-img,exfil-picture] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+e-sb-bypass-contract-tt      ready=false exec=0 [] exfil=0 [] mermaid=0,0,0,0,0 tt=1 consistent=true errors=1
+e-sb-forget                  ready=true exec=9 [a-javascript,details-ontoggle,form-formaction,iframe-javascript,iframe-srcdoc,img-onerror,mxss-noscript,style-onload,video-source-onerror] exfil=4 [exfil-a-ping,exfil-css-url,exfil-img,exfil-picture] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+e-sb-forget-contract         ready=true exec=0 [] exfil=3 [exfil-css-url,exfil-img,exfil-picture] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+e-sb-forget-contract-csp     ready=true exec=0 [] exfil=0 [] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0
+e-sb-forget-contract-tt      ready=true exec=0 [] exfil=3 [exfil-css-url,exfil-img,exfil-picture] mermaid=0,0,0,0,0 tt=1 consistent=true errors=0
+e-sb-shipped                 ready=true exec=0 [] exfil=3 [exfil-css-url,exfil-img,exfil-picture] mermaid=1,1,1,1,1 tt=0 consistent=true errors=0

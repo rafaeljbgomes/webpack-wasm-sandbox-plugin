@@ -1,0 +1,297 @@
+{
+ "marked": "15.0.7",
+ "dompurify": "3.4.17",
+ "examples": 652,
+ "unchanged": 616,
+ "changed": 36,
+ "bySection": {
+  "HTML blocks": 17,
+  "Link reference definitions": 2,
+  "Lists": 2,
+  "Links": 1,
+  "Autolinks": 4,
+  "Raw HTML": 10
+ },
+ "byRemoved": {
+  "el:foo": 2,
+  "(serialization only)": 15,
+  "el:warning": 1,
+  "attr:language": 1,
+  "el:bar": 1,
+  "el:#comment": 6,
+  "attr:href": 4,
+  "el:bab": 1,
+  "el:c2c": 1,
+  "el:b2": 2,
+  "attr:zoop:33": 1,
+  "attr:_boolean": 1,
+  "attr:bam": 1,
+  "attr:foo": 1,
+  "el:responsive-image": 1,
+  "el:php": 1
+ },
+ "changedExamples": [
+  {
+   "example": 150,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": [
+    "el:foo"
+   ]
+  },
+  {
+   "example": 151,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 163,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": [
+    "el:warning"
+   ]
+  },
+  {
+   "example": 165,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 169,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": [
+    "attr:language"
+   ]
+  },
+  {
+   "example": 170,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 171,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 172,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 173,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 176,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 177,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 178,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 179,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 180,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 181,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 182,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 183,
+   "section": "HTML blocks",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 196,
+   "section": "Link reference definitions",
+   "same": false,
+   "removed": []
+  },
+  {
+   "example": 201,
+   "section": "Link reference definitions",
+   "same": false,
+   "removed": [
+    "el:bar"
+   ]
+  },
+  {
+   "example": 308,
+   "section": "Lists",
+   "same": false,
+   "removed": [
+    "el:#comment"
+   ]
+  },
+  {
+   "example": 309,
+   "section": "Lists",
+   "same": false,
+   "removed": [
+    "el:#comment"
+   ]
+  },
+  {
+   "example": 491,
+   "section": "Links",
+   "same": false,
+   "removed": [
+    "el:foo"
+   ]
+  },
+  {
+   "example": 596,
+   "section": "Autolinks",
+   "same": false,
+   "removed": [
+    "attr:href"
+   ]
+  },
+  {
+   "example": 598,
+   "section": "Autolinks",
+   "same": false,
+   "removed": [
+    "attr:href"
+   ]
+  },
+  {
+   "example": 599,
+   "section": "Autolinks",
+   "same": false,
+   "removed": [
+    "attr:href"
+   ]
+  },
+  {
+   "example": 601,
+   "section": "Autolinks",
+   "same": false,
+   "removed": [
+    "attr:href"
+   ]
+  },
+  {
+   "example": 613,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:bab",
+    "el:c2c"
+   ]
+  },
+  {
+   "example": 614,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:b2"
+   ]
+  },
+  {
+   "example": 615,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:b2"
+   ]
+  },
+  {
+   "example": 616,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "attr:zoop:33",
+    "attr:_boolean",
+    "attr:bam",
+    "attr:foo"
+   ]
+  },
+  {
+   "example": 617,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:responsive-image"
+   ]
+  },
+  {
+   "example": 625,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:#comment"
+   ]
+  },
+  {
+   "example": 626,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:#comment"
+   ]
+  },
+  {
+   "example": 627,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:php"
+   ]
+  },
+  {
+   "example": 628,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:#comment"
+   ]
+  },
+  {
+   "example": 629,
+   "section": "Raw HTML",
+   "same": false,
+   "removed": [
+    "el:#comment"
+   ]
+  }
+ ]
+}

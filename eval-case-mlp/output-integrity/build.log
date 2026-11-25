@@ -1,0 +1,13 @@
+{"name":"e-native-shipped","mode":"native","buildMs":29017,"files":238,"bytes":9431645}
+{"name":"e-native-forget","mode":"native","buildMs":28315,"files":238,"bytes":9431626}
+{"name":"e-sb-shipped","mode":"sandbox","buildMs":27856,"files":248,"bytes":10084691}
+{"name":"e-sb-forget","mode":"sandbox","buildMs":27644,"files":248,"bytes":10084750}
+{"name":"e-sb-forget-contract","mode":"sandbox","buildMs":28201,"files":248,"bytes":10089145}
+{"name":"e-sb-forget-contract-csp","mode":"sandbox","buildMs":23062,"files":248,"bytes":10089095}
+{"name":"e-sb-forget-contract-tt","mode":"sandbox","buildMs":28492,"files":248,"bytes":10089417}
+{"name":"e-sb-bypass-contract","mode":"sandbox","buildMs":28526,"files":248,"bytes":10089116}
+{"name":"e-sb-bypass-contract-tt","mode":"sandbox","buildMs":28385,"files":248,"bytes":10089388}
+{"name":"b-native-shipped","mode":"native","buildMs":27932,"files":238,"bytes":9429974}
+{"name":"b-sb-shipped","mode":"sandbox","buildMs":29906,"files":248,"bytes":10083049}
+{"name":"b-sb-forget-contract","mode":"sandbox","buildMs":23847,"files":248,"bytes":10087432}
+{"name":"b-sb-forget-contract-tt","mode":"sandbox","buildMs":23222,"files":248,"bytes":10087660}

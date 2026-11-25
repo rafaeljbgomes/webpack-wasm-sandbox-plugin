@@ -55,7 +55,7 @@ export const SandboxManager = {
  * @param {string} [options.shim] Source for `.sandbox/core/sandbox-manager.js`.
  * @returns {Promise<object>} The imported proxy module namespace.
  */
-async function importGeneratedProxy(t, { libraryData, body, permissions = [], workloads = [], shim = reexportShim, integrity, servedBody }) {
+async function importGeneratedProxy(t, { libraryData, body, permissions = [], workloads = [], shim = reexportShim, integrity, servedBody, outputs = {}, hostModules = {} }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "sandbox-generated-proxy-test-"));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   fs.mkdirSync(path.join(root, ".sandbox", "core"), { recursive: true });
@@ -63,13 +63,15 @@ async function importGeneratedProxy(t, { libraryData, body, permissions = [], wo
   fs.mkdirSync(path.join(root, "dist"), { recursive: true });
   fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ type: "module" }));
   fs.writeFileSync(path.join(root, ".sandbox", "core", "sandbox-manager.js"), shim);
+  fs.copyFileSync(new URL("../../.sandbox/core/output-contracts.js", import.meta.url), path.join(root, ".sandbox", "core", "output-contracts.js"));
+  for (const [file, src] of Object.entries(hostModules)) fs.writeFileSync(path.join(root, ".sandbox", "proxys", file), src);
   // `servedBody` simulates a bundle modified after the digest was pinned.
   fs.writeFileSync(path.join(root, "dist", "fixture.bundle.js"), fixtureBundle(servedBody ?? body));
   for (const workload of workloads) {
     fs.writeFileSync(path.join(root, "dist", `fixture.${workload.workloadName}.workload.bundle.js`), workload.code);
   }
 
-  const source = new ProxyGenerator().generate(libraryData, "fixture", workloads, permissions, integrity);
+  const source = new ProxyGenerator().generate(libraryData, "fixture", workloads, permissions, integrity, {}, false, undefined, outputs);
   const proxyPath = path.join(root, ".sandbox", "proxys", "fixture-proxy.js");
   fs.writeFileSync(proxyPath, source);
 
@@ -323,4 +325,24 @@ test("a proxy with a pinned digest refuses a modified bundle before evaluating i
   );
   assert.equal(globalThis.__tamperedBundleRan, false);
   delete globalThis.__tamperedBundleRan;
+});
+
+test("output contracts sanitize and type-check what a sandboxed export returns", async (t) => {
+  const proxy = await importGeneratedProxy(t, {
+    libraryData: { exportedNames: ["marked", "mime"] },
+    body: `
+      const marked = (s) => "<p>" + s + "</p><img src=x onerror=pwn()>";
+      marked.parse = marked;
+      return { marked, mime: { getType: (e) => e === "evil" ? "text/html; charset=x" : "text/plain" } };
+    `,
+    outputs: {
+      "marked.parse": { type: "html", sanitizer: "./strip.js" },
+      "mime.getType": { type: "string", pattern: "^[a-z]+/[a-z0-9.+-]+$" },
+    },
+    hostModules: { "strip.js": "export default (s) => s.replace(/<img[^>]*>/g, '');\n" },
+  });
+  assert.equal(proxy.marked.parse("hi"), "<p>hi</p>");
+  assert.equal(proxy.marked("hi"), "<p>hi</p><img src=x onerror=pwn()>", "only declared paths are checked");
+  assert.equal(proxy.mime.getType("txt"), "text/plain");
+  assert.throws(() => proxy.mime.getType("evil"), { name: "SandboxOutputError" });
 });

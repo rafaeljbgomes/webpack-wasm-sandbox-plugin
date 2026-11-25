@@ -28,8 +28,72 @@ export interface LibraryPolicy {
    * into the VM, `memoryBytes` caps the Wasm linear memory of its instance.
    */
   limits?: SandboxLimits;
+  /**
+   * Output contracts keyed by export path (`"marked.parse"`, `"default"`):
+   * the type the host expects each call's result to have. Enforced on the
+   * host side of the membrane by the generated proxy.
+   */
+  outputs?: Record<string, OutputContract>;
   workloads?: Record<string, WorkloadConfig>;
   [key: string]: unknown;
+}
+
+/** Declared type of a sandboxed export's return value. */
+export interface OutputContract {
+  type: "html" | "string" | "boolean" | "bytes";
+  /** html: host module (not sandboxed) whose default export sanitizes a string. */
+  sanitizer?: string;
+  /** html: Trusted Types policy name; results become TrustedHTML where supported. */
+  trustedTypes?: string;
+  /** string: maximum length. */
+  maxLength?: number;
+  /** string: regular expression (Unicode mode) the whole value must match. */
+  pattern?: string;
+  /** bytes: exact length. */
+  length?: number;
+  /** Host module whose default export (result, args) must return true. */
+  check?: string;
+}
+
+const CONTRACT_KEYS: Record<OutputContract["type"], string[]> = {
+  html: ["sanitizer", "trustedTypes", "check"],
+  string: ["maxLength", "pattern", "check"],
+  boolean: ["check"],
+  bytes: ["length", "check"],
+};
+
+/** Validates `outputs`: dotted export paths mapped to well-formed contracts. */
+export function normalizeOutputs(name: string, value: unknown): Record<string, OutputContract> {
+  if (value === undefined) return {};
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`[SandboxPlugin] Outputs for ${name} must be an object keyed by export path`);
+  }
+  const out: Record<string, OutputContract> = {};
+  for (const [exportPath, raw] of Object.entries(value)) {
+    if (!exportPath.split(".").every(isNonEmptyString)) {
+      throw new Error(`[SandboxPlugin] Output path "${exportPath}" for ${name} must be a dotted export path`);
+    }
+    const where = `${name} output ${exportPath}`;
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) throw new Error(`[SandboxPlugin] Contract for ${where} must be an object`);
+    const c = raw as Record<string, unknown>;
+    const type = c.type as OutputContract["type"];
+    if (!Object.prototype.hasOwnProperty.call(CONTRACT_KEYS, type)) throw new Error(`[SandboxPlugin] Contract for ${where} has unknown type ${JSON.stringify(c.type)}`);
+    for (const key of Object.keys(c)) {
+      if (key !== "type" && !CONTRACT_KEYS[type].includes(key)) throw new Error(`[SandboxPlugin] Contract for ${where} does not take "${key}"`);
+    }
+    if (type === "html" && !isNonEmptyString(c.sanitizer)) throw new Error(`[SandboxPlugin] Contract for ${where} needs a sanitizer module`);
+    for (const key of ["sanitizer", "trustedTypes", "pattern", "check"]) {
+      if (c[key] !== undefined && !isNonEmptyString(c[key])) throw new Error(`[SandboxPlugin] ${key} for ${where} must be a nonempty string`);
+    }
+    for (const key of ["maxLength", "length"]) {
+      if (c[key] !== undefined && !(Number.isInteger(c[key]) && (c[key] as number) >= 0)) throw new Error(`[SandboxPlugin] ${key} for ${where} must be a nonnegative integer`);
+    }
+    if (c.pattern !== undefined) {
+      try { new RegExp(c.pattern as string, "u"); } catch { throw new Error(`[SandboxPlugin] pattern for ${where} is not a valid regular expression`); }
+    }
+    out[exportPath] = { ...(c as unknown as OutputContract) };
+  }
+  return out;
 }
 
 export interface SandboxLimits {
@@ -131,6 +195,7 @@ export function loadSandboxPolicy(configPath: string, context: string): Record<s
     const subpaths = normalizeSubpaths(name, (value as LibraryPolicy).subpaths);
     const writable = normalizeWritable(name, (value as LibraryPolicy).writable, permissions);
     const limits = normalizeLimits(name, (value as LibraryPolicy).limits);
+    const outputs = normalizeOutputs(name, (value as LibraryPolicy).outputs);
     // The new fields appear only when declared, so existing policies normalize unchanged.
     normalized[name] = {
       ...value,
@@ -138,7 +203,19 @@ export function loadSandboxPolicy(configPath: string, context: string): Record<s
       ...(subpaths.length ? { subpaths } : {}),
       ...(Object.keys(writable).length ? { writable } : {}),
       ...(limits ? { limits } : {}),
+      ...(Object.keys(outputs).length ? { outputs } : {}),
     };
+  }
+  // Contract modules run on the host with full authority: a sandboxed library
+  // cannot also be the code that checks its own (or another library's) output.
+  for (const [name, entry] of Object.entries(normalized)) {
+    for (const [exportPath, contract] of Object.entries(entry.outputs ?? {})) {
+      for (const request of [contract.sanitizer, contract.check]) {
+        if (request !== undefined && Object.prototype.hasOwnProperty.call(normalized, request.split("/")[0].startsWith("@") ? request.split("/").slice(0, 2).join("/") : request.split("/")[0])) {
+          throw new Error(`[SandboxPlugin] Contract for ${name} output ${exportPath} names ${request}, which is itself sandboxed`);
+        }
+      }
+    }
   }
   return normalized;
 }

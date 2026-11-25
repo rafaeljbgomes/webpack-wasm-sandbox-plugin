@@ -24,12 +24,15 @@ if (!fs.existsSync(path.join(APP, "src/main.js"))) throw new Error("set APP to t
 const OUT = path.join(here, "out");
 const loader = (n) => require.resolve(n, { paths: [here] });
 
-function config(mode, outRoot) {
+// opts (output-integrity study, output-integrity/run.mjs): outName (output
+// directory), outputs (output contracts for marked), forget (the app skips its
+// DOMPurify call), csp (Content-Security-Policy meta tag added to the page).
+function config(mode, outRoot, opts = {}) {
   const plugins = [];
   if (mode === "sandbox") {
     const policyPath = path.join(outRoot, "policy.cjs");
     fs.mkdirSync(outRoot, { recursive: true });
-    fs.writeFileSync(policyPath, `module.exports = ${JSON.stringify({ marked: { permissions: [] } }, null, 1)};\n`);
+    fs.writeFileSync(policyPath, `module.exports = ${JSON.stringify({ marked: { permissions: [], ...(opts.outputs ? { outputs: opts.outputs } : {}) } }, null, 1)};\n`);
     plugins.push(new WebpackSandboxPlugin({
       configPath: policyPath,
       proxyDirectory: path.join(repo, ".sandbox", "proxys"),
@@ -47,7 +50,9 @@ function config(mode, outRoot) {
     cache: false,
     devtool: false,
     entry: "./src/main.js",
-    output: { filename: "bundle.js", path: path.join(outRoot, "dist"), publicPath: "/dist/", clean: true },
+    output: { filename: "bundle.js", path: path.join(outRoot, "dist"), publicPath: "/dist/", clean: true,
+      // Pages that enforce Trusted Types need Webpack's chunk-loading policy.
+      ...(opts.csp && opts.csp.includes("require-trusted-types-for") ? { trustedTypes: { policyName: "webpack" } } : {}) },
     experiments: { topLevelAwait: true, asyncWebAssembly: true },
     resolve: {
       modules: [path.join(APP, "node_modules"), path.join(repo, "node_modules"), "node_modules"],
@@ -57,7 +62,7 @@ function config(mode, outRoot) {
     resolveLoader: { modules: [path.join(here, "node_modules"), path.join(repo, "node_modules")] },
     module: {
       rules: [
-        { test: /[\\/]src[\\/]main\.js$/, use: [path.join(here, "start-after-load-loader.cjs")] },
+        { test: /[\\/]src[\\/]main\.js$/, use: [{ loader: path.join(here, "start-after-load-loader.cjs"), options: { forget: !!opts.forget, bypass: !!opts.bypass } }] },
         { test: /\.css$/, use: [loader("style-loader"), loader("css-loader")] },
         { test: /\.ttf$/, type: "asset/resource" },
         { test: /\.m?js$/, resolve: { fullySpecified: false } },
@@ -70,21 +75,22 @@ function config(mode, outRoot) {
   };
 }
 
-function page(outRoot, mode) {
+function page(outRoot, mode, opts = {}) {
   let html = fs.readFileSync(path.join(APP, "index.html"), "utf8");
   html = html.replace(/<!-- Google tag[\s\S]*?<\/script>\s*<script>[\s\S]*?gtag\('config'[^<]*<\/script>/, "");
   html = html.replace(/<script async src="https:\/\/www\.googletagmanager\.com[^>]*><\/script>/, "");
   html = html.replace(/<script type="module" src="\/src\/main\.js[^"]*"><\/script>/,
     `${mode === "lavamoat" ? '<script src="/dist/lockdown"></script>' : ""}<script src="/dist/bundle.js"></script>`);
   if (/googletagmanager|gtag\(/.test(html)) throw new Error("analytics tag still present");
+  if (opts.csp) html = html.replace(/<head>/, `<head>\n<meta http-equiv="Content-Security-Policy" content="${opts.csp}">`);
   fs.writeFileSync(path.join(outRoot, "index.html"), html);
   fs.cpSync(path.join(APP, "public"), outRoot, { recursive: true });
 }
 
-async function build(mode) {
-  const outRoot = path.join(OUT, mode);
+async function build(mode, opts = {}) {
+  const outRoot = path.join(OUT, opts.outName ?? mode);
   const t0 = Date.now();
-  const stats = await new Promise((ok, ko) => webpack(config(mode, outRoot), (e, s) => (e ? ko(e) : ok(s))));
+  const stats = await new Promise((ok, ko) => webpack(config(mode, outRoot, opts), (e, s) => (e ? ko(e) : ok(s))));
   const ms = Date.now() - t0;
   if (stats.hasErrors()) {
     const text = stats.toString({ all: false, errors: true });
@@ -94,7 +100,7 @@ async function build(mode) {
     fs.writeFileSync(path.join(outRoot, "flagged.json"), JSON.stringify(flagged, null, 1));
     throw new Error(`${flagged.length} packages flagged by classify-or-fail; see build-errors.txt\n` + text.slice(0, 1500));
   }
-  page(outRoot, mode);
+  page(outRoot, mode, opts);
   const files = fs.readdirSync(path.join(outRoot, "dist"));
   const bytes = files.reduce((n, f) => n + fs.statSync(path.join(outRoot, "dist", f)).size, 0);
   return { mode, buildMs: ms, files: files.length, bytes };

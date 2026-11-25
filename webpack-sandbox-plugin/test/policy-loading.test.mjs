@@ -118,3 +118,23 @@ test("rejects a library entry that is not an object", (t) => {
     );
   }
 });
+
+test("normalizes output contracts and rejects malformed ones", (t) => {
+  const policy = loadPolicy(t, `module.exports = { "fixture-lib": { outputs: {
+    "value.parse": { type: "html", sanitizer: "dompurify", trustedTypes: "out" },
+    "sig": { type: "bytes", length: 64, check: "./verify.js" } } } };\n`);
+  assert.deepEqual(policy["fixture-lib"].outputs, {
+    "value.parse": { type: "html", sanitizer: "dompurify", trustedTypes: "out" },
+    sig: { type: "bytes", length: 64, check: "./verify.js" },
+  });
+  for (const [bad, re] of [
+    ['{ "x": { type: "html" } }', /needs a sanitizer/],
+    ['{ "x": { type: "json" } }', /unknown type/],
+    ['{ "x": { type: "boolean", length: 2 } }', /does not take "length"/],
+    ['{ "x..y": { type: "boolean" } }', /dotted export path/],
+    ['{ "x": { type: "string", pattern: "(" } }', /not a valid regular expression/],
+    ['{ "x": { type: "html", sanitizer: "fixture-lib" } }', /itself sandboxed/],
+  ]) {
+    assert.throws(() => loadPolicy(t, `module.exports = { "fixture-lib": { outputs: ${bad} } };\n`), re);
+  }
+});
