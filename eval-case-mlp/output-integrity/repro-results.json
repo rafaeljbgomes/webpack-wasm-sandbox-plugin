@@ -1,0 +1,230 @@
+{
+ "chrome": "158.0.8127.88",
+ "runs": 5,
+ "corpus": [
+  {
+   "id": "exfil-img",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-css-url",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-picture",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-a-ping",
+   "kind": "exfil",
+   "needs": "click"
+  },
+  {
+   "id": "img-onerror",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "svg-onload",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "details-ontoggle",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "video-source-onerror",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "style-onload",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "input-autofocus",
+   "kind": "script",
+   "needs": "focus"
+  },
+  {
+   "id": "iframe-srcdoc",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "iframe-javascript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "object-javascript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "a-javascript",
+   "kind": "script",
+   "needs": "click"
+  },
+  {
+   "id": "form-formaction",
+   "kind": "script",
+   "needs": "click"
+  },
+  {
+   "id": "script-tag",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "mxss-noscript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "mxss-math-style",
+   "kind": "script",
+   "needs": "load"
+  }
+ ],
+ "variants": {
+  "e-native-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    null
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  },
+  "e-sb-forget-contract": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    null
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  },
+  "b-native-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    null
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  },
+  "b-sb-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    null
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  }
+ }
+}

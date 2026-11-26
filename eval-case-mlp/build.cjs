@@ -26,7 +26,11 @@ const loader = (n) => require.resolve(n, { paths: [here] });
 
 // opts (output-integrity study, output-integrity/run.mjs): outName (output
 // directory), outputs (output contracts for marked), forget (the app skips its
-// DOMPurify call), csp (Content-Security-Policy meta tag added to the page).
+// DOMPurify call), csp (Content-Security-Policy meta tag added to the page),
+// policy (lavamoat mode only): "generate" (default; generate into
+// <out>/lavamoat while building), "generate-only" (write policy.json to
+// opts.policyDir and emit no bundle), or the directory of an existing policy
+// (policy.json plus an optional policy-override.json) to build under.
 function config(mode, outRoot, opts = {}) {
   const plugins = [];
   if (mode === "sandbox") {
@@ -41,7 +45,12 @@ function config(mode, outRoot, opts = {}) {
   }
   if (mode === "lavamoat") {
     const LavaMoatPlugin = require("@lavamoat/webpack");
-    plugins.push(new LavaMoatPlugin({ generatePolicy: true, policyLocation: path.join(outRoot, "lavamoat"), readableResourceIds: true }));
+    const pol = opts.policy ?? "generate";
+    plugins.push(new LavaMoatPlugin(
+      pol === "generate" ? { generatePolicy: true, policyLocation: path.join(outRoot, "lavamoat"), readableResourceIds: true }
+      : pol === "generate-only" ? { generatePolicyOnly: true, policyLocation: path.resolve(opts.policyDir), readableResourceIds: true }
+      // emitPolicySnapshot writes the effective policy (override applied) next to the bundle
+      : { policyLocation: path.resolve(pol), readableResourceIds: true, emitPolicySnapshot: true }));
   }
   return {
     mode: "production",
@@ -92,6 +101,12 @@ async function build(mode, opts = {}) {
   const t0 = Date.now();
   const stats = await new Promise((ok, ko) => webpack(config(mode, outRoot, opts), (e, s) => (e ? ko(e) : ok(s))));
   const ms = Date.now() - t0;
+  if (mode === "lavamoat" && opts.policy === "generate-only") {
+    // LavaMoat reports incompatible packages on the console and writes nothing; fail loudly here.
+    const file = path.join(path.resolve(opts.policyDir), "policy.json");
+    if (!fs.existsSync(file)) throw new Error(`no policy written to ${file} (LavaMoat stopped; see its console output)`);
+    return { mode, policy: path.resolve(opts.policyDir), buildMs: ms };
+  }
   if (stats.hasErrors()) {
     const text = stats.toString({ all: false, errors: true });
     fs.mkdirSync(outRoot, { recursive: true });

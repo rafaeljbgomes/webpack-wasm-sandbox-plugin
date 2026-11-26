@@ -1,0 +1,370 @@
+{
+ "chrome": "158.0.8127.88",
+ "runs": 5,
+ "corpus": [
+  {
+   "id": "exfil-img",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-css-url",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-picture",
+   "kind": "exfil",
+   "needs": "load"
+  },
+  {
+   "id": "exfil-a-ping",
+   "kind": "exfil",
+   "needs": "click"
+  },
+  {
+   "id": "img-onerror",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "svg-onload",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "details-ontoggle",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "video-source-onerror",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "style-onload",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "input-autofocus",
+   "kind": "script",
+   "needs": "focus"
+  },
+  {
+   "id": "iframe-srcdoc",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "iframe-javascript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "object-javascript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "a-javascript",
+   "kind": "script",
+   "needs": "click"
+  },
+  {
+   "id": "form-formaction",
+   "kind": "script",
+   "needs": "click"
+  },
+  {
+   "id": "script-tag",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "mxss-noscript",
+   "kind": "script",
+   "needs": "load"
+  },
+  {
+   "id": "mxss-math-style",
+   "kind": "script",
+   "needs": "load"
+  }
+ ],
+ "variants": {
+  "t-native-shipped": {
+   "ready": true,
+   "executed": [
+    "a-javascript",
+    "details-ontoggle",
+    "form-formaction",
+    "iframe-javascript",
+    "iframe-srcdoc",
+    "img-onerror",
+    "mxss-noscript",
+    "style-onload",
+    "video-source-onerror"
+   ],
+   "exfiltrated": [
+    "exfil-a-ping",
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    "tamper:T1=applied T2=applied"
+   ],
+   "nextNodeReplaced": [
+    true
+   ],
+   "setterReplaced": [
+    true
+   ]
+  },
+  "t-native-shipped-blind": {
+   "ready": true,
+   "executed": [
+    "a-javascript",
+    "details-ontoggle",
+    "form-formaction",
+    "iframe-javascript",
+    "iframe-srcdoc",
+    "img-onerror",
+    "style-onload",
+    "video-source-onerror"
+   ],
+   "exfiltrated": [
+    "exfil-a-ping",
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    "tamper:T1=applied T2=off"
+   ],
+   "nextNodeReplaced": [
+    true
+   ],
+   "setterReplaced": [
+    false
+   ]
+  },
+  "t-native-shipped-sink": {
+   "ready": true,
+   "executed": [
+    "details-ontoggle",
+    "iframe-javascript",
+    "iframe-srcdoc",
+    "img-onerror",
+    "mxss-noscript",
+    "style-onload",
+    "video-source-onerror"
+   ],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    "tamper:T1=off T2=applied"
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    true
+   ]
+  },
+  "t-sb-shipped": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    "tamper:T1=absent T2=absent"
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  },
+  "t-sb-forget-contract": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    "tamper:T1=absent T2=absent"
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  },
+  "t-sb-forget-contract-csp": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [],
+   "mermaidSvg": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mermaidError": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "ttViolations": [],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    "tamper:T1=absent T2=absent"
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  },
+  "t-sb-forget-contract-tt": {
+   "ready": true,
+   "executed": [],
+   "exfiltrated": [
+    "exfil-css-url",
+    "exfil-img",
+    "exfil-picture"
+   ],
+   "mermaidSvg": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "mermaidError": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "ttViolations": [
+    "This document requires 'TrustedHTML' assignment. The action has been blocked. @ bundle.js:1"
+   ],
+   "errors": [],
+   "consistent": true,
+   "tamperReport": [
+    "tamper:T1=absent T2=absent"
+   ],
+   "nextNodeReplaced": [
+    false
+   ],
+   "setterReplaced": [
+    false
+   ]
+  }
+ }
+}

@@ -1,0 +1,7 @@
+{"name":"t-native-shipped","mode":"native","buildMs":35262,"files":238,"bytes":9433997}
+{"name":"t-native-shipped-blind","mode":"native","buildMs":34980,"files":238,"bytes":9431939}
+{"name":"t-native-shipped-sink","mode":"native","buildMs":34908,"files":238,"bytes":9433774}
+{"name":"t-sb-shipped","mode":"sandbox","buildMs":36398,"files":248,"bytes":10087138}
+{"name":"t-sb-forget-contract","mode":"sandbox","buildMs":37503,"files":248,"bytes":10091478}
+{"name":"t-sb-forget-contract-csp","mode":"sandbox","buildMs":36211,"files":248,"bytes":10091484}
+{"name":"t-sb-forget-contract-tt","mode":"sandbox","buildMs":35651,"files":248,"bytes":10091760}

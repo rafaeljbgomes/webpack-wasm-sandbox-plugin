@@ -1,0 +1,3 @@
+Incompatible code detected in package "monaco-editor" file "/private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/5da04648-5c63-4345-a463-18fa57b52245/scratchpad/repo2/eval-case-mlp/app/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js". Violations:
+{"dynamicRequires":[{"range":"319:16,319:66","sample":"require([`${moduleId}`], onModuleCallback, reject);"}],"primordialMutations":[],"strictModeViolations":[]}
+RESULT: no policy written to /private/tmp/claude-501/-Users-npereira-Documents-papers-wasm-js-sandbox-paper-submission/5da04648-5c63-4345-a463-18fa57b52245/scratchpad/repo2/eval-case-mlp/output-integrity/lavamoat-policies/clean/policy.json (LavaMoat stopped; see its console output)
